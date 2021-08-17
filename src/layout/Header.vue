@@ -58,6 +58,8 @@ export default {
         font-size: 20px;
     }
     .header {
+        top: 0px;
+        left: 0px;
         width: 100%;
         background-color: white;
         position: fixed;

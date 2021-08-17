@@ -2,9 +2,11 @@
  * @Ahthor: xiaoxi
 -->
 <template>
-    <div>
+    <div >
         <Header ></Header>
-        <router-view style="padding: 20px;padding-top: 70px;"></router-view>
+        <div class="container">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
@@ -18,4 +20,11 @@ export default {
 
 <style>
 
+.container {
+    padding: 20px;
+    max-width: 1144px;
+    margin: 0 auto;
+    box-shadow:0 0 36.8px 9.2px rgb(16 37 65 / 10%);
+    margin-top: 80px;
+}
 </style>
