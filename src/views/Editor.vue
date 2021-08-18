@@ -33,9 +33,9 @@
             title="片段笔记"
             :visible.sync="rightDrawer"
             direction="rtl"
-            size='500px'
+            size='50%'
             :modal='false'>
-            笔记笔记
+            <note></note>
         </el-drawer>
     </div>
 </template>
@@ -46,8 +46,9 @@ import VsCode from '../components/VsCode.vue'
 import API from '../api/'
 import Btns from '../components/Btns.vue'
 import FilesManager from '../components/filesManager.vue'
+import Note from '../components/Note.vue'
 export default {
-    components: { VsCode, Preview, Btns, FilesManager },
+    components: { VsCode, Preview, Btns, FilesManager, Note },
     data() {
         return {
             id: -1,
