@@ -22,8 +22,10 @@ export default {
     },
     computed: {
     },
-    mounted() {
-        this.content = this.note
+    watch: {
+        note() {
+            this.content = this.note
+        }
     }
 }
 </script>
