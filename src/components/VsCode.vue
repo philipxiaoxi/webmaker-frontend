@@ -36,6 +36,9 @@ export default {
         throttle(method, time) {
             clearTimeout(this.timer)
             this.timer = setTimeout(method, time)
+        },
+        setModelLanguage(type) {
+            monaco.editor.setModelLanguage(this.monacoEditor.getModel(), type)
         }
     }
 }

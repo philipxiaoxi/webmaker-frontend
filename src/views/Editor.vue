@@ -18,10 +18,11 @@
         <div class="leftBtn" @click="drawer = !drawer"><i class="el-icon-caret-right"></i></div>
         <!-- 工具箱抽屉内容 -->
         <el-drawer
-            title="工具箱"
+            title="文件管理器"
             :visible.sync="drawer"
+            @opened='drawerOpen'
             direction="ltr">
-            <span>我来啦!</span>
+            <files-manager @click="setValue" ref="filesManager"></files-manager>
         </el-drawer>
     </div>
 </template>
@@ -31,13 +32,15 @@ import Preview from '../components/Preview.vue'
 import VsCode from '../components/VsCode.vue'
 import API from '../api/'
 import Btns from '../components/Btns.vue'
+import FilesManager from '../components/filesManager.vue'
 export default {
-    components: { VsCode, Preview, Btns },
+    components: { VsCode, Preview, Btns, FilesManager },
     data() {
         return {
             id: -1,
             drawer: false,
-            item: {}
+            item: {},
+            drawerOpenStatus: false
         }
     },
     activated() {
@@ -47,9 +50,14 @@ export default {
                 if (res.data.data == null) {
                     this.$message.error('该代码片段已下架或者被删除！')
                 }
+                // 赋值片段信息
                 this.item = res.data.data
+                // 赋值到编辑器
                 this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
+                // 预览
                 this.$refs.preview.goPreview(res.data.data.content)
+                // 告知抽屉需要重新渲染
+                this.drawerOpenStatus = false
             }).catch((e) => {
                 console.log(e)
             })
@@ -61,6 +69,23 @@ export default {
         this.dragControllerMiddle()
     },
     methods: {
+        setValue(data) {
+            // 赋值到编辑器
+            this.$refs.vscode.monacoEditor.getModel().setValue(data.data)
+            // 设置语言
+            this.$refs.vscode.setModelLanguage(data.type)
+            // 预览
+            setTimeout(() => {
+                this.preview()
+            }, 100)
+        },
+        drawerOpen() {
+            // 获取片段结构
+            if (!this.drawerOpenStatus) {
+                this.$refs.filesManager.getSnippetProject(this.item.id)
+            }
+            this.drawerOpenStatus = true
+        },
         dragControllerMiddle() {
             // 总盒子
             const box = document.getElementsByClassName('con')[0]
@@ -102,8 +127,9 @@ export default {
             }
         },
         preview() {
+            const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.item.id}/" />`
             const content = this.$refs.vscode.value
-            this.$refs.preview.goPreview(content)
+            this.$refs.preview.goPreview(base + content)
         },
         changeIframeDivStyle(display) {
             var iframeDiv = document.getElementsByClassName('iframeDiv')
@@ -156,6 +182,6 @@ export default {
     opacity: 0;
     background: transparent;
     margin-top: 10px;
-    /*display: none;*/
+    display: none;
 }
 </style>
