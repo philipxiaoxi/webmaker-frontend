@@ -26,6 +26,17 @@
             :modal='false'>
             <files-manager @click="setValue" ref="filesManager"></files-manager>
         </el-drawer>
+        <!-- 右边工具箱按钮 -->
+        <div class="rightBtn" @click="rightDrawer = !rightDrawer"><i class="el-icon-caret-left"></i></div>
+        <!-- 工具箱抽屉内容 -->
+        <el-drawer
+            title="片段笔记"
+            :visible.sync="rightDrawer"
+            direction="rtl"
+            size='500px'
+            :modal='false'>
+            笔记笔记
+        </el-drawer>
     </div>
 </template>
 
@@ -41,6 +52,7 @@ export default {
         return {
             id: -1,
             drawer: false,
+            rightDrawer: false,
             item: {},
             drawerOpenStatus: false
         }
@@ -161,6 +173,17 @@ export default {
     line-height: 40px;
     border-top-right-radius: 25%;
     border-bottom-right-radius: 25%;
+}
+.rightBtn {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    width: 30px;
+    height: 40px;
+    background-color: #DCDFE6;
+    line-height: 40px;
+    border-top-left-radius: 25%;
+    border-bottom-left-radius: 25%;
 }
 .container {
     margin-top: 70px;
