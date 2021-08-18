@@ -21,7 +21,9 @@
             title="文件管理器"
             :visible.sync="drawer"
             @opened='drawerOpen'
-            direction="ltr">
+            direction="ltr"
+            size='300px'
+            :modal='false'>
             <files-manager @click="setValue" ref="filesManager"></files-manager>
         </el-drawer>
     </div>
@@ -58,6 +60,10 @@ export default {
                 this.$refs.preview.goPreview(res.data.data.content)
                 // 告知抽屉需要重新渲染
                 this.drawerOpenStatus = false
+                // 抽屉自动打开
+                if (this.item.type == 1) {
+                    this.drawer = true
+                }
             }).catch((e) => {
                 console.log(e)
             })
