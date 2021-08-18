@@ -10,7 +10,7 @@ export default {
     data() {
         return {
             monacoEditor: null,
-            value: '<h1>233</h1>'
+            value: ''
         }
     },
     mounted() {
