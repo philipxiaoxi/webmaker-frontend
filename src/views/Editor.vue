@@ -17,10 +17,29 @@
 <script>
 import Preview from '../components/Preview.vue'
 import VsCode from '../components/VsCode.vue'
+import API from '../api/'
 export default {
     components: { VsCode, Preview },
+    data() {
+        return {
+            id: -1
+        }
+    },
     activated() {
-        this.preview()
+        if (this.$route.query.id != null && this.$route.query.id != this.id) {
+            this.id = this.$route.query.id
+            this.axios(API.snippet.getSnippet(this.id)).then(res => {
+                if (res.data.data == null) {
+                    this.$message.error('该代码片段已下架或者被删除！')
+                }
+                this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
+                this.$refs.preview.goPreview(res.data.data.content)
+            }).catch((e) => {
+                console.log(e)
+            })
+        } else {
+            this.preview()
+        }
     },
     methods: {
         preview() {

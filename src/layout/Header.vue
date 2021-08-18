@@ -58,7 +58,7 @@ export default {
         font-size: 20px;
     }
     .header {
-        z-index: 99999;
+        z-index: 10;
         top: 0px;
         left: 0px;
         width: 100%;

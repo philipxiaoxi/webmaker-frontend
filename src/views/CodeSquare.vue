@@ -6,7 +6,7 @@
             </el-carousel-item>
         </el-carousel>
         <div class="codes">
-            <code-card @click="goTo(item)" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
+            <code-card @click.native="goTo(item)" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
         </div>
         <div style="margin-top:20px;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
     </div>
@@ -58,7 +58,9 @@ export default {
                 console.log(e)
             })
         },
-        goTo() {}
+        goTo(item) {
+            this.$router.push({ path: '/editor', query: { id: item.id } })
+        }
     }
 }
 </script>
