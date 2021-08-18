@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="container">
         <el-carousel height="350px" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
                 <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
         <div class="codes">
-            <code-card :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
+            <code-card @click="goTo(item)" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
         </div>
         <div style="margin-top:20px;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
     </div>
@@ -57,12 +57,21 @@ export default {
             }).catch((e) => {
                 console.log(e)
             })
-        }
+        },
+        goTo() {}
     }
 }
 </script>
 
 <style lang='less' scoped>
+.container {
+    max-width: 1144px;
+    padding: 20px;
+    margin: 0 auto;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+    margin-top: 80px;
+    margin-bottom: 20px;
+}
 .el-carousel {
     margin-bottom: 20px;
 }

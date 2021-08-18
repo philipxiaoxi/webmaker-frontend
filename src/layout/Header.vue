@@ -26,7 +26,7 @@ export default {
                 },
                 {
                     name: '代码编辑',
-                    path: '/code-editor'
+                    path: '/editor'
                 },
                 {
                     name: '搜索片段',

@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>贪玩方块Minecraft服务器</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://mc.xiaotao2333.top:344src/css/style.css">
+    <script src="https://mc.xiaotao2333.top:344/lib/skinview3d.bundle.js"></script>
+</head>
+<body class="mdui-theme-primary-indigo mdui-appbar-with-toolbar mdui-appbar-with-tab">
+    <!-- 背景图遮罩，叠一层白色 -->
+    <div class="mask"></div>
+
+    <!-- 网页标头header -->
+    <header style="user-select: none;">
+        <div class="mdui-appbar mdui-appbar-scroll-toolbar-hide mdui-appbar-fixed my-header">
+            <!-- 大标题 -->
+            <div class="mdui-toolbar mdui-color-theme">
+                <h1 class="mdui-typo-title">贪玩方块MC服务器（测试运行中）</h1>
+                <div class="mdui-toolbar-spacer"></div>
+            </div>
+
+            <!-- 标签按钮组 -->
+            <div class="mdui-tab mdui-color-theme" mdui-tab id="tab">
+                <a href="#tab1" id="index_btn" onclick="show('index')" class="mdui-ripple mdui-ripple-white">首页</a>
+                <a href="#tab2" id="download_btn" onclick="show('download')" class="mdui-ripple mdui-ripple-white">下载</a>
+                <a href="#tab3" id="skin_btn" onclick="show('skin')" class="mdui-ripple mdui-ripple-white">皮肤</a>
+                <a href="#tab3" id="about_btn" onclick="show('about')" class="mdui-ripple mdui-ripple-white">关于</a>
+            </div>
+        </div>
+    </header>
+    <main class="mdui-typo mdui-container my-main">
+        <!-- 关于标签 -->
+        <div id="about" name="tab">
+            <h3>本站技术架构</h3>
+            <p>以技术分享为目的，在这里说明以下用到的技术架构</p>
+            <div class="mdui-table-fluid">
+                <table class="mdui-table" style="overflow: hidden;">
+                    <tbody>
+                        <tr>
+                            <td>Web服务器程序</td>
+                            <td>Nginx</td>
+                        </tr>
+                        <tr>
+                            <td>后端程序设计语言</td>
+                            <td>PHP</td>
+                        </tr>
+                        <tr>
+                            <td>前端UI框架</td>
+                            <td>
+                                <a target="_blank" href="https://www.mdui.org/">MDUI</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>用到的第三方JavaScript库</td>
+                            <td>
+                                <a target="_blank" href="https://github.com/bs-community/skinview3d">skinview3d</a>
+                                <span> | </span>
+                                <a target="_blank" href="https://threejs.org/">three.js(skinview3d依赖)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>操作系统</td>
+                            <td>GNU/Linux (Debian 9) x86_64</td>
+                        </tr>
+                        <tr>
+                            <td>服务器提供商</td>
+                            <td>自建</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 皮肤标签 -->
+        <div name="tab" id="skin">
+            <h3>贪玩方块皮肤站(试运行)</h3>
+            <div class="mdui-panel" mdui-panel>
+                <div class="mdui-panel-item">
+                    <div class="mdui-panel-item-header">
+                        <div class="mdui-panel-item-title">皮肤站说明</div>
+                        <div class="mdui-panel-item-summary">正版皮肤？LittleSkin？Skinme？</div>
+                        <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                    </div>
+                    <div class="mdui-panel-item-body">
+                        <p>你可以在这里操作你的角色在本皮肤站上的皮肤和披风，没有账号验证系统是因为我相信各位都是高素质有道德的玩家</p>
+                        <p>整合包中使用了皮肤模组（CustomSkinLoader）实现了第三方皮肤站支持</p>
+                        <p>皮肤加载顺序：贪玩方块皮肤站 > 正版 > LittleSkin > BlessingSkin > ElyBy > Skinme > </p>
+                        <p>皮肤加载优先级按上述顺序进行加载，直到成功加载</p>
+                        <div class="mdui-panel-item-actions">
+                            <button class="mdui-btn mdui-ripple" mdui-panel-item-close>OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-row">
+                <div class="mdui-col-xs-12 mdui-col-sm-6">
+                    <div class="mdui-textfield mdui-textfield-floating-label">
+                        <label class="mdui-textfield-label">玩家名称</label>
+                        <input id="name" class="mdui-textfield-input"/>
+                        <span>先查询，后操作</span>
+                    </div>
+                    <button class="mdui-btn mdui-color-theme" onclick="getskin()">查询</button>
+
+                    
+                    <!-- 皮肤展示与操作卡片 -->
+                    <div class="mdui-card" name="skin-card" style="display: none;margin-top: 10px;">
+                        <div class="mdui-card-header">
+                            <h4>操作</h4>
+                        </div>
+                        <div class="mdui-card-content">
+                            <span>原皮肤图片展示</span>
+                            <div class="mdui-divider"></div>
+                            <div class="mdui-row-xs-2 skin">
+                                <!-- 披风与皮肤原图展示 -->
+                                <div class="mdui-row">
+                                    <div class="mdui-col skin-origin">
+                                        <img id="skin-img" src="" alt="没有皮肤">
+                                    </div>
+                                    <div class="mdui-col skin-origin">
+                                        <img id="cape-img" src="" alt="没有披风">
+                                    </div>
+                                </div>
+                                <!-- 上传按钮组 -->
+                                <div class="mdui-row">
+                                    <div class="mdui-col">
+                                        <button class="mdui-btn mdui-color-theme" onclick="upload('skin')">上传皮肤</button>
+                                    </div>
+                                    <div class="mdui-col">
+                                        <button class="mdui-btn mdui-color-theme" onclick="upload('cape')">上传披风</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-col-xs-12  mdui-col-sm-6">
+                    <!-- 3D预览卡片 -->
+                    <div class="mdui-card" name="skin-card" style="display: none;margin-top: 25px;">
+                        <div class="mdui-card-header">
+                            <h4>预览</h4>
+                        </div>
+                        <div class="mdui-card-content">
+                            <span>拖动旋转，滚轮/触屏双指缩放</span>
+                            <div class="mdui-divider"></div>
+                            <canvas  id="skin_viewer"></canvas>
+                            <div class="mdui-divider"></div>
+                        </div>
+                        <div class="mdui-container">
+                            <div class="mdui-row">
+                                <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-3 mdui-col-md-2">
+                                    <label class="mdui-radio">
+                                        <input value="none" type="radio" name="motion-stat"/>
+                                        <i class="mdui-radio-icon"></i>
+                                        无
+                                    </label>
+                                </div>
+                                <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-3 mdui-col-md-2">
+                                    <label class="mdui-radio">
+                                        <input checked value="walk" type="radio" name="motion-stat"/>
+                                        <i class="mdui-radio-icon"></i>
+                                        走路
+                                    </label>
+                                </div>
+                                <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-3 mdui-col-md-2">
+                                    <label class="mdui-radio">
+                                        <input value="run" type="radio" name="motion-stat"/>
+                                        <i class="mdui-radio-icon"></i>
+                                        跑步
+                                    </label>
+                                </div>
+                                <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-3 mdui-col-md-2">
+                                    <label class="mdui-radio">
+                                        <input value="fly" type="radio" name="motion-stat"/>
+                                        <i class="mdui-radio-icon"></i>
+                                        芜湖
+                                    </label>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下载标签 -->
+        <div name="tab" id="download">
+            <h3>客户端下载</h3>
+            <div class="mdui-row-sm-2">
+                <div class="mdui-col">
+                    <div class="mdui-card">
+                        <div class="mdui-card-header">
+                            <h5>完整客户端（推荐新手）</h5>
+                        </div>
+                        <div class="mdui-card-content">
+                            <p>适用于没有1.16.5版本游戏客户端的新玩家</p>
+                            <p>注意：MC运行需要安装Java，如果没有安装Java，请<a href="file/java8_64.exe">点击这里</a>下载Java8 64位版本安装</p>
+                            <p>SHA1: C089EC83BF6BBB786D583209178ECEDF3D948414</p>
+                            <p>大小: 449456851 字节 (428 MiB)</p>
+                            <a href="file/Minecraft.zip"><button class="mdui-btn mdui-color-theme mdui-ripple">点击下载</button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-col">
+                    <div class="mdui-card">
+                        <div class="mdui-card-header">
+                            <h5>Mod包+配置</h5>
+                        </div>
+                        <div class="mdui-card-content">
+                            <p>适用于自行配置安装/配置客户端的玩家</p>
+                            <p>SHA1: 38DDD7F808C61063455E9E7D708175825B77FD49</p>
+                            <p>大小: 23530923 字节 (22 MiB)</p>
+                            <a href="file/Minecraft-ModOnly.zip"><button class="mdui-btn mdui-color-theme mdui-ripple">点击下载</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-row-sm-2">
+                <h3>启动器&整合包</h3>
+                <div class="mdui-col">
+                    <div class="mdui-card">
+                        <div class="mdui-card-header">
+                            <h5>MultiMC/HMCL实例</h5>
+                        </div>
+                        <div class="mdui-card-content">
+                            <p>可直接导入现有的启动器中作为一个独立MC版本实例，支持HMCL和MultiMC启动器</p>
+                            <p>SHA1: 7A897442B3D3636889CB083517B85C2D1BAE70DB</p>
+                            <p>大小: 22830659 字节 (21 MiB)</p>
+                            <a href="file/MultiMC.zip"><button class="mdui-btn mdui-color-theme mdui-ripple">点击下载</button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdui-col">
+                    <div class="mdui-card">
+                        <div class="mdui-card-header">
+                            <h5>HMCL启动器</h5>
+                        </div>
+                        <div class="mdui-card-content">
+                            <p>可直接导入现有的启动器中作为一个独立MC版本实例，支持HMCL和MultiMC启动器</p>
+                            <p>SHA1: CD0EAC415898C874BDDB3D9C4FB4D10EB7863CBB</p>
+                            <p>大小: 2968839 字节 (2899 KiB)</p>
+                            <a href="file/HMCL-3.3.181.jar"><button class="mdui-btn mdui-color-theme mdui-ripple">点击下载</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mdui-row-sm-2">
+                
+                <h3>运行环境和其他附件</h3>
+                <div class="mdui-col">
+                    <div class="mdui-card">
+                        <div class="mdui-card-header">
+                            <h5>Java</h5>
+                        </div>
+                        <div class="mdui-card-content">
+                            <p>Minecraft运行环境，必备</p>
+                            <p>SHA1: F3CB0F6E2773B4885E436986A67F3AEA48A28DBB</p>
+                            <p>大小: 71581248 字节 (68 MiB)</p>
+                            <a href="file/java8_64.exe"><button class="mdui-btn mdui-color-theme mdui-ripple">点击下载</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 首页标签 -->
+        <div name="tab" id="index">
+            <h3>服务器简介</h3>
+            <div class="mdui-card">
+                <div class="mdui-card-content">
+                    <p>这是一个用爱发电的免费非盈利公益服务器，玩法为原版+MOD纯生存联机，没有花里胡哨的服务器插件和玩法以及收费项目，每个玩家在服务器中都拥有几乎无限制的自由，但需要遵守以下规则：
+                        <ol>
+                            <li>不得进行人身攻击，辱骂他人</li>
+                            <li>不得随意破坏他人方块，作品</li>
+                            <li>不得恶意PVP</li>
+                        </ol>
+                    </p>
+                    <p>服务器目前处于测试状态，可能会有各种各样的bug</p>
+                    <p>注意：服务器列表刷新响应时间可能会比较长，但服务器无特殊情况都是24小时开启的，直接点击进去即可，首次进入时间可能会比较长（服务端的问题，后续可能会修复），耐心等待即可</p>
+                    <p>需要下载请<a href="javascript:;" onclick="document.querySelector('#download_btn').click()">点击这里</a></p>
+                    <p>本站皮肤服务<a href="javascript:;" onclick="document.querySelector('#skin_btn').click()">点击这里</a></p>
+                </div>
+            </div>
+            <h3>服务器基本信息</h3>
+            <div class="mdui-table-fluid">
+                <table class="mdui-table" style="overflow: hidden;">
+                    <tbody>
+                        <tr>
+                            <td>服务器地址</td>
+                            <td>www.xiaotao2333.top</td>
+                        </tr>
+                        <tr>
+                            <td>服务器版本</td>
+                            <td>1.16.5</td>
+                        </tr>
+                        <tr>
+                            <td>Mod API</td>
+                            <td>Forge</td>
+                        </tr>
+                        <tr>
+                            <td>内存</td>
+                            <td>4096MiB</td>
+                        </tr>
+                        <tr>
+                            <td>服务端类型</td>
+                            <td>Mohits（插件+mod）</td>
+                        </tr>
+                        <tr>
+                            <td>正版验证</td>
+                            <td>无</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js" integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A" crossorigin="anonymous"></script>
+    <script src="https://mc.xiaotao2333.top:344/src/js/FileUtils.js"></script>
+    <script src="https://mc.xiaotao2333.top:344/src/js/tabControl.js"></script>
+    <script src="https://mc.xiaotao2333.top:344/src/js/skinControl.js"></script>
+    <script>
+        // 调试模式开关，开启调试模式时，所有标签页内容合并到同一个标签页内容中
+        // debug = true
+
+        hidAll()
+        show('index')
+    </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>bootstrap作业-2018131902黄鉴熙</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">网格系统</a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#table">表格</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#form">表单</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#module">模块</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div id="table" class="container tab-pane active"><br>
+            <h3>table</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>产品</th>
+                            <th>付款时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>涛哥云主机</td>
+                            <td>2021-12-09</td>
+                            <td>已发货</td>
+                        </tr>
+                        <tr>
+                            <td>涛哥云主机</td>
+                            <td>2021-12-09</td>
+                            <td>已发货</td>
+                        </tr>
+                        <tr>
+                            <td>涛哥云主机</td>
+                            <td>2021-12-09</td>
+                            <td>已发货</td>
+                        </tr>
+                        <tr>
+                            <td>涛哥云主机</td>
+                            <td>2021-12-09</td>
+                            <td>已发货</td>
+                        </tr>
+                        <tr>
+                            <td>涛哥云主机</td>
+                            <td>2021-12-09</td>
+                            <td>已发货</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="form" class="container tab-pane fade"><br>
+            <h3 style="text-align: center;">form</h3>
+            <form style="max-width: 500px;margin: 0 auto;">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox"> Remember me
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div id="module" class="container tab-pane fade"><br>
+            <h3>module</h3>
+            <!-- 按钮：用于打开模态框 -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                打开模态框
+            </button>
+            <br>
+            <br>
+            <br>
+            <h2>简单的折叠</h2>
+            <p>点击按钮内容会再显示与隐藏之间切换。</p>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">简单的折叠</button>
+            <div id="demo" class="collapse">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </div>
+            <br>
+            <br>
+            <br>
+            <h2>提示框</h2>
+            <p>提示框可以使用 .alert 类, 后面加上指定特定意义的颜色类来实现:</p>
+            <div class="alert alert-success">
+                <strong>成功!</strong> 指定操作成功提示信息。
+            </div>
+            <div class="alert alert-info">
+                <strong>信息!</strong> 请注意这个信息。
+            </div>
+        </div>
+    </div>
+        <!-- 模态框 -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">模态框头部</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- 模态框主体 -->
+                    <div class="modal-body">
+                        模态框内容..
+                    </div>
+
+                    <!-- 模态框底部 -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+    </style>
+    <script>
+        var as = $('#collapsibleNavbar a')
+        var a="121"
+        console.log(a)
+        console.log(as)
+        $('#collapsibleNavbar a').bind('click', e => {
+            console.log(as)
+            setTimeout(() => {
+                for (let i = 0; i < as.length; i++) {
+                    const element = as[i];
+                    console.log(element)
+                    element.classList.remove('active')
+                }
+            }, 10);
+
+            $(this).add("active");
+        })
+
+    </script>
+</body>
+
+</html>

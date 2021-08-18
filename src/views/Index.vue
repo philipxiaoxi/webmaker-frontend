@@ -4,9 +4,9 @@
 <template>
     <div >
         <Header ></Header>
-        <div class="container">
+        <keep-alive>
             <router-view></router-view>
-        </div>
+        </keep-alive>
     </div>
 </template>
 
@@ -19,13 +19,4 @@ export default {
 </script>
 
 <style>
-
-.container {
-    padding: 20px;
-    max-width: 1144px;
-    margin: 0 auto;
-    box-shadow:0 0 36.8px 9.2px rgb(16 37 65 / 10%);
-    margin-top: 80px;
-    margin-bottom: 20px;
-}
 </style>
