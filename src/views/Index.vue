@@ -26,5 +26,6 @@ export default {
     margin: 0 auto;
     box-shadow:0 0 36.8px 9.2px rgb(16 37 65 / 10%);
     margin-top: 80px;
+    margin-bottom: 20px;
 }
 </style>

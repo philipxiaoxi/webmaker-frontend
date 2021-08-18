@@ -2,15 +2,15 @@
     <div>
         <el-card style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
             <div class="heads">
-                <img src="https://blog.diyxi.top/upload/2021/08/image-784af8bb55f348e88ff12e6f1009e3ff.png" alt="">
+                <img :src="RealCodeImg" alt="">
             </div>
             <div class="headimg">
                 <div class="xx-row">
-                    <img src="https://blog.diyxi.top/upload/2021/06/5222013_huang_jianxi_1609203986%20(2)-075d4779647a487ab9bf61a201c6c6d4.png" alt="">
+                    <img :src="headimg" alt="">
                     <div class="tips">
-                        <div class="title">CodeShare代码测试片段</div>
+                        <div class="title">{{title}}</div>
                         <div class="info">
-                            <div class="author">黄鉴熙</div>
+                            <div class="author">{{author}}</div>
                             <el-tag style="margin-left: 10px;margin-top: 1px;" type="info" size="mini">实习码农</el-tag>
                         </div>
                     </div>
@@ -23,7 +23,57 @@
 
 <script>
 export default {
-
+    props: {
+        title: {
+            type: String,
+            default: 'CodeShare代码卡片展示'
+        },
+        author: {
+            type: String,
+            default: '作者'
+        },
+        codeimg: {
+            // 片段图片
+            type: String,
+            default: '/img/code.jpg'
+        },
+        headimg: {
+            // 片段图片
+            type: String,
+            default: '/img/code.jpg'
+        },
+        identity: {
+            type: Number,
+            default: -1
+        },
+        id: {
+            // 片段id
+            type: Number,
+            default: -1
+        },
+        type: {
+            type: Number,
+            default: -1
+        }
+    },
+    data() {
+        return {
+            RealCodeImg: ''
+        }
+    },
+    mounted() {
+        this.getCodeimg(this.id)
+    },
+    methods: {
+        async getCodeimg(id) {
+            const res = await this.axios.get(`/common/getSnippetImg/${id}`)
+            if (res.data.data != null) {
+                this.RealCodeImg = res.data.data
+            } else {
+                this.RealCodeImg = this.codeimg
+            }
+        }
+    }
 }
 </script>
 
@@ -31,6 +81,7 @@ export default {
 .heads {
     img {
         width: 100%;
+        height: 250px;
         padding-bottom: 0px;
     }
 }
@@ -61,6 +112,11 @@ export default {
     }
     .title {
         font-size: 1.1em;
+        white-space: nowrap;
+        font-size: 1.1em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 260px;
     }
     .author {
         color: #717790;
