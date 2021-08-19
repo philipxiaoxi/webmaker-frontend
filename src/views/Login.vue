@@ -2,6 +2,12 @@
     <div class="container">
         <div class="login-card">
             <h1>登录</h1>
+            <el-alert
+                class="input"
+                title="您好，欢迎使用CodeShare，新版本处于开发阶段。"
+                type="info"
+                :closable="false">
+            </el-alert>
             <xx-input class="input" placeholder="请输入账号" v-model="form.account"></xx-input>
             <xx-input class="input" placeholder="请输入密码" v-model="form.password"></xx-input>
             <div>
