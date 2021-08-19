@@ -11,6 +11,24 @@
             <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path" :class="{active: routePath == link.path}">
                 <span>{{link.name}}</span>
             </router-link>
+            <!-- 登录注册选项 -->
+            <div v-if="this.$store.state.userInfo.phone=='未登录'">
+                <router-link  to="/login" :class="{active: routePath == '/login'}">
+                    <span>登录</span>
+                </router-link>
+                <router-link  to="/sign" :class="{active: routePath == '/sign'}">
+                    <span>注册</span>
+                </router-link>
+            </div>
+            <!-- 用户选项 -->
+            <div v-else>
+                <router-link   to="/my" :class="{active: routePath == '/my'}">
+                    <span>个人中心</span>
+                </router-link>
+                <span  >xiaoxi233</span>
+                <span  >退出</span>
+            </div>
+
         </div>
     </div>
 </template>
@@ -35,10 +53,6 @@ export default {
                 {
                     name: '我的片段',
                     path: '/my-codes'
-                },
-                {
-                    name: '个人中心',
-                    path: '/my'
                 }
             ],
             routePath: '/'
@@ -76,7 +90,12 @@ export default {
         display: flex;
         transition: all 0.3s;
         height: 100%;
-        > * {
+        >div {
+            display: flex;
+            margin:  0px;
+            padding: 0px;
+        }
+        * {
             text-decoration: none;
             line-height: 60px;
             position: relative;
@@ -101,6 +120,5 @@ export default {
                 width: 100%;
             }
         }
-
     }
 </style>

@@ -5,8 +5,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        token: '',
+        userInfo: { phone: '未登录' }
     },
     mutations: {
+        setUserInfo(state, userInfo) {
+            state.userInfo = userInfo
+        },
+        setToken(state, token) {
+            state.token = token
+        }
     },
     actions: {
     },
