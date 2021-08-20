@@ -1,6 +1,6 @@
 <template>
     <div style="width: 100%;height:100%;">
-        <mavon-editor style="width: 100%;height:100%;" v-model="content" ></mavon-editor>
+        <mavon-editor style="width: 100%;height:100%;" v-model="$parent.$parent.item.note" ></mavon-editor>
     </div>
 </template>
 
@@ -9,10 +9,6 @@ export default {
     name: 'Note',
     components: {},
     props: {
-        note: {
-            type: String,
-            default: ''
-        }
     },
     data() {
         return {
@@ -23,9 +19,6 @@ export default {
     computed: {
     },
     watch: {
-        note() {
-            this.content = this.note
-        }
     }
 }
 </script>
