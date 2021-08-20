@@ -109,6 +109,7 @@ export default {
                     if (this.item.type == 1) {
                         this.drawer = true
                     } else {
+                        this.$refs.vscode.setModelLanguage('html')
                         this.$refs.filesManager.data = []
                     }
                 }).catch((e) => {
