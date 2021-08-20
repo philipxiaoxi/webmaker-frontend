@@ -38,6 +38,7 @@ export default {
             // 定义图片类型文档
             const pic_types = ['jpg', 'jpeg', 'png', 'gif']
             const type = this.getFileType(data.label)
+            this.fileType = type
             if (data.type == 'file') {
                 // 判断是否为图片类文件
                 if (pic_types.indexOf(type) > -1) {

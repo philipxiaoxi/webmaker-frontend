@@ -42,6 +42,13 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
     function(response) {
     // Do something with response data
+        // 当后端返回数组没有遵守规定的返回格式直接返回结果
+        if (response.data.data == undefined || response.data.data == null) {
+            return response
+        }
+        if (response.data.status != 200) {
+            return Promise.reject(response.data.data)
+        }
         return response
     },
     function(error) {

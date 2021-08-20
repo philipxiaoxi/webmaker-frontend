@@ -59,35 +59,52 @@ export default {
         }
     },
     activated() {
-        if (this.$route.query.id != null && this.$route.query.id != this.id) {
-            this.id = this.$route.query.id
-            this.axios(API.snippet.getSnippet(this.id)).then(res => {
-                if (res.data.data == null) {
-                    this.$message.error('该代码片段已下架或者被删除！')
-                }
-                // 赋值片段信息
-                this.item = res.data.data
-                // 赋值到编辑器
-                this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
-                // 预览
-                this.$refs.preview.goPreview(res.data.data.content)
-                // 告知抽屉需要重新渲染
-                this.drawerOpenStatus = false
-                // 抽屉自动打开
-                if (this.item.type == 1) {
-                    this.drawer = true
-                }
-            }).catch((e) => {
-                console.log(e)
-            })
-        } else {
-            this.preview()
-        }
+        this.checkStatus()
     },
     mounted() {
         this.dragControllerMiddle()
     },
     methods: {
+        /**
+         * 检测当前编辑器打开状态
+         * 如果是第一次打开则加载片段
+         * 否则直接预览
+         * @Ahthor: xiaoxi
+         */
+        checkStatus() {
+            if (this.$route.query.id != null && this.$route.query.id != this.id) {
+                this.id = this.$route.query.id
+                this.axios(API.snippet.getSnippet(this.id)).then(res => {
+                    if (res.data.data == null) {
+                        this.$message.error('该代码片段已下架或者被删除！')
+                    }
+                    // 赋值片段信息
+                    this.item = res.data.data
+                    console.log(this.item)
+                    // 赋值到编辑器
+                    this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
+                    // 预览
+                    this.$refs.preview.goPreview(res.data.data.content)
+                    // 告知抽屉需要重新渲染
+                    this.drawerOpenStatus = false
+                    // 抽屉自动打开
+                    if (this.item.type == 1) {
+                        this.drawer = true
+                    } else {
+                        this.$refs.filesManager.data = []
+                    }
+                }).catch((e) => {
+                    console.log(e)
+                })
+            } else {
+                this.preview()
+            }
+        },
+        /**
+         * 设置编辑器内容并自动渲染
+         * @Ahthor: xiaoxi
+         * @param {*} data
+         */
         setValue(data) {
             // 赋值到编辑器
             this.$refs.vscode.monacoEditor.getModel().setValue(data.data)
@@ -98,13 +115,21 @@ export default {
                 this.preview()
             }, 100)
         },
+        /**
+         * 抽屉打开获取目录
+         * @Ahthor: xiaoxi
+         */
         drawerOpen() {
             // 获取片段结构
-            if (!this.drawerOpenStatus) {
+            if (!this.drawerOpenStatus && this.item.type == 1) {
                 this.$refs.filesManager.getSnippetProject(this.item.id)
             }
             this.drawerOpenStatus = true
         },
+        /**
+         * 拖拽调整宽度
+         * @Ahthor: xiaoxi
+         */
         dragControllerMiddle() {
             // 总盒子
             const box = document.getElementsByClassName('con')[0]
@@ -145,14 +170,96 @@ export default {
                 return false
             }
         },
+        /**
+         * 代码预览
+         * @Ahthor: xiaoxi
+         */
         preview() {
             const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.item.id}/" />`
             const content = this.$refs.vscode.value
             this.$refs.preview.goPreview(base + content)
         },
+        /**
+         * 改变iframe遮罩显示
+         * @Ahthor: xiaoxi
+         * @param {*} display
+         */
         changeIframeDivStyle(display) {
             var iframeDiv = document.getElementsByClassName('iframeDiv')
             iframeDiv[0].style.display = display
+        },
+        /**
+         * 更新单页面代码片段
+         * @Ahthor: xiaoxi
+         * @param {*} value
+         * @param {*} img
+         */
+        updateSnippet(value, img) {
+            this.item.content = value
+            this.item.img = img
+            this.axios(API.snippet.updateSnippet(this.item)).then(() => {
+                this.$message({
+                    message: '保存成功！',
+                    type: 'success'
+                })
+            }).catch((e) => {
+                this.$message.error(e)
+            })
+        },
+        /**
+         * 更新项目里面的文件
+         * @Ahthor: xiaoxi
+         * @param {*} code
+         * @param {*} img
+         */
+        projectFileSave(code, img) {
+            if (this.$refs.filesManager.selectNode == null) {
+                this.$message({
+                    message: '没有任何文件被打开。',
+                    type: 'info'
+                })
+                return
+            }
+            const pic_types = ['jpg', 'jpeg', 'png', 'gif']
+            if (pic_types.indexOf(this.$refs.filesManager.fileType) > -1) {
+                this.$message.error('图片只能预览，无法修改。')
+                return
+            }
+            this.axios(API.snippetProject.updateSnippetProjectFile(this.$refs.filesManager.selectNode.path, code)).then(() => {
+                if (this.$refs.filesManager.fileType == 'html') {
+                    this.updateSnippet('', img)
+                } else {
+                    this.$message({
+                        message: '文件保存成功！',
+                        type: 'success'
+                    })
+                }
+            }).catch((e) => {
+                this.$message.error(e)
+            })
+        },
+        /**
+         * 保存修改函数
+         * 判断当前片段类型执行对应的更新方法
+         * @Ahthor: xiaoxi
+         */
+        save() {
+            if (this.item.id == undefined) {
+                this.$message.error('当前没有项目或单页应用被打开。')
+                return
+            }
+            switch (this.item.type) {
+            case 0:
+                // 单页应用保存
+                this.updateSnippet(this.$refs.vscode.monacoEditor.getModel().getValue(), this.item.img)
+                break
+            case 1:
+                // 项目文件保存
+                this.projectFileSave(this.$refs.vscode.monacoEditor.getModel().getValue(), this.item.img)
+                break
+            default:
+                break
+            }
         }
     }
 }

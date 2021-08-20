@@ -7,7 +7,7 @@
                 <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
             </el-tooltip>
             <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
-            <el-button type="primary" round size="mini" >保存</el-button>
+            <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
             <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
             <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
         </div>
