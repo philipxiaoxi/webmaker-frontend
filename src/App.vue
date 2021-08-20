@@ -8,8 +8,33 @@
 <script>
 import Index from './views/Index.vue'
 export default {
-    components: { Index }
-
+    components: { Index },
+    mounted() {
+        const res = localStorage.getItem('token')
+        if (res != null) {
+            this.$store.commit('setToken', { data: res })
+            this.getUserInfo()
+        }
+    },
+    methods: {
+        getUserInfo() {
+            const p = new Promise((resolve) => {
+                this.axios.get('/api/getUserInfo').then(res => {
+                    resolve(res)
+                    this.$message({
+                        message: `欢迎您回来，${res.data.data.name}`,
+                        type: 'success'
+                    })
+                    this.$store.commit('setUserInfo', res.data.data)
+                }).catch((e) => {
+                    console.log(e)
+                    this.$message.error(e)
+                    localStorage.clear('token')
+                })
+            })
+            return p
+        }
+    }
 }
 </script>
 

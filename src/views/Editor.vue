@@ -62,9 +62,27 @@ export default {
         this.checkStatus()
     },
     mounted() {
-        this.dragControllerMiddle()
+        this.init()
     },
     methods: {
+
+        /**
+         * 执行一次的初始化
+         * 按键绑定
+         * 开启自由调整鼠标拖拽事件监听
+         * @Ahthor: xiaoxi
+         */
+        init() {
+            // ctrl+s保存
+            document.onkeydown = (event) => {
+                const key = window.event.keyCode
+                if (key == 83 && event.ctrlKey) { //= = 83 && event.ctrlKey
+                    window.event.preventDefault() // 关闭浏览器快捷键
+                    this.save()
+                }
+            }
+            this.dragControllerMiddle()
+        },
         /**
          * 检测当前编辑器打开状态
          * 如果是第一次打开则加载片段
