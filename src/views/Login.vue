@@ -8,10 +8,10 @@
                 type="info"
                 :closable="false">
             </el-alert>
-            <xx-input class="input" placeholder="请输入账号" v-model="form.account"></xx-input>
-            <xx-input class="input" placeholder="请输入密码" v-model="form.password"></xx-input>
+            <xx-input class="input" placeholder="请输入手机号" v-model="form.phone"></xx-input>
+            <xx-input class="input" placeholder="请输入密码" v-model="form.password" type="password"></xx-input>
             <div>
-                <el-button style="width: 200px;" type="primary" round>登录</el-button>
+                <el-button style="width: 200px;" type="primary" round @click="login">登录</el-button>
             </div>
             <div>
                 <el-link type="info">使用咸鱼云通行证登录</el-link>
@@ -23,11 +23,57 @@
 
 <script>
 import XxInput from '../components/XxInput.vue'
+import API from '../api/'
 export default {
     components: { XxInput },
     data() {
         return {
             form: {}
+        }
+    },
+    mounted() {
+
+    },
+    methods: {
+        async login() {
+            await this.getToken()
+            await this.getUserInfo()
+        },
+        getToken() {
+            const p = new Promise((resolve, reject) => {
+                const param = new URLSearchParams()
+                param.append('phone', this.form.phone)
+                param.append('password', this.form.password)
+                this.axios(API.user.getToken(this.form.phone, this.form.password)).then((res) => {
+                    console.log(res.data)
+                    if (res.data.status == 401) {
+                        this.$message.error(res.data.data)
+                        reject(res)
+                    } else {
+                        this.$store.commit('setToken', res.data)
+                        localStorage.setItem('token', res.data.data)
+                        resolve(res)
+                    }
+                }).catch((e) => {
+                    console.log(e)
+                    this.$message.error(e)
+                })
+            })
+            return p
+        },
+        getUserInfo() {
+            const p = new Promise((resolve) => {
+                this.axios.get('/api/getUserInfo').then(res => {
+                    resolve(res)
+                    this.$message({
+                        message: `欢迎您回来，${res.data.data.name}`,
+                        type: 'success'
+                    })
+                    this.$store.commit('setUserInfo', res.data.data)
+                    this.$router.push({ path: '/' })
+                })
+            })
+            return p
         }
     }
 }

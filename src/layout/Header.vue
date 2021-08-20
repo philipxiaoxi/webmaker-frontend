@@ -25,10 +25,9 @@
                 <router-link   to="/my" :class="{active: routePath == '/my'}">
                     <span>个人中心</span>
                 </router-link>
-                <span  >xiaoxi233</span>
-                <span  >退出</span>
+                <span  >{{this.$store.state.userInfo.name}}</span>
+                <span style="cursor: pointer;"  @click="logout">退出</span>
             </div>
-
         </div>
     </div>
 </template>
@@ -62,6 +61,17 @@ export default {
         $route(to, from) {
             this.routePath = to.path
             document.documentElement.scrollTop = 0
+        }
+    },
+    methods: {
+        logout() {
+            localStorage.clear('token')
+            this.$store.commit('setToken', null)
+            this.$store.commit('setUserInfo', { phone: '未登录' })
+            this.$message({
+                message: '勤奋的coder，欢迎下次再来~',
+                type: 'success'
+            })
         }
     }
 }

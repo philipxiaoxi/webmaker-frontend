@@ -2,7 +2,8 @@
 
 import Vue from 'vue'
 import axios from 'axios'
-
+import store from '../store'
+import qs from 'qs'
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -16,10 +17,19 @@ const config = {
 }
 
 const _axios = axios.create(config)
-
+_axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 _axios.interceptors.request.use(
     function(config) {
     // Do something before request is sent
+        if (store.state.token != null) {
+            config.headers.token = store.state.token.data
+        }
+        if (config.data !== undefined && config.method !== 'get') {
+            const name = config.data.constructor.name
+            if (name !== 'FormData' && config.headers['Content-Type'].indexOf('json') === -1) {
+                config.data = qs.stringify(config.data)
+            }
+        }
         return config
     },
     function(error) {
