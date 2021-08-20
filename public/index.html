@@ -5,9 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <!--  引入加载动画  -->
+    <link rel="stylesheet" type="text/css" href="/css/loading.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
+    <div id="loading">
+      <div style="padding: 300px 0;">
+        <div class="loadingcontainer" style="margin: 0 auto;">
+          <div class="item a"></div>
+          <div class="item b"></div>
+          <div class="item c"></div>
+        </div>
+        <p style="font-size: 18px; margin-top: 30px; text-align: center;">页面加载中，喝口水先，不急。</p>
+      </div>
+    </div>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

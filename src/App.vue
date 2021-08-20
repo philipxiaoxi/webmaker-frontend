@@ -16,6 +16,12 @@ export default {
             this.getUserInfo()
         }
     },
+    created() {
+        const loading = document.getElementById('loading')
+        if (loading !== null) {
+            document.body.removeChild(loading)
+        }
+    },
     methods: {
         getUserInfo() {
             const p = new Promise((resolve) => {
