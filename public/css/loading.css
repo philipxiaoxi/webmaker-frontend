@@ -2,34 +2,39 @@
     position: relative;
     text-align: center;
     width: 100px;
-  }
-  
-  .item {
+} 
+.loadingitem {
     display: inline-block;
     height: 15px;
     width: 15px;
     border-radius: 50%;
     background: #969aec;;
-    animation: item 1s ease-in-out infinite;
-  }
-  .b {
+    animation: loadingitem 1s ease-in-out infinite;
+}
+.b {
     animation-delay: .2s;
-  }
-  .c {
+}
+.c {
     animation-delay: .4s;
-  }
-  @keyframes item {
+}
+@keyframes loadingitem {
     0% {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
     }
     50% {
-      transform: translateY(20px);
-      opacity: 0;
+        transform: translateY(20px);
+        opacity: 0;
     }
     100% {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
     }
-  }
+}
+.loadingcenter{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
   
