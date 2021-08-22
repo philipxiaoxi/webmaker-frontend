@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import CodeSquare from '../views/CodeSquare.vue'
 import Editor from '../views/Editor.vue'
 import Login from '../views/Login.vue'
-
+import My from '../views/My.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +21,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/my',
+        name: 'My',
+        component: My
     }
 ]
 
