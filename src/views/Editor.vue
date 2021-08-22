@@ -58,6 +58,8 @@ export default {
             drawerOpenStatus: false
         }
     },
+    deactivated() {
+    },
     activated() {
         this.checkStatus()
     },
@@ -98,6 +100,8 @@ export default {
                     }
                     // 赋值片段信息
                     this.item = res.data.data
+                    // 赋值到标题
+                    document.title = this.item.title + ' - CodeShare'
                     console.log(this.item)
                     // 赋值到编辑器
                     this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
