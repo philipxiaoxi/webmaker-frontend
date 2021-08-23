@@ -3,7 +3,7 @@
         <div class="codes">
             <code-card :headimg="'https://api.sunweihu.com/api/sjtx/api.php?lx=a1&t=' + Math.random()" @click.native="goTo(item)" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
         </div>
-        <div style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
+        <div class="obItem" style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
     </div>
 </template>
 
@@ -26,15 +26,29 @@ export default {
         }
     },
     mounted() {
-        switch (this.type) {
-        case 'common':
-            this.getAllSnippet()
-            break
-        default:
-            break
-        }
+        this.init()
     },
     methods: {
+        init() {
+            // 创建一个监听者
+            const observer = new IntersectionObserver((entries, observer) => {
+                if (entries[0].intersectionRatio > 0) {
+                    console.log('进入可视区域')
+                    switch (this.type) {
+                    case 'common':
+                        this.getAllSnippet()
+                        break
+                    default:
+                        break
+                    }
+                } else {
+                    console.log('移出可视区域')
+                }
+            })
+            // 指定监听元素
+            const target = document.querySelector('.obItem')
+            observer.observe(target)
+        },
         async getCodeimg(item) {
             const res = await this.axios.get(`/common/getSnippetImg/${item.id}`)
             return res.data.data
