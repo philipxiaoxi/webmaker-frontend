@@ -5,18 +5,14 @@
                 <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
-        <div class="codes">
-            <code-card :headimg="'https://api.sunweihu.com/api/sjtx/api.php?lx=a1&t=' + Math.random()" @click.native="goTo(item)" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
-        </div>
-        <div style="margin-top:20px;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
+        <codes-show></codes-show>
     </div>
 </template>
 
 <script>
-import CodeCard from '../components/CodeCard.vue'
-import API from '../api/'
+import CodesShow from '../components/CodesShow.vue'
 export default {
-    components: { CodeCard },
+    components: { CodesShow },
     data() {
         return {
             pageCount: 1,
@@ -39,28 +35,10 @@ export default {
         }
     },
     mounted() {
-        this.getAllSnippet()
+
     },
     methods: {
-        async getCodeimg(item) {
-            const res = await this.axios.get(`/common/getSnippetImg/${item.id}`)
-            return res.data.data
-        },
-        getAllSnippet() {
-            this.pageIndex = this.pageIndex + 1
-            if (this.pageIndex > this.pageCount) {
-                return
-            }
-            this.axios(API.snippet.getAllSnippet(this.pageIndex)).then(res => {
-                this.cards = this.cards.concat(res.data.data.list)
-                this.pageCount = res.data.data.lastPage
-            }).catch((e) => {
-                console.log(e)
-            })
-        },
-        goTo(item) {
-            this.$router.push({ path: '/editor', query: { id: item.id } })
-        }
+
     }
 }
 </script>
