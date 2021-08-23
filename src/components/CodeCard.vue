@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import API from '../api'
 export default {
     props: {
         title: {
@@ -62,9 +63,12 @@ export default {
         }
     },
     mounted() {
-        this.getCodeimg(this.id)
+        this.getCodeimgByFile(this.id)
     },
     methods: {
+        async getCodeimgByFile(id) {
+            this.RealCodeImg = API.getServer() + `/common/getImg/${id}`
+        },
         async getCodeimg(id) {
             const res = await this.axios.get(`/common/getSnippetImg/${id}`)
             if (res.data.data != null) {
