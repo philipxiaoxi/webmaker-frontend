@@ -1,5 +1,5 @@
 <template>
-    <div class="ForumItemContainer">
+    <div class="ForumItemContainer" @click="$emit('click')">
         <div class="container">
             <div class="xx-row">
                 <img :src="'https://api.sunweihu.com/api/sjtx/api.php?lx=a1&t=' + Math.random()" alt="">

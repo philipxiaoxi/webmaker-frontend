@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <h1>欢迎来到 CodeShare Forum（建设中）</h1>
+        <h1>欢迎来到 CodeShare Forum</h1>
         <p>你可以在此交流代码片段或使用CodeShare中遇到的问题、与他人分享使用经验。提问前请先阅读《提问的智慧》</p>
-        <forum-list :data='dataList'></forum-list>
+        <forum-list @click="goTo" :data='dataList'></forum-list>
     </div>
 </template>
 
@@ -55,7 +55,10 @@ export default {
 
     },
     methods: {
-
+        goTo(item) {
+            console.log(item)
+            this.$router.push({ path: '/forumpage', query: { id: item.id } })
+        }
     }
 }
 </script>

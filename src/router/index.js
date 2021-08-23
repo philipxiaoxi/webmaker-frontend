@@ -7,6 +7,7 @@ import My from '../views/My.vue'
 import Search from '../views/Search.vue'
 import MyCodes from '../views/MyCodes.vue'
 import Forum from '../views/Forum.vue'
+import ForumPage from '../views/ForumPage.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -44,6 +45,11 @@ const routes = [
         path: '/forum',
         name: 'Forum',
         component: Forum
+    },
+    {
+        path: '/forumpage',
+        name: 'ForumPage',
+        component: ForumPage
     }
 ]
 

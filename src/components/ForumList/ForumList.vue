@@ -9,6 +9,7 @@
         :preface="item.preface"
         :replyNum="item.replyNum"
         :showPreface="item.showPreface"
+        @click="click(item)"
         ></forum-item>
     </div>
 </template>
@@ -21,6 +22,11 @@ export default {
         data: {
             type: Array,
             default: () => { return [] }
+        }
+    },
+    methods: {
+        click(item) {
+            this.$emit('click', item)
         }
     }
 }
