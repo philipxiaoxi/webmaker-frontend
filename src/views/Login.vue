@@ -70,7 +70,7 @@ export default {
                         type: 'success'
                     })
                     this.$store.commit('setUserInfo', res.data.data)
-                    this.$router.push({ path: '/' })
+                    history.back()
                 })
             })
             return p
