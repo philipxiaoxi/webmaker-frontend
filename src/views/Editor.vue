@@ -35,7 +35,7 @@
             direction="rtl"
             size='50%'
             :modal='false'>
-            <note :value="item.note" v-model="item.note"></note>
+            <note v-model="item.note"></note>
         </el-drawer>
     </div>
 </template>
