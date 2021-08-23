@@ -38,6 +38,9 @@ export default {
                     case 'common':
                         this.getAllSnippet()
                         break
+                    case 'mycodes':
+                        this.getSnippetByUserid()
+                        break
                     default:
                         break
                     }
@@ -73,6 +76,22 @@ export default {
                 this.pageCount = res.data.data.lastPage
             }).catch((e) => {
                 console.log(e)
+            })
+        },
+        getSnippetByUserid() {
+            this.pageIndex = this.pageIndex + 1
+            if (this.pageIndex > this.pageCount) {
+                return
+            }
+            this.axios(API.snippet.getSnippetByUserid(this.pageIndex)).then(res => {
+                console.log(res.data)
+                this.cards = this.cards.concat(res.data.data.list)
+                this.pageCount = res.data.data.lastPage
+            }).catch((e) => {
+                console.log(e)
+                this.$root.$emit('showLogin', true)
+                this.pageIndex = 0
+                this.pageCount = 1
             })
         },
         goTo(item) {

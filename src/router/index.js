@@ -5,6 +5,7 @@ import Editor from '../views/Editor.vue'
 import Login from '../views/Login.vue'
 import My from '../views/My.vue'
 import Search from '../views/Search.vue'
+import MyCodes from '../views/MyCodes.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +33,11 @@ const routes = [
         path: '/search',
         name: 'Search',
         component: Search
+    },
+    {
+        path: '/My-codes',
+        name: 'MyCodes',
+        component: MyCodes
     }
 ]
 
