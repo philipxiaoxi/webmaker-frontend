@@ -22,6 +22,9 @@
             </div>
             <!-- 用户选项 -->
             <div v-else>
+                <router-link   to="/my-codes" :class="{active: routePath == '/my-codes'}">
+                    <span>我的片段</span>
+                </router-link>
                 <router-link   to="/my" :class="{active: routePath == '/my'}">
                     <span>个人中心</span>
                 </router-link>
@@ -48,10 +51,6 @@ export default {
                 {
                     name: '搜索片段',
                     path: '/search'
-                },
-                {
-                    name: '我的片段',
-                    path: '/my-codes'
                 }
             ],
             routePath: '/'
