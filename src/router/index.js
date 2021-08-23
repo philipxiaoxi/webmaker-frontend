@@ -4,6 +4,7 @@ import CodeSquare from '../views/CodeSquare.vue'
 import Editor from '../views/Editor.vue'
 import Login from '../views/Login.vue'
 import My from '../views/My.vue'
+import Search from '../views/Search.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
         path: '/my',
         name: 'My',
         component: My
+    },
+    {
+        path: '/search',
+        name: 'Search',
+        component: Search
     }
 ]
 
