@@ -51,6 +51,10 @@ export default {
                 {
                     name: '搜索片段',
                     path: '/search'
+                },
+                {
+                    name: 'CodeShare论坛',
+                    path: '/forum'
                 }
             ],
             routePath: '/'
