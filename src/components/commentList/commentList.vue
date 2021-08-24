@@ -5,7 +5,7 @@
         :key="item.id"
         :name="item.name"
         :time="item.time"
-        :replyItem="item.replyItem"
+        :replyName="item.replyName"
         :content="item.content"
         ></comment-item>
     </div>

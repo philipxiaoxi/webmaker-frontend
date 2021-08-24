@@ -15,7 +15,7 @@
             <el-link href="https://element.eleme.io" target="_blank">回复TA</el-link>
         </div>
        <div class="content">
-           <el-tag v-if="replyItem != null"><i class="el-icon-s-promotion"></i>回复[{{replyItem.name}}]的评论</el-tag>
+           <el-tag v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
             <p>
                 {{content}}
             </p>
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-    props: ['name', 'time', 'replyItem', 'content']
+    props: ['name', 'time', 'replyName', 'content']
 }
 </script>
 
