@@ -8,56 +8,36 @@
 
 <script>
 import ForumList from '../components/ForumList/ForumList.vue'
+import API from '../api/'
 export default {
     components: { ForumList },
     data() {
         return {
             form: {},
-            dataList: [
-                {
-                    id: 1,
-                    title: '一分钟教会你codeshare的正确用法！',
-                    author: '黄鉴熙',
-                    topic: '知识小课堂',
-                    showPreface: true,
-                    replyNum: 12,
-                    preface: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
-                },
-                {
-                    id: 2,
-                    title: '咸鱼云的登录窗口自定义输入框的设计，很漂亮，不来看看你血亏！',
-                    author: '莫锦涛',
-                    topic: '知识小课堂',
-                    showPreface: true,
-                    replyNum: 6,
-                    preface: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
-                },
-                {
-                    id: 3,
-                    title: '测试2333333333333333',
-                    author: '莫锦涛',
-                    topic: '知识小课堂',
-                    replyNum: 122,
-                    preface: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
-                },
-                {
-                    id: 4,
-                    title: '测试23333333333333335666666666666',
-                    author: '莫锦涛',
-                    topic: '知识小课堂',
-                    replyNum: 999,
-                    preface: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
-                }
-            ]
+            dataList: []
         }
     },
     mounted() {
-
+        this.getAllForumPage()
     },
     methods: {
         goTo(item) {
             console.log(item)
             this.$router.push({ path: '/forumpage', query: { id: item.id } })
+        },
+        async getAllForumPage() {
+            this.pageIndex = this.pageIndex ? this.pageIndex : 0
+            this.pageIndex = this.pageIndex + 1
+            if (this.pageIndex > this.pageCount) {
+                return
+            }
+            const res = await this.axios(API.forum.getAllForumPage(this.pageIndex))
+            console.log(res)
+            this.pageCount = res.data.data.lastPage
+            this.dataList = this.dataList.concat(res.data.data.list)
+            // 使前两个显示详情
+            this.dataList[0].showPreface = true
+            this.dataList[1].showPreface = true
         }
     }
 }
