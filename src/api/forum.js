@@ -24,8 +24,21 @@ const forum = {
                 id: id
             }
         }
+    },
+    /**
+     * 获取帖子回复列表
+     * @returns
+     */
+    getForumReply(id = 1, pageNum = 1) {
+        return {
+            url: '/common/getForumReply',
+            method: 'get',
+            params: {
+                id: id,
+                pageNum: pageNum
+            }
+        }
     }
-
 }
 
 module.exports = forum
