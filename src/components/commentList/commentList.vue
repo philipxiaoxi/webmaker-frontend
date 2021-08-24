@@ -7,6 +7,7 @@
         :time="item.time"
         :replyName="item.replyName"
         :content="item.content"
+        @click="click(item)"
         ></comment-item>
     </div>
 </template>
@@ -19,6 +20,11 @@ export default {
         data: {
             type: Array,
             default: () => { return [] }
+        }
+    },
+    methods: {
+        click(item) {
+            this.$emit('replyClick', item)
         }
     }
 }

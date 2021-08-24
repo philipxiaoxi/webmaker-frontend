@@ -38,6 +38,21 @@ const forum = {
                 pageNum: pageNum
             }
         }
+    },
+    /**
+     * 帖子插入一个回复
+     * @returns
+     */
+    insertForumReply(forumId, content, replyId = null) {
+        return {
+            url: '/api/insertForumReply',
+            method: 'post',
+            data: {
+                forumId: forumId,
+                content: content,
+                replyId: replyId
+            }
+        }
     }
 }
 

@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </div>
-            <el-link href="https://element.eleme.io" target="_blank">回复TA</el-link>
+            <el-link @click.native="click" target="_blank">回复TA</el-link>
         </div>
        <div class="content">
            <el-tag v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
@@ -25,7 +25,12 @@
 
 <script>
 export default {
-    props: ['name', 'time', 'replyName', 'content']
+    props: ['name', 'time', 'replyName', 'content', 'id'],
+    methods: {
+        click() {
+            this.$emit('click')
+        }
+    }
 }
 </script>
 
