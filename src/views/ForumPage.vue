@@ -15,13 +15,27 @@
                 <mavon-editor style="border: none;z-index: 0;" :toolbarsFlag='false' :boxShadow='false' :subfield='false' :editable='false' defaultOpen='preview' v-model="value"/>
             </div>
         </div>
+        <div>
+            <comment-list :data='dataList'></comment-list>
+        </div>
+        <div class="reply-tools">
+            <el-divider></el-divider>
+            <h1><i class="el-icon-s-promotion"></i>回复莫锦涛的评论</h1>
+            <note :boxShadow='false' v-model="replyContent"></note>
+            <div class="btns">
+                <el-button type="primary" round>回复TA</el-button>
+            </div>
+
+        </div>
     </div>
 </template>
 
 <script>
+import CommentList from '../components/commentList/commentList.vue'
 import ForumItem from '../components/ForumList/ForumItem.vue'
+import Note from '../components/Note.vue'
 export default {
-    components: { ForumItem },
+    components: { ForumItem, CommentList, Note },
     data() {
         return {
             form: {},
@@ -34,6 +48,35 @@ export default {
                 replyNum: 12,
                 preface: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
             },
+            dataList: [
+                {
+                    id: 1,
+                    time: '2021-05-23',
+                    name: '黄鉴熙',
+                    content: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
+                },
+                {
+                    id: 2,
+                    time: '2021-05-23',
+                    name: '莫锦涛',
+                    replyItem: { id: 1, name: '黄鉴熙' },
+                    content: '这玩意还是挺好用的。'
+                },
+                {
+                    id: 3,
+                    time: '2021-05-23',
+                    name: '黎文翀',
+                    replyItem: { id: 1, name: '莫锦涛' },
+                    content: '太拉跨了！！！'
+                },
+                {
+                    id: 4,
+                    time: '2021-05-23',
+                    name: 'Ma6Jia',
+                    content: '就不能好好玩耍了嘛。'
+                }
+            ],
+            replyContent: '',
             value: `## 广东智慧团建第三方客户端young3.0
 这是使用electron开发的广东智慧团建第三方客户端，目的是补全网页版缺失的功能如青年大学习未学名单，优化页面显示效果，优化加载速度等。并且添加一些新的实用性功能。
 
@@ -117,6 +160,17 @@ npm run electron:build
 </script>
 
 <style lang='less' scoped>
+.reply-tools {
+    text-align: left;
+    .el-button {
+        margin-top: 20px;
+    }
+    .btns {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
 .page {
     padding: 20px;
 }
