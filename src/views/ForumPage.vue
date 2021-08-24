@@ -42,41 +42,19 @@ export default {
         return {
             form: {},
             item: {},
-            dataList: [
-                {
-                    id: 1,
-                    time: '2021-05-23',
-                    name: '黄鉴熙',
-                    content: '大家好，我是大熙哥今天教会你们如何使用codeshare，代码分享平台，CodeShare网站，能够保存前端代码片段，能够实实时修改，实时预览，在每个代码片段中提供笔记的功能，介绍代码片段的实现方式或者使用方式，通过这种的方式去学习前端。另外还可以提供单页html静态或者动态前端网页链接供开发者使用。分享你的代码片段，享受开源的互利共赢的乐趣。'
-                },
-                {
-                    id: 2,
-                    time: '2021-05-23',
-                    name: '莫锦涛',
-                    replyItem: { id: 1, name: '黄鉴熙' },
-                    content: '这玩意还是挺好用的。'
-                },
-                {
-                    id: 3,
-                    time: '2021-05-23',
-                    name: '黎文翀',
-                    replyItem: { id: 1, name: '莫锦涛' },
-                    content: '太拉跨了！！！'
-                },
-                {
-                    id: 4,
-                    time: '2021-05-23',
-                    name: 'Ma6Jia',
-                    content: '就不能好好玩耍了嘛。'
-                }
-            ],
+            dataList: [],
             replyContent: ''
         }
     },
     mounted() {
     },
     activated() {
-        this.getForumPage(this.$route.query.id)
+        this.pageIndex = 0
+        this.dataList = []
+        this.item = {}
+        this.id = this.$route.query.id
+        this.getForumPage(this.id)
+        this.getForumReply()
     },
     methods: {
         goBack() {
@@ -86,6 +64,12 @@ export default {
             const res = await this.axios(API.forum.getForumPage(id))
             this.item = res.data.data
             document.documentElement.scrollTop = 0
+        },
+        async getForumReply(pageNum) {
+            this.pageIndex = this.pageIndex ? this.pageIndex : 0
+            this.pageIndex = this.pageIndex + 1
+            const res = await this.axios(API.forum.getForumReply(this.id, this.pageIndex))
+            this.dataList = res.data.data.list
         }
     }
 }
