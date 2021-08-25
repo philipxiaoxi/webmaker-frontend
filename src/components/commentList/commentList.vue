@@ -1,12 +1,13 @@
 <template>
     <div>
         <comment-item
-        v-for="item in data"
+        v-for="(item, index) in data"
         :key="item.id"
         :name="item.name"
         :time="item.time"
         :replyName="item.replyName"
         :content="item.content"
+        :index="index"
         @click="click(item)"
         ></comment-item>
     </div>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="position: relative;">
         <el-divider></el-divider>
         <div class="container">
             <div class="xx-row">
@@ -12,10 +12,19 @@
                     </div>
                 </div>
             </div>
+            <div class="levelNum">#{{index + 1}}</div>
             <el-link @click.native="click" target="_blank">回复TA</el-link>
         </div>
        <div class="content">
-           <el-tag v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
+            <el-popover
+            ref="replyShow"
+            placement="top-start"
+            :title="replyName"
+            width="200"
+            trigger="hover"
+            :content="replycontent">
+            </el-popover>
+           <el-tag v-popover:replyShow v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
             <p>
                 {{content}}
             </p>
@@ -25,7 +34,12 @@
 
 <script>
 export default {
-    props: ['name', 'time', 'replyName', 'content', 'id'],
+    props: ['name', 'time', 'replyName', 'content', 'index'],
+    data() {
+        return {
+            replycontent: '暂未支持，请稍等。'
+        }
+    },
     methods: {
         click() {
             this.$emit('click')
@@ -42,6 +56,16 @@ export default {
     align-items: center;
     text-align: justify;
     padding: 20px;
+    .levelNum {
+        position: absolute;
+        bottom: 0;
+        right: 30px;
+        font-size: 35px;
+        color: #20dbfd;
+        text-shadow: 0 0 25px #00d8ff;
+        font-family: fantasy;
+        text-align: right;
+    }
     .content {
         text-align: justify;
         padding: 0px 20px;
@@ -52,6 +76,7 @@ export default {
         .el-tag {
             margin: 0px 0px;
             margin-top: 4px;
+            cursor: pointer;
         }
     }
 }
