@@ -22,6 +22,7 @@
             :title="replyName"
             width="200"
             trigger="hover"
+            @show='replyShow'
             :content="replycontent">
             </el-popover>
            <el-tag v-popover:replyShow v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
@@ -33,16 +34,21 @@
 </template>
 
 <script>
+import API from '../../api'
 export default {
-    props: ['name', 'time', 'replyName', 'content', 'index'],
+    props: ['name', 'time', 'replyName', 'content', 'index', 'replyId'],
     data() {
         return {
-            replycontent: '暂未支持，请稍等。'
+            replycontent: '加载中……'
         }
     },
     methods: {
         click() {
             this.$emit('click')
+        },
+        async replyShow() {
+            const res = await this.axios(API.forum.getForumReplyById(this.replyId))
+            this.replycontent = res.data.content
         }
     }
 }

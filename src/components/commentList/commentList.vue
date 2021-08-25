@@ -8,6 +8,7 @@
         :replyName="item.replyName"
         :content="item.content"
         :index="index"
+        :replyId="item.replyId"
         @click="click(item)"
         ></comment-item>
     </div>

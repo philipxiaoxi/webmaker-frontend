@@ -53,6 +53,16 @@ const forum = {
                 replyId: replyId
             }
         }
+    },
+    /**
+     * 获取一个详细回复
+     * @returns
+     */
+    getForumReplyById(id) {
+        return {
+            url: '/common/getForumReply/' + id,
+            method: 'get'
+        }
     }
 }
 
