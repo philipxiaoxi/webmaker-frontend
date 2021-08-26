@@ -28,7 +28,15 @@
                 :showPreface="false"
             ></forum-item>
             <div>
-                <mavon-editor style="border: none;z-index: 0;" :toolbarsFlag='false' :boxShadow='false' :subfield='false' :editable='false' defaultOpen='preview' v-model="item.content"/>
+                <mavon-editor
+                style="border: none;z-index: 0;"
+                :autofocus="false"
+                :toolbarsFlag='false'
+                :boxShadow='false'
+                :subfield='false'
+                :editable='false'
+                defaultOpen='preview'
+                v-model="item.content"/>
             </div>
         </div>
         <div>
