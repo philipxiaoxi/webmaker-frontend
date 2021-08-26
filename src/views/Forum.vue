@@ -2,6 +2,12 @@
     <div class="container">
         <h1>欢迎来到 CodeShare Forum</h1>
         <p>你可以在此交流代码片段或使用CodeShare中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
+        <el-carousel height="350px" :interval="5000" arrow="always">
+            <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
+                <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
+            </el-carousel-item>
+        </el-carousel>
+        <div class="btns"><el-button icon="el-icon-plus" @click="goToNew" type="primary" round>发布新帖子</el-button></div>
         <forum-list @click="goTo" :data='dataList'></forum-list>
     </div>
 </template>
@@ -14,7 +20,13 @@ export default {
     data() {
         return {
             form: {},
-            dataList: []
+            dataList: [],
+            carouselImgs: [
+                {
+                    title: 'CodeShare轻松编码网站！',
+                    imgurl: '/img/banner/forumBanner1.png'
+                }
+            ]
         }
     },
     mounted() {
@@ -24,6 +36,9 @@ export default {
         goTo(item) {
             console.log(item)
             this.$router.push({ path: '/forumpage', query: { id: item.id } })
+        },
+        goToNew() {
+            this.$router.push({ path: '/newforumpage' })
         },
         async getAllForumPage() {
             this.pageIndex = this.pageIndex ? this.pageIndex : 0
@@ -53,5 +68,11 @@ export default {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    .btns {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 20px;
+    }
 }
 </style>
