@@ -63,6 +63,22 @@ const forum = {
             url: '/common/getForumReply/' + id,
             method: 'get'
         }
+    },
+    /**
+     * 新增一个帖子
+     * @returns
+     */
+    insertForumPage(title, preface, topic, content) {
+        return {
+            url: '/api/insertForumPage',
+            method: 'post',
+            data: {
+                title: title,
+                preface: preface,
+                topic: topic,
+                content: content
+            }
+        }
     }
 }
 
