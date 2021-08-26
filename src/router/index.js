@@ -8,6 +8,7 @@ import Search from '../views/Search.vue'
 import MyCodes from '../views/MyCodes.vue'
 import Forum from '../views/Forum.vue'
 import ForumPage from '../views/ForumPage.vue'
+import NewForumPage from '../views/NewForumPage.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -50,6 +51,11 @@ const routes = [
         path: '/forumpage',
         name: 'ForumPage',
         component: ForumPage
+    },
+    {
+        path: '/newforumpage',
+        name: 'NewForumPage',
+        component: NewForumPage
     }
 ]
 
