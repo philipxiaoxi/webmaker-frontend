@@ -23,6 +23,7 @@
 
 <script>
 import API from '../api/'
+import common from '../util/common'
 export default {
     data() {
         return {
@@ -60,12 +61,20 @@ export default {
         this.init()
     },
     methods: {
+        /**
+         * @Ahthor: xiaoxi
+         * 初始化组件
+         */
         init() {
             document.addEventListener('click', () => {
                 this.menuShow = false
             })
         },
-        // 获取代码片段结构
+        /**
+         * @Ahthor: xiaoxi
+         * 获取代码片段结构
+         * @param {*} id
+         */
         getSnippetProject(id) {
             this.axios(API.snippetProject.getSnippetProject(id)).then(res => {
                 if (res.data.data == null) {
@@ -77,6 +86,11 @@ export default {
                 this.$message.error(e)
             })
         },
+        /**
+         * @Ahthor: xiaoxi
+         * 点击节点获取节点文件
+         * @param {*} data
+         */
         handleTreeNodeClick(data) {
             this.selectNode = data
             // 定义代码类型文档
@@ -108,7 +122,11 @@ export default {
                 })
             }
         },
-        // 传入文件名称，获取后缀
+        /**
+         * @Ahthor: xiaoxi
+         * @param {*} fileName
+         * 传入文件名称，获取后缀
+         */
         getFileType(fileName) {
             var type = fileName.split('.').pop()
             switch (type) {
@@ -118,6 +136,12 @@ export default {
                 return type
             }
         },
+        /**
+         * @Ahthor: xiaoxi
+         * 右键点击弹出菜单
+         * @param {*} event
+         * @param {*} data
+         */
         rightClick(event, data) {
             // 判断弹出菜单类型
             if (data.type == 'file') {
@@ -129,6 +153,10 @@ export default {
             // 保存右键选中节点
             this.rightClickSelectNode = data
         },
+        /**
+         * @Ahthor: xiaoxi
+         * 打开菜单显示
+         */
         openMenu() {
             this.menuShow = true// 让菜单显示
             const menu = document.querySelector('#menu')
@@ -138,8 +166,86 @@ export default {
             menu.style.top = event.clientY + 'px'
             menu.style.width = '150px'
         },
+        /**
+         * @Ahthor: xiaoxi
+         * 菜单点击事件
+         * @param {*} item
+         */
         rightMenuClick(item) {
             console.log(item)
+            switch (item.title) {
+            case '新建文件':
+                break
+            case '新建文件夹':
+                break
+            case '重命名':
+                break
+            case '删除':
+                break
+            case '复制直链':
+                this.doCopy(API.getServer() + 'common/getSnippetProjectFile/' + this.rightClickSelectNode.path)
+                break
+            case '复制相对路径':
+                this.doCopy(this.getRelativePath(this.rightClickSelectNode.path))
+                break
+            case '生成标签代码':
+                this.makeTag(this.rightClickSelectNode)
+                break
+            default:
+                break
+            }
+        },
+        /**
+         * @Ahthor: xiaoxi
+         * 生成标签代码
+         * @param {*} node
+         */
+        makeTag(node) {
+            var type = node.label.split('.').pop()
+            switch (type) {
+            case 'jpg':
+            case 'gif':
+            case 'bmp':
+            case 'png':
+                this.doCopy(`<img src="${this.getRelativePath(this.rightClickSelectNode.path)}" />`)
+                break
+            case 'js':
+                /* eslint-disable-next-line */
+                        this.doCopy(`<script src="${this.getRelativePath(this.rightClickSelectNode.path)}"><\/script>`)
+                break
+            case 'css':
+                this.doCopy(`<link href="${this.getRelativePath(this.rightClickSelectNode.path)}" rel="stylesheet" >`)
+                break
+            case 'html':
+                /* eslint-disable-next-line */
+                        this.doCopy(`<a href="${this.getRelativePath(this.rightClickSelectNode.path)}" >${node.label}<\/a>`)
+                break
+            default:
+                break
+            }
+        },
+        /**
+         * @Ahthor: xiaoxi
+         * 获取相对路径
+         * @param {*} path
+         */
+        getRelativePath(path) {
+            // 去除代码片段id
+            var index = path.indexOf('/')
+            var path2 = path.substring(index + 1)
+            return path2
+        },
+        /**
+         * @Ahthor: xiaoxi
+         * 封装复制方法
+         * @param {*} val
+         */
+        doCopy(val) {
+            common.copy(val)
+            this.$message({
+                message: '复制成功',
+                type: 'success'
+            })
         }
     }
 }
