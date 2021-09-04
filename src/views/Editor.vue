@@ -24,7 +24,7 @@
             direction="ltr"
             size='300px'
             :modal='false'>
-            <files-manager @click="setValue" ref="filesManager"></files-manager>
+            <files-manager :id="item.id" @click="setValue" ref="filesManager"></files-manager>
         </el-drawer>
         <!-- 右边工具箱按钮 -->
         <div class="rightBtn" @click="rightDrawer = !rightDrawer"><i class="el-icon-caret-left"></i></div>
