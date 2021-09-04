@@ -7,6 +7,7 @@
                 <span>{{ node.label }}</span>
             </span>
         </el-tree>
+        <!-- 通用右键菜单 -->
         <el-menu
             v-show="menuShow"
             id="menu"
@@ -18,18 +19,25 @@
                 <span slot="title"><i :class="item.icon"></i>{{item.title}}</span>
             </el-menu-item>
         </el-menu>
+        <!-- 通用对话框 -->
+        <xx-dialog :dialogVisible="dialogData.dialogVisible" @click="dialogClick"></xx-dialog>
     </div>
 </template>
 
 <script>
 import API from '../api/'
 import common from '../util/common'
+import XxDialog from './XxDialog.vue'
 export default {
+    components: { XxDialog },
     data() {
         return {
             data: [],
             menuShow: false,
             menuData: [],
+            dialogData: {
+                dialogVisible: false
+            },
             // 项目右键菜单
             menuData_project: [
                 { title: '上传文件', click: '' },
@@ -246,6 +254,10 @@ export default {
                 message: '复制成功',
                 type: 'success'
             })
+        },
+        dialogClick() {
+            this.dialogData.dialogVisible = false
+            console.log('对话框被点击')
         }
     }
 }
