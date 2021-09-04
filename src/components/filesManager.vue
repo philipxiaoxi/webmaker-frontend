@@ -8,17 +8,13 @@
             </span>
         </el-tree>
         <!-- 通用右键菜单 -->
-        <el-menu
-            v-show="menuShow"
-            id="menu"
-            text-color="#000"
-            active-text-color="#000"
-            style="background-color: #f2f3f5;text-align:left;"
-        >
-            <el-menu-item @click="rightMenuClick(item)" v-for="(item) in menuData" class="menuItem" v-bind:key="item.title">
-                <span slot="title"><i :class="item.icon"></i>{{item.title}}</span>
-            </el-menu-item>
-        </el-menu>
+        <right-menu
+        :menuShow='menuShow'
+        :menuData="menuData"
+        :x='menuX'
+        :y='menuY'
+        @rightMenuClick='rightMenuClick'
+        ></right-menu>
         <!-- 通用对话框 -->
         <xx-dialog :dialogVisible="dialogData.dialogVisible" @click="dialogClick"></xx-dialog>
     </div>
@@ -27,14 +23,17 @@
 <script>
 import API from '../api/'
 import common from '../util/common'
+import RightMenu from './RightMenu.vue'
 import XxDialog from './XxDialog.vue'
 export default {
-    components: { XxDialog },
+    components: { XxDialog, RightMenu },
     data() {
         return {
             data: [],
             menuShow: false,
             menuData: [],
+            menuX: 0,
+            menuY: 0,
             dialogData: {
                 dialogVisible: false
             },
@@ -100,6 +99,7 @@ export default {
          * @param {*} data
          */
         handleTreeNodeClick(data) {
+            console.log(data)
             this.selectNode = data
             // 定义代码类型文档
             const code_types = ['css', 'javascript', 'html']
@@ -151,35 +151,26 @@ export default {
          * @param {*} data
          */
         rightClick(event, data) {
+            this.menuX = event.clientX
+            this.menuY = event.clientY
+            this.menuShow = false
             // 判断弹出菜单类型
             if (data.type == 'file') {
                 this.menuData = this.menuData_file
             } else {
                 this.menuData = this.menuData_folder
             }
-            this.openMenu()
+            this.menuShow = true
             // 保存右键选中节点
             this.rightClickSelectNode = data
         },
         /**
          * @Ahthor: xiaoxi
-         * 打开菜单显示
-         */
-        openMenu() {
-            this.menuShow = true// 让菜单显示
-            const menu = document.querySelector('#menu')
-            /* 菜单定位基于鼠标点击位置 */
-            menu.style.position = 'fixed'
-            menu.style.left = event.clientX + 'px'
-            menu.style.top = event.clientY + 'px'
-            menu.style.width = '150px'
-        },
-        /**
-         * @Ahthor: xiaoxi
          * 菜单点击事件
          * @param {*} item
+         * @param {MouseEvent} event
          */
-        rightMenuClick(item) {
+        rightMenuClick(item, event) {
             console.log(item)
             switch (item.title) {
             case '新建文件':
