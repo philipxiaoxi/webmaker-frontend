@@ -16,7 +16,13 @@
         @rightMenuClick='rightMenuClick'
         ></right-menu>
         <!-- 通用对话框 -->
-        <xx-dialog :dialogVisible="dialogData.dialogVisible" @click="dialogClick"></xx-dialog>
+        <xx-dialog
+        :title="dialogData.title"
+        :dialogVisible="dialogData.dialogVisible"
+        @click="dialogClick"
+        @dialogCancel="dialogCancel"
+        :fromData="dialogData.fromData"
+        ></xx-dialog>
     </div>
 </template>
 
@@ -27,6 +33,12 @@ import RightMenu from './RightMenu.vue'
 import XxDialog from './XxDialog.vue'
 export default {
     components: { XxDialog, RightMenu },
+    props: {
+        id: {
+            type: Number,
+            default: -1
+        }
+    },
     data() {
         return {
             data: [],
@@ -35,7 +47,6 @@ export default {
             menuX: 0,
             menuY: 0,
             dialogData: {
-                dialogVisible: false
             },
             // 项目右键菜单
             menuData_project: [
@@ -132,7 +143,7 @@ export default {
         },
         /**
          * @Ahthor: xiaoxi
-         * @param {*} fileName
+         * @param {*} fileName 文件名称
          * 传入文件名称，获取后缀
          */
         getFileType(fileName) {
@@ -147,28 +158,28 @@ export default {
         /**
          * @Ahthor: xiaoxi
          * 右键点击弹出菜单
-         * @param {*} event
-         * @param {*} data
+         * @param {*} event 鼠标事件
+         * @param {*} node 点击节点
          */
-        rightClick(event, data) {
+        rightClick(event, node) {
             this.menuX = event.clientX
             this.menuY = event.clientY
             this.menuShow = false
             // 判断弹出菜单类型
-            if (data.type == 'file') {
+            if (node.type == 'file') {
                 this.menuData = this.menuData_file
             } else {
                 this.menuData = this.menuData_folder
             }
             this.menuShow = true
             // 保存右键选中节点
-            this.rightClickSelectNode = data
+            this.rightClickSelectNode = node
         },
         /**
          * @Ahthor: xiaoxi
          * 菜单点击事件
-         * @param {*} item
-         * @param {MouseEvent} event
+         * @param {*} item 点击项目
+         * @param {MouseEvent} event 鼠标事件
          */
         rightMenuClick(item, event) {
             console.log(item)
@@ -178,6 +189,18 @@ export default {
             case '新建文件夹':
                 break
             case '重命名':
+                this.dialogData = {
+                    type: '重命名',
+                    title: '重命名-' + this.rightClickSelectNode.label,
+                    dialogVisible: true,
+                    fromData: [
+                        {
+                            placeholder: '新文件名称',
+                            value: this.rightClickSelectNode.label,
+                            model: 'title'
+                        }
+                    ]
+                }
                 break
             case '删除':
                 break
@@ -197,7 +220,7 @@ export default {
         /**
          * @Ahthor: xiaoxi
          * 生成标签代码
-         * @param {*} node
+         * @param {*} node 节点
          */
         makeTag(node) {
             var type = node.label.split('.').pop()
@@ -226,7 +249,7 @@ export default {
         /**
          * @Ahthor: xiaoxi
          * 获取相对路径
-         * @param {*} path
+         * @param {String} path 绝对路径
          */
         getRelativePath(path) {
             // 去除代码片段id
@@ -237,7 +260,7 @@ export default {
         /**
          * @Ahthor: xiaoxi
          * 封装复制方法
-         * @param {*} val
+         * @param {String} val 待复制数据
          */
         doCopy(val) {
             common.copy(val)
@@ -246,9 +269,38 @@ export default {
                 type: 'success'
             })
         },
-        dialogClick() {
+        /**
+         * 对话框取消事件
+         * @Ahthor: xiaoxi
+         */
+        dialogCancel() {
             this.dialogData.dialogVisible = false
-            console.log('对话框被点击')
+        },
+        /**
+         * 对话框点击事件
+         * @Ahthor: xiaoxi
+         * @param {*} form 表单数据
+         */
+        dialogClick(form) {
+            let new_path
+            switch (this.dialogData.type) {
+            case '重命名':
+                this.dialogData.dialogVisible = false
+                new_path = this.rightClickSelectNode.path.substring(0, this.rightClickSelectNode.path.lastIndexOf('/') + 1) + form.title
+                this.axios(API.snippetProject.SnippetProjectReName(this.rightClickSelectNode.path, new_path)).then(() => {
+                    this.$message({
+                        message: '重命名成功。',
+                        type: 'success'
+                    })
+                    this.getSnippetProject(this.id)
+                }).catch((e) => {
+                    this.$message.error(e)
+                })
+                break
+
+            default:
+                break
+            }
         }
     }
 }
