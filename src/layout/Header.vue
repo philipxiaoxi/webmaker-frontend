@@ -16,7 +16,7 @@
                 <router-link  to="/login" :class="{active: routePath == '/login'}">
                     <span>登录</span>
                 </router-link>
-                <router-link  to="/sign" :class="{active: routePath == '/sign'}">
+                <router-link  to="/register" :class="{active: routePath == '/register'}">
                     <span>注册</span>
                 </router-link>
             </div>
