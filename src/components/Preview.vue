@@ -9,13 +9,13 @@ export default {
     methods: {
         goPreview(content) {
             this.$refs.preview_iframe.src = '/mock/default.html'
-            setTimeout(() => {
+            this.$refs.preview_iframe.onload = () => {
                 if (!this.$refs.preview_iframe.contentWindow) {
                     return
                 }
                 this.$refs.preview_iframe.contentWindow.document.write(content) // 动态写入返回页面到iframe
                 this.$refs.preview_iframe.contentWindow.document.close()
-            }, 500)
+            }
         }
     }
 }
