@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @contextmenu.prevent='rightClick' style="height:100%">
         <el-tree @node-contextmenu='rightClick' @node-click="handleTreeNodeClick"  :data="data" empty-text="单页网页没有目录内容">
             <span class="custom-tree-node" slot-scope="{ node,data }">
                 <i v-if="data.type=='folder'" class="el-icon-folder"></i>
@@ -165,12 +165,17 @@ export default {
             this.menuX = event.clientX
             this.menuY = event.clientY
             this.menuShow = false
-            // 判断弹出菜单类型
-            if (node.type == 'file') {
-                this.menuData = this.menuData_file
+            if (node == null) {
+                this.menuData = this.menuData_project
             } else {
-                this.menuData = this.menuData_folder
+                // 判断弹出菜单类型
+                if (node.type == 'file') {
+                    this.menuData = this.menuData_file
+                } else {
+                    this.menuData = this.menuData_folder
+                }
             }
+
             this.menuShow = true
             // 保存右键选中节点
             this.rightClickSelectNode = node
@@ -185,8 +190,32 @@ export default {
             console.log(item)
             switch (item.title) {
             case '新建文件':
+                this.dialogData = {
+                    type: '新建文件',
+                    title: `在[${this.rightClickSelectNode ? this.rightClickSelectNode.label : '项目'}]下新建文件`,
+                    dialogVisible: true,
+                    fromData: [
+                        {
+                            placeholder: '新建文件名称',
+                            value: '',
+                            model: 'title'
+                        }
+                    ]
+                }
                 break
             case '新建文件夹':
+                this.dialogData = {
+                    type: '新建文件夹',
+                    title: `在[${this.rightClickSelectNode ? this.rightClickSelectNode.label : '项目'}]下新建文件夹`,
+                    dialogVisible: true,
+                    fromData: [
+                        {
+                            placeholder: '新建文件夹名称',
+                            value: '',
+                            model: 'title'
+                        }
+                    ]
+                }
                 break
             case '重命名':
                 this.dialogData = {
@@ -203,6 +232,13 @@ export default {
                 }
                 break
             case '删除':
+                this.dialogData = {
+                    type: '删除',
+                    title: '真的要删除' + this.rightClickSelectNode.label + '吗？',
+                    dialogVisible: true,
+                    fromData: [
+                    ]
+                }
                 break
             case '复制直链':
                 this.doCopy(API.getServer() + 'common/getSnippetProjectFile/' + this.rightClickSelectNode.path)
@@ -297,7 +333,54 @@ export default {
                     this.$message.error(e)
                 })
                 break
-
+            case '删除':
+                this.dialogData.dialogVisible = false
+                new_path = this.rightClickSelectNode.path
+                this.axios(API.snippetProject.SnippetProjectDelFile(new_path)).then(() => {
+                    this.$message({
+                        message: '删除成功。',
+                        type: 'success'
+                    })
+                    // 更新树形框
+                    this.getSnippetProject(this.id)
+                }).catch((e) => {
+                    this.$message.error(e)
+                })
+                break
+            case '新建文件':
+                this.dialogData.dialogVisible = false
+                new_path = this.id
+                if (this.rightClickSelectNode != null) {
+                    new_path = this.rightClickSelectNode.path
+                }
+                this.axios(API.snippetProject.SnippetProjectNewFile(new_path, form.title)).then(() => {
+                    this.$message({
+                        message: '新建成功。',
+                        type: 'success'
+                    })
+                    // 更新树形框
+                    this.getSnippetProject(this.id)
+                }).catch((e) => {
+                    this.$message.error(e)
+                })
+                break
+            case '新建文件夹':
+                this.dialogData.dialogVisible = false
+                new_path = this.id + '/' + form.title
+                if (this.rightClickSelectNode != null) {
+                    new_path = this.rightClickSelectNode.path + '/' + form.title
+                }
+                this.axios(API.snippetProject.SnippetProjectNewDirectory(new_path)).then(() => {
+                    this.$message({
+                        message: '新建成功。',
+                        type: 'success'
+                    })
+                    // 更新树形框
+                    this.getSnippetProject(this.id)
+                }).catch((e) => {
+                    this.$message.error(e)
+                })
+                break
             default:
                 break
             }
