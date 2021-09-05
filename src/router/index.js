@@ -9,6 +9,7 @@ import MyCodes from '../views/MyCodes.vue'
 import Forum from '../views/Forum.vue'
 import ForumPage from '../views/ForumPage.vue'
 import NewForumPage from '../views/NewForumPage.vue'
+import Register from '../views/Register.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -56,6 +57,11 @@ const routes = [
         path: '/newforumpage',
         name: 'NewForumPage',
         component: NewForumPage
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     }
 ]
 
