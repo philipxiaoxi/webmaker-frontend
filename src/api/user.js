@@ -34,6 +34,32 @@ const user = {
             method: 'post',
             data: userInfo
         }
+    },
+    /**
+     * 发送注册验证邮件
+     * @Ahthor: xiaoxi
+     * @param {*} email
+     */
+    sendSignCode(email) {
+        return {
+            url: '/common/sendSignCode',
+            method: 'post',
+            data: {
+                email: email
+            }
+        }
+    },
+    /**
+     * 插入一个用户
+     * @Ahthor: xiaoxi
+     * @param {*} form
+     */
+    insertUser(form) {
+        return {
+            url: '/common/insertUser',
+            method: 'post',
+            data: form
+        }
     }
 }
 
