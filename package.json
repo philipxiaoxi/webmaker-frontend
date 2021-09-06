@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -36,6 +38,8 @@
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "vue-cli-plugin-axios": "0.0.4",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vuepress": "^1.8.2",
+    "vuepress-plugin-autobar": "github:boboidream/vuepress-bar"
   }
 }
