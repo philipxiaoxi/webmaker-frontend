@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="btns">
-            <el-button type="primary" round size="mini" >新建代码片段</el-button>
+            <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
             <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
             <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
                 <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
@@ -11,14 +11,30 @@
             <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
             <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
         </div>
+        <new-project-dialog
+        :dialogVisible.sync="dialogVisible"
+        @handleClose='handleClose'
+        @handleClick='handleClick'
+        >
+        </new-project-dialog>
     </div>
 </template>
 
 <script>
 import API from '../api/'
 import common from '../util/common'
+import NewProjectDialog from './NewProjectDialog.vue'
 export default {
+    components: { NewProjectDialog },
+    data() {
+        return {
+            dialogVisible: false
+        }
+    },
     methods: {
+        handleClose() {
+            this.dialogVisible = false
+        },
         copyLink() {
             const data = window.location.href
             if (common.copy(data)) {
@@ -47,6 +63,40 @@ export default {
                     type: 'success'
                 })
             }
+        },
+        handleClick(item, i) {
+            console.log(item, i)
+            switch (item.title) {
+            case '单页应用':
+                this.newCode('新建代码片段-' + new Date())
+                break
+            case '完整项目':
+                this.newProjectCode('新建代码项目-' + new Date())
+                break
+            default:
+                this.$message.error('功能还在开发中')
+                this.dialogVisible = false
+                break
+            }
+        },
+        newCode(title) {
+            const content = this.$parent.getValue()
+            this.axios(API.snippet.insertSnippet(title, content)).then(res => {
+                this.$router.push({ path: '/editor', query: { id: res.data.data } })
+                this.dialogVisible = false
+                this.$parent.checkStatus()
+            }).catch((e) => {
+                this.$message.error(e)
+            })
+        },
+        newProjectCode(title) {
+            this.axios(API.snippetProject.insertSnippetProject(title)).then(res => {
+                this.$router.push({ path: '/editor', query: { id: res.data.data } })
+                this.dialogVisible = false
+                this.$parent.checkStatus()
+            }).catch((e) => {
+                this.$message.error(e)
+            })
         }
     }
 }
