@@ -1,6 +1,6 @@
 <template>
     <div @contextmenu.prevent='rightClick' style="height:100%">
-        <el-tree @node-contextmenu='rightClick' @node-click="handleTreeNodeClick"  :data="data" empty-text="单页网页没有目录内容">
+        <el-tree :allow-drop="allowDrop" @node-drop="nodeDrop" draggable @node-contextmenu='rightClick' @node-click="handleTreeNodeClick"  :data="data" empty-text="单页网页没有目录内容">
             <span class="custom-tree-node" slot-scope="{ node,data }">
                 <i v-if="data.type=='folder'" class="el-icon-folder"></i>
                 <i v-if="data.type=='file'" class="el-icon-document"></i>
@@ -384,6 +384,43 @@ export default {
             default:
                 break
             }
+        },
+        /**
+         * 判断是否允许拖拽放入
+         * @Ahthor: xiaoxi
+         * @param {*} darggingNode
+         * @param {*} dropNode
+         * @param {*} type
+         */
+        allowDrop(darggingNode, dropNode, type) {
+            if (dropNode.data.type == 'file') {
+                return type == 'next'
+            } else {
+                return type
+            }
+        },
+        nodeDrop(darggingNode, dropNode, type) {
+            let path = ''
+            let new_path = ''
+            if (type == 'inner') {
+                console.log(darggingNode.data.path, dropNode.data.path + darggingNode.data.path.substring(darggingNode.data.path.lastIndexOf('/')), type)
+                path = darggingNode.data.path
+                new_path = dropNode.data.path + darggingNode.data.path.substring(darggingNode.data.path.lastIndexOf('/'))
+            } else {
+                console.log(darggingNode.data.path, dropNode.data.path.substring(0, dropNode.data.path.lastIndexOf('/')) + darggingNode.data.path.substring(darggingNode.data.path.lastIndexOf('/')), type)
+                path = darggingNode.data.path
+                new_path = dropNode.data.path.substring(0, dropNode.data.path.lastIndexOf('/')) + darggingNode.data.path.substring(darggingNode.data.path.lastIndexOf('/'))
+            }
+            this.axios(API.snippetProject.SnippetProjectMoveFile(path, new_path)).then(() => {
+                this.$message({
+                    message: '移动成功。',
+                    type: 'success'
+                })
+                // 更新树形框
+                this.getSnippetProject(this.id)
+            }).catch((e) => {
+                this.$message.error(e)
+            })
         }
     }
 }
