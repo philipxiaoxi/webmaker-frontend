@@ -138,6 +138,9 @@ export default {
                 this.preview()
             }, 100)
         },
+        getValue() {
+            return this.$refs.vscode.monacoEditor.getValue()
+        },
         /**
          * 抽屉打开获取目录
          * @Ahthor: xiaoxi
