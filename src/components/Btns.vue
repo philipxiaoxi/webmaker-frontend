@@ -17,18 +17,26 @@
         @handleClick='handleClick'
         >
         </new-project-dialog>
+        <el-dialog
+        title="虚拟容器创建页面"
+        :visible.sync="dockerDialogVisible"
+        width="50%">
+        <docker-manager></docker-manager>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import API from '../api/'
 import common from '../util/common'
+import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
 export default {
-    components: { NewProjectDialog },
+    components: { NewProjectDialog, DockerManager },
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            dockerDialogVisible: false
         }
     },
     methods: {
@@ -72,6 +80,10 @@ export default {
                 break
             case '完整项目':
                 this.newProjectCode('新建代码项目-' + new Date())
+                break
+            case '虚拟容器':
+                this.dialogVisible = false
+                this.dockerDialogVisible = true
                 break
             default:
                 this.$message.error('功能还在开发中')
