@@ -12,6 +12,18 @@ const docker = {
                 password: password
             }
         }
+    },
+    /**
+     * docker容器状态查询
+     * @Ahthor: xiaoxi
+     */
+    dockerCheck() {
+        return {
+            url: '/api/dockerCheck',
+            method: 'get',
+            params: {
+            }
+        }
     }
 }
 
