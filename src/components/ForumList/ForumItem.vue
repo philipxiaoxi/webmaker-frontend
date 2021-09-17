@@ -2,7 +2,7 @@
     <div class="ForumItemContainer" @click="$emit('click')">
         <div class="container">
             <div class="xx-row">
-                <img :src="'https://api.sunweihu.com/api/sjtx/api.php?lx=c1&t=' + Math.random()" alt="">
+                <img src="https://disk.xiaotao2333.top:344/api/user/avatar/n" alt="">
                 <div class="tips">
                     <div class="title">{{title}}</div>
                     <div class="info">
