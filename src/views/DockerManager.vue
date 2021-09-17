@@ -24,7 +24,7 @@ export default {
     },
     mounted() {
         this.dockerCheck()
-        setInterval(() => {
+        this.dockerTimer = setInterval(() => {
             this.dockerCheck()
         }, 5000)
     },
@@ -42,9 +42,7 @@ export default {
             }
         },
         async dockerCheck() {
-            const res = await this.axios(API.docker.dockerCheck()).catch((e) => {
-                this.$message.error(e)
-            })
+            const res = await this.axios(API.docker.dockerCheck())
             if (res.data.data == null) {
                 this.dockerStatus = '【无人使用】'
             } else {
