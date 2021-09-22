@@ -10,7 +10,7 @@ import Forum from '../views/Forum.vue'
 import ForumPage from '../views/ForumPage.vue'
 import NewForumPage from '../views/NewForumPage.vue'
 import Register from '../views/Register.vue'
-import DockerManager from '../views/DockerManager.vue'
+import DockerView from '../views/DockerView.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -65,9 +65,9 @@ const routes = [
         component: Register
     },
     {
-        path: '/dockermanager',
-        name: 'DockerManager',
-        component: DockerManager
+        path: '/dockerview',
+        name: 'dockerview',
+        component: DockerView
     }
 ]
 

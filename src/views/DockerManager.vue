@@ -2,11 +2,19 @@
     <div class="container">
         <h1>CodeShare Docker Manager</h1>
         <p>由codeshare管控的虚拟容器可以让你在web上开发任何语言。享受你的开发乐趣。</p>
-        <p>测试阶段，只允许一容器运行。</p>
+        <p>
+            测试阶段，只允许一容器运行。更多请查看
+            <el-link type="primary" @click="goTo">使用说明
+            </el-link>
+        </p>
         <p>容器状态：{{dockerStatus}}，当容器释放后可重新申请。</p>
         <div class="xx-from-container">
             <xx-input v-model="form.password" placeholder="设置连接密码"></xx-input>
-            <el-button type="primary" round @click="createDocker">创建容器</el-button>
+            <div>
+                <el-button type="success" round @click="openDocker">打开容器</el-button>
+                <el-button type="primary" round @click="createDocker">申请容器</el-button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -29,6 +37,9 @@ export default {
         }, 5000)
     },
     methods: {
+        goTo() {
+            window.open(window.location.origin + '/#/forumpage?id=21')
+        },
         async createDocker() {
             const res = await this.axios(API.docker.createDocker(this.form.password)).catch((e) => {
                 this.$message.error(e)
@@ -40,6 +51,9 @@ export default {
                 })
                 window.open('http://www.xiaotao2333.top:' + res.data.data)
             }
+        },
+        openDocker() {
+            window.open('http://www.xiaotao2333.top:8443')
         },
         async dockerCheck() {
             const res = await this.axios(API.docker.dockerCheck())
