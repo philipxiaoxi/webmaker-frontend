@@ -39,7 +39,43 @@ export default {
             dockerDialogVisible: false
         }
     },
+    mounted() {
+        this.pasteEventListener()
+    },
     methods: {
+        /**
+        * 监听图片按钮粘贴事件
+        * @date 2021-06-12
+        * @returns {any}
+        */
+        pasteEventListener() {
+            // 粘贴获取截图
+            const code_pic = document.getElementById('code_pic')
+            code_pic.addEventListener('paste', (event) => {
+                const items = event.clipboardData && event.clipboardData.items
+                let file = null
+                if (items && items.length) {
+                    // 检索剪切板items
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image') !== -1) {
+                            file = items[i].getAsFile()
+                            // 此时file就是剪切板中的图片文件
+                            const code_pic_reader = new FileReader()
+                            // 解析成base64格式
+                            code_pic_reader.readAsDataURL(file)
+                            code_pic_reader.onload = () => {
+                                this.$parent.item.img = code_pic_reader.result
+                                this.$message({
+                                    message: '图片获取成功，请记得点击保存按钮。',
+                                    type: 'success'
+                                })
+                            }
+                            break
+                        }
+                    }
+                }
+            })
+        },
         handleClose() {
             this.dialogVisible = false
         },
