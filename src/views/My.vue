@@ -14,29 +14,100 @@
                         <div v-else>管理员</div>
                     </el-descriptions-item>
                 </el-descriptions>
+                <el-button style="margin: 10px;" type="primary" plain @click="initFormData">修改</el-button>
             </el-tab-pane>
             <el-tab-pane label="编码成就">配置管理</el-tab-pane>
             <el-tab-pane label="第三方引入">角色管理</el-tab-pane>
             <el-tab-pane label="其他设置">定时任务补偿</el-tab-pane>
         </el-tabs>
         </div>
+        <!-- 修改个人信息弹窗 -->
+        <xx-dialog
+        title="修改我的信息"
+        :fromData="fromData"
+        width="50%"
+        :dialogVisible="dialogVisible"
+        @dialogCancel='dialogCancel'
+        @click='dialogClick'
+        ></xx-dialog>
     </div>
 </template>
 
 <script>
+import API from '../api/'
+import XxDialog from '../components/XxDialog.vue'
 import FS from '../util/FormatString'
 export default {
+    components: { XxDialog },
     data() {
         return {
-            form: {}
+            form: {},
+            dialogVisible: false,
+            fromData: []
         }
     },
     mounted() {
-
     },
     methods: {
+        saveInfo(userInfo) {
+            this.axios(API.user.updateUser(userInfo)).then(() => {
+                this.$message({
+                    message: '您的信息更改成功！',
+                    type: 'success'
+                })
+                this.dialogVisible = false
+            }).catch((e) => {
+                this.$message.error(e)
+            })
+        },
+        initFormData() {
+            this.fromData = [
+                {
+                    placeholder: '姓名',
+                    value: this.$store.state.userInfo.name,
+                    model: 'name'
+                },
+                {
+                    placeholder: '邮箱',
+                    value: this.$store.state.userInfo.email,
+                    model: 'email'
+                },
+                {
+                    placeholder: '手机号',
+                    value: this.$store.state.userInfo.phone,
+                    model: 'phone'
+                },
+                {
+                    placeholder: '性别',
+                    value: this.$store.state.userInfo.sex,
+                    model: 'sex'
+                },
+                {
+                    placeholder: '签名',
+                    value: this.$store.state.userInfo.sign,
+                    model: 'sign'
+                }
+            ]
+            this.dialogVisible = true
+        },
         getString(value) {
             return FS.getIdentityString(value)
+        },
+        /**
+         * 对话框取消事件
+         * @Ahthor: xiaoxi
+         */
+        dialogCancel() {
+            this.dialogVisible = false
+        },
+        /**
+         * 对话框点击事件
+         * @Ahthor: xiaoxi
+         * @param {*} form
+         */
+        dialogClick(form) {
+            console.log(form)
+            this.saveInfo(form)
         }
     }
 }
