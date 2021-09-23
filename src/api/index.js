@@ -4,7 +4,8 @@ const snippetProject = require('./snippetProject')
 const forum = require('./forum')
 const docker = require('./docker')
 const API = {
-    server: 'http://www.xiaotao2333.top:8000/',
+    // server: 'http://www.xiaotao2333.top:8000/',
+    server: 'https://codeshare.xiaotao2333.top:344/',
     snippet: snippet,
     user: user,
     snippetProject: snippetProject,
