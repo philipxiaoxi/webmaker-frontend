@@ -133,6 +133,8 @@ export default {
             this.$refs.vscode.monacoEditor.getModel().setValue(data.data)
             // 设置语言
             this.$refs.vscode.setModelLanguage(data.type)
+            // 保存分析结果
+            this.fileInfo = data
             // 预览
             setTimeout(() => {
                 this.preview()
@@ -201,9 +203,8 @@ export default {
          * @Ahthor: xiaoxi
          */
         preview() {
-            const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.item.id}/" />`
             const content = this.$refs.vscode.value
-            this.$refs.preview.goPreview(base + content)
+            this.$refs.preview.goPreview(content, this.fileInfo.type)
         },
         /**
          * 改变iframe遮罩显示
