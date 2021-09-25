@@ -69,13 +69,14 @@ class Cs {
         // 调用原先的打印
         console.oldLog(T)
         // 匹配所在行数
-        const regexp = /\/:[0-9]+/g
+        const regexp = /:[0-9]+:[0-9]+/g
         let array = []
         let line = '[未知]'
         // 如果能够获得行数
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
-            line = parseInt(array[0][0].replace('/:', '')) - 1
+            console.oldLog(array)
+            line = parseInt(array[1][0].substring(1).split(':')[0]) - 1
         }
         // 判断是否对象，是对象需要格式化成文本
         if (T instanceof Object) {
