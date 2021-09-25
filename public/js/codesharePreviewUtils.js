@@ -44,6 +44,9 @@ class Cs {
         span.innerHTML = `第${line}行`
         span.style.float = 'right'
         newInsertElement.appendChild(span)
+        newInsertElement.onclick = () => {
+            window.parent.postMessage(JSON.stringify({ line }), window.location.href)
+        }
         document.getElementById('cs_logs_container').appendChild(newInsertElement)
     }
 
