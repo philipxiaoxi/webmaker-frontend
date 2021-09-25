@@ -83,6 +83,15 @@ export default {
                     this.save()
                 }
             }
+            // 接收预览框反馈消息
+            window.addEventListener('message', (e) => {
+                if (!(e.data instanceof Object)) {
+                    const obj = JSON.parse(e.data)
+                    this.$refs.vscode.monacoEditor.revealPositionInCenter({ lineNumber: obj.line, column: 0 })
+                    const range = { startLineNumber: obj.line, startColumn: 0, endLineNumber: obj.line, endColumn: 10000 }
+                    this.$refs.vscode.monacoEditor.setSelection(range)
+                }
+            }, false)
             this.dragControllerMiddle()
         },
         /**
