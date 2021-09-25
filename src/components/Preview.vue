@@ -34,56 +34,15 @@ export default {
         },
         writeJsC(content) {
             this.$refs.preview_iframe.contentWindow.document.write(
-                `<style>
-                    body {
-                        font-size: 10px;
-                    }
-                    .log-item {
-                        border-bottom: 1px solid rgba(148, 148, 148, 0.25);
-                        padding: 5px;
-                        padding-left: 20px;
-                        cursor: pointer;
-                        font-size: 10px;
-                        word-break: break-all;
-                    }
-                    .log-item::before {
-                        content: '> ';
-                        height: 100%;
-                        position: absolute;
-                        left: 10px;
-                        color: gray;
-                    }
-                    .log-item:hover {
-                        background-color: aliceblue;
-                    }
-                <\/style>`  +
                 `
-                <h1 style="text-align: center;">CodeShare控制台<\/h1>
-                <p style="text-align: center;">codeshare控制台显示您的打印结果。无需打开F12。<\/p>
-                <div id="container"><\/div>
-                `+
-                '<script>' + 
-                this.catchConsoleLog() + content
-                +
-                '<\/script>'
+                    <body><\/body>
+                    <script src="/js/codesharePreviewUtils.js"><\/script>
+                    <script>
+                        ${content}
+                    <\/script>
+                `
             ) // 动态写入返回页面到iframe
             this.$refs.preview_iframe.contentWindow.document.close()
-        },
-        catchConsoleLog() {
-            const code = `
-                console.oldLog = console.log
-                console.log = function(T) {
-                    console.oldLog(T)
-                    if(T instanceof Object) {
-                        T = JSON.stringify(T)
-                    }
-                    let newInsertElement = document.createElement("div")
-                    newInsertElement.classList.add("log-item")
-                    newInsertElement.innerText = T
-                    document.getElementById("container").appendChild(newInsertElement)
-                }
-            `
-            return code
         }
     }
 }
