@@ -8,6 +8,31 @@ class Cs {
         this.appendContainer(dom)
     }
 
+    // /**
+    //  * 安全维护函数
+    //  * 等级默认3级
+    //  * @Ahthor: xiaoxi
+    //  * @param {*} level
+    //  */
+    // SecurityMaintenance(level = 3) {
+    //     switch (level) {
+    //     case 3:
+    //         // 禁止localStorage
+    //         window.localStorage.getItem = tips
+    //         window.localStorage.setItem = tips
+    //         // 禁止访问cookie
+    //         window.document.cookie = tips()
+    //         // 禁止访问父级
+    //         window.parent = null
+    //         break
+    //     default:
+    //         break
+    //     }
+    //     function tips(params) {
+    //         return '为了安全起见，该方法已经被禁用。'
+    //     }
+    // }
+
     appendContainer(dom) {
         // 添加样式
         dom.classList.add('cs_console_container')

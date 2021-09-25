@@ -12,6 +12,7 @@ export default {
         goPreview(content, type) {
             console.log(type)
             this.$refs.preview_iframe.src = '/mock/default.html'
+            content = this.SecurityMaintenance(content)
             this.$refs.preview_iframe.onload = () => {
                 if (!this.$refs.preview_iframe.contentWindow) {
                     return
@@ -26,6 +27,25 @@ export default {
                 }
 
             }
+        },
+        /**
+         * 安全维护函数
+         * 将会去除代码敏感关键词
+         * @Ahthor: xiaoxi
+         * @param {*} content
+         */
+        SecurityMaintenance(content) {
+            let words = [
+                'parent',
+                'localStorage',
+                'token',
+                'document',
+                'window'
+                ]
+            for (const iterator of words) {
+                content = content.replaceAll(iterator ,'禁止使用')
+            }
+            return content
         },
         writeHtml(content) {
             const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.$parent.item.id}/" />`
