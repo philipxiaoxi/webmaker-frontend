@@ -86,6 +86,33 @@ class Cs {
         // 插入到显示区域
         this.insertLog(T, 'log-item', line)
     }
+
+    setExample(Examples) {
+        this.Examples = Examples
+    }
+
+    judge() {
+        if (cs.runCode == null) {
+            cs.insertLog('[ERROR]: ' + 'runCode代码为空，无法进行判断。', 'log-item-red', '[cs处理器]')
+            return
+        }
+        if (cs.Examples == null) {
+            cs.insertLog('[ERROR]: ' + 'Examples为空，无法进行判断。', 'log-item-red', '[cs处理器]')
+            return
+        }
+        for (const item of this.Examples) {
+            const out = cs.runCode(item.key)
+            this.insertLog(
+                `输入：${JSON.stringify(item.key)}，正确输出：${item.value}，您的输出：${out}。`
+                , 'log-item'
+                , '[cs处理器]')
+            if (JSON.stringify(out) != JSON.stringify(item.value)) {
+                cs.insertLog('[ERROR]: ' + '以上用例未通过。', 'log-item-red', '[cs处理器]')
+                return
+            }
+        }
+        cs.insertLog('[WINNER]: ' + '恭喜你！所有用例通过！', 'log-item-green', '[cs处理器]')
+    }
 }
 const newInsertElement = document.createElement('div')
 newInsertElement.id = '124106_codeshare_utils_c'

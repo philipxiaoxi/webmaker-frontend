@@ -21,6 +21,15 @@
     word-break: break-all;
     color: red;
 }
+.cs_console_container .log-item-green {
+    border-bottom: 1px solid rgba(148, 148, 148, 0.25);
+    padding: 5px;
+    padding-left: 20px;
+    cursor: pointer;
+    font-size: 10px;
+    word-break: break-all;
+    color: green;
+}
 .cs_console_container .log-item::before {
     content: '> ';
     height: 100%;
