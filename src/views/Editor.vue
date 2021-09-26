@@ -213,7 +213,7 @@ export default {
          */
         preview() {
             const content = this.$refs.vscode.value
-            this.$refs.preview.goPreview(content, this.fileInfo.type)
+            this.$refs.preview.goPreview(content, this.fileInfo != null ? this.fileInfo.type : '')
         },
         /**
          * 改变iframe遮罩显示
