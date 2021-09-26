@@ -69,10 +69,10 @@ class Cs {
         span.innerHTML = `${line}`
         span.style.float = 'right'
         newInsertElement.appendChild(span)
-        newInsertElement.onclick = () => {
-            // window.parent.postMessage(JSON.stringify({ line }), 'http://192.168.2.233:8080/')
-            window.parent.postMessage(JSON.stringify({ line }), 'https://codeshare2.diyxi.top/')
-        }
+        // newInsertElement.onclick = () => {
+        //     // window.parent.postMessage(JSON.stringify({ line }), 'http://192.168.2.233:8080/')
+        //     window.parent.postMessage(JSON.stringify({ line }), 'https://codeshare2.diyxi.top/')
+        // }
         document.getElementById('cs_logs_container').appendChild(newInsertElement)
     }
 
