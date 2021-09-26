@@ -124,6 +124,7 @@ export default {
                     } else {
                         this.$refs.vscode.setModelLanguage('html')
                         this.$refs.filesManager.data = []
+                        this.fileInfo = {}
                     }
                 }).catch((e) => {
                     console.log(e)
