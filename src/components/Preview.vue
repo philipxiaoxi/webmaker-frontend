@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe class="xx-iframe" frameborder='0' sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals" ref="preview_iframe" style="width:100%;height:100%;"></iframe>
+        <iframe class="xx-iframe" frameborder='0' sandbox="allow-scripts allow-popups allow-forms allow-modals" ref="preview_iframe" style="width:100%;height:100%;"></iframe>
     </div>
 </template>
 
@@ -9,23 +9,43 @@ import API from '../api/'
 /* eslint-disable */
 export default {
     methods: {
-        goPreview(content, type) {
-            console.log(type)
-            this.$refs.preview_iframe.src = '/mock/default.html'
-            content = this.SecurityMaintenance(content)
-            this.$refs.preview_iframe.onload = () => {
-                if (!this.$refs.preview_iframe.contentWindow) {
-                    return
-                }
-                switch (type) {
-                    case 'javascript':
-                        this.writeJsC(content)
-                        break;
-                    default:
-                        this.writeHtml(content)
-                        break;
-                }
+        // 该预览方式有xss、csrf攻击的可能性
+        // goPreview(content, type) {
+        //     console.log(type)
+        //     this.$refs.preview_iframe.src = '/mock/default.html'
+        //     content = this.SecurityMaintenance(content)
+        //     this.$refs.preview_iframe.onload = () => {
+        //         if (!this.$refs.preview_iframe.contentWindow) {
+        //             return
+        //         }
+        //         switch (type) {
+        //             case 'javascript':
+        //                 this.writeJsC(content)
+        //                 break;
+        //             default:
+        //                 this.writeHtml(content)
+        //                 break;
+        //         }
 
+        //     }
+        // },
+        goPreview(content, type) {
+            this.$refs.preview_iframe.src = '/mock/default.html'
+            switch (type) {
+                case 'javascript':
+                    let code = `
+                        <body><\/body>
+                        <script src="${window.location.origin}/js/codesharePreviewUtils.js"><\/script>
+                        <script>
+                            ${content}
+                        <\/script>
+                    `
+                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(code)}`
+                    break;
+                default:
+                    const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.$parent.item.id}/" />`
+                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(base + content)}`
+                    break;
             }
         },
         /**
