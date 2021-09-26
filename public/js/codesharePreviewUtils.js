@@ -103,7 +103,6 @@ class Cs {
         // 如果能够获得行数
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
-            console.oldLog(array)
             line = parseInt(array[1][0].substring(1).split(':')[0]) - 4
         }
         // 判断是否对象，是对象需要格式化成文本
