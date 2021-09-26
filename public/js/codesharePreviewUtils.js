@@ -53,7 +53,7 @@ class Cs {
     watchLogsAndError() {
         // 监听代码错误全局异常捕获
         window.onerror = function(message, source, lineno, colno, error) {
-            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 1)
+            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 4)
         }
         console.oldLog = console.log
         // 重写打印输出函数，实现获取输出内容
@@ -66,12 +66,12 @@ class Cs {
         newInsertElement.classList.add(className)
         newInsertElement.innerHTML = message
         const span = document.createElement('span')
-        span.innerHTML = `第${line}行`
+        span.innerHTML = `${line}`
         span.style.float = 'right'
         newInsertElement.appendChild(span)
-        newInsertElement.onclick = () => {
-            window.parent.postMessage(JSON.stringify({ line }), window.location.href)
-        }
+        // newInsertElement.onclick = () => {
+        //     window.parent.postMessage(JSON.stringify({ line }), window.location.href)
+        // }
         document.getElementById('cs_logs_container').appendChild(newInsertElement)
     }
 
@@ -86,7 +86,7 @@ class Cs {
 
     info() {
         console.log(`
-        CodeShare JS 调试工具脚本 1.0
+        CodeShare JS 调试工具脚本 2.2
         Aut: xiaoxi
         Msg：您的代码处理专家。
         Url: blog.diyxi.top
@@ -104,7 +104,7 @@ class Cs {
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
             console.oldLog(array)
-            line = parseInt(array[1][0].substring(1).split(':')[0]) - 1
+            line = parseInt(array[1][0].substring(1).split(':')[0]) - 4
         }
         // 判断是否对象，是对象需要格式化成文本
         if (T instanceof Object) {
@@ -148,5 +148,5 @@ newInsertElement.id = '124106_codeshare_utils_c'
 document.body.appendChild(newInsertElement)
 const cs = new Cs(document.getElementById('124106_codeshare_utils_c'))
 cs.info()
-cs.dynamicLoadCss('/css/codesharePreview.css')
+cs.dynamicLoadCss('https://codeshare2.diyxi.top/css/codesharePreview.css')
 cs.watchLogsAndError()
