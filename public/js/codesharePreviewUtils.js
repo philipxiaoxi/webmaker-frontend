@@ -85,9 +85,32 @@ class Cs {
         head.appendChild(link)
     }
 
+    dynamicLoadJs(url, callback) {
+        var script = document.createElement('script')
+        var fn = callback || function() {}
+        script.type = 'text/javascript'
+        // IE
+        if (script.readyState) {
+            script.onreadystatechange = function() {
+                if (script.readyState == 'loaded' || script.readyState == 'complete') {
+                    script.onreadystatechange = null
+
+                    fn()
+                }
+            }
+        } else {
+            // 其他浏览器
+            script.onload = function() {
+                fn()
+            }
+        }
+        script.src = url
+        document.getElementsByTagName('head')[0].appendChild(script)
+    }
+
     info() {
         console.log(`
-        CodeShare JS 调试工具脚本 2.2
+        CodeShare JS 调试工具脚本 2.3
         Aut: xiaoxi
         Msg：您的代码处理专家。
         Url: blog.diyxi.top
@@ -141,6 +164,17 @@ class Cs {
             }
         }
         cs.insertLog('[WINNER]: ' + '恭喜你！所有用例通过！', 'log-item-green', '[cs处理器]')
+    }
+
+    setLogContainerFontSize(type) {
+        document.getElementById('cs_logs_container').style.fontSize = type
+    }
+
+    setStyle(type) {
+        if (type == 'black') {
+            document.body.style.backgroundColor = 'black'
+            document.getElementById('124106_codeshare_utils_c').style.color = 'white'
+        }
     }
 }
 const newInsertElement = document.createElement('div')
