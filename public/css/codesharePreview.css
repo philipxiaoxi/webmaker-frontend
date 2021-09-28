@@ -9,7 +9,6 @@
     padding: 5px;
     padding-left: 20px;
     cursor: pointer;
-    font-size: 10px;
     word-break: break-all;
 }
 .cs_console_container .log-item-red {
@@ -17,7 +16,6 @@
     padding: 5px;
     padding-left: 20px;
     cursor: pointer;
-    font-size: 10px;
     word-break: break-all;
     color: red;
 }
@@ -26,7 +24,6 @@
     padding: 5px;
     padding-left: 20px;
     cursor: pointer;
-    font-size: 10px;
     word-break: break-all;
     color: green;
 }
@@ -39,4 +36,5 @@
 }
 .cs_console_container .log-item:hover {
     background-color: aliceblue;
+    color: black;
 }
