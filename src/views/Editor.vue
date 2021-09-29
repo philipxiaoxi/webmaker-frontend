@@ -331,7 +331,7 @@ export default {
     border-bottom-left-radius: 25%;
 }
 .container {
-    margin-top: 70px;
+    margin-top: 63px;
 }
 .con {
     display: flex;
