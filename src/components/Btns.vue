@@ -4,6 +4,7 @@
             <div class="btns">
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                 <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
+                <divv v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</divv>
                 <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                 </el-tooltip>
@@ -12,7 +13,7 @@
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
             </div>
-            <div class="status">您正在编辑:index.html</div>
+            <!-- <div class="status">您正在编辑:{{fileName}}</div> -->
         </div>
         <!-- 新建项目弹窗 -->
         <new-project-dialog
@@ -38,6 +39,12 @@ import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
 export default {
     components: { NewProjectDialog, DockerManager },
+    props: {
+        fileName: {
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             dialogVisible: false,
@@ -160,6 +167,12 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    // justify-content: space-between;
+    .status {
+        margin-right: 20px;
+        font-size: 14px;
+        color: #909399;
+    }
 }
 .btns {
     margin: 10px;
