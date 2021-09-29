@@ -1,22 +1,27 @@
 <template>
     <div>
-        <div class="btns">
-            <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
-            <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
-            <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
-                <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
-            </el-tooltip>
-            <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
-            <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
-            <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
-            <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
+        <div class="container">
+            <div class="btns">
+                <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
+                <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
+                <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
+                    <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
+                </el-tooltip>
+                <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
+                <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
+                <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
+                <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
+            </div>
+            <div class="status">您正在编辑:index.html</div>
         </div>
+        <!-- 新建项目弹窗 -->
         <new-project-dialog
         :dialogVisible.sync="dialogVisible"
         @handleClose='handleClose'
         @handleClick='handleClick'
         >
         </new-project-dialog>
+        <!-- 虚拟容器配置页面 -->
         <el-dialog
         title="虚拟容器创建页面"
         :visible.sync="dockerDialogVisible"
@@ -151,6 +156,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .btns {
     margin: 10px;
     text-align: left;
