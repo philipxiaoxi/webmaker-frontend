@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- 工具条按钮组 -->
-        <btns></btns>
+        <btns :fileName="selectNode.label"></btns>
         <div class="con">
             <!-- 代码编辑器 -->
             <vs-code ref="vscode" class="xx-vscode"></vs-code>
@@ -55,7 +55,8 @@ export default {
             drawer: false,
             rightDrawer: false,
             item: {},
-            drawerOpenStatus: false
+            drawerOpenStatus: false,
+            selectNode: { label: '' }
         }
     },
     deactivated() {
@@ -125,6 +126,7 @@ export default {
                         this.$refs.vscode.setModelLanguage('html')
                         this.$refs.filesManager.data = []
                         this.fileInfo = {}
+                        this.selectNode = { label: '' }
                     }
                 }).catch((e) => {
                     console.log(e)
@@ -138,7 +140,9 @@ export default {
          * @Ahthor: xiaoxi
          * @param {*} data
          */
-        setValue(data) {
+        setValue(data, selectNode) {
+            this.selectNode = selectNode
+            console.log(data)
             // 赋值到编辑器
             this.$refs.vscode.monacoEditor.getModel().setValue(data.data)
             // 设置语言
