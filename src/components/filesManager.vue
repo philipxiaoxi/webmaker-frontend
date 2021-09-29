@@ -122,7 +122,7 @@ export default {
                 // 判断是否为图片类文件
                 if (pic_types.indexOf(type) > -1) {
                     const res = { data: `<img src="${data.path.substring(data.path.indexOf('/') + 1)}" />`, type: 'html' }
-                    this.$emit('click', res)
+                    this.$emit('click', res, this.selectNode)
                     return
                 }
                 // 判断是否为代码类文件
@@ -135,7 +135,7 @@ export default {
                 }
                 this.axios(API.snippetProject.getSnippetProjectFile(data.path)).then(res => {
                     const data = { data: res.data, type: type }
-                    this.$emit('click', data)
+                    this.$emit('click', data, this.selectNode)
                 }).catch((e) => {
                     console.log(e)
                 })
