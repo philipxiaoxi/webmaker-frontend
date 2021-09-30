@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- 工具条按钮组 -->
-        <btns :fileName="selectNode.label"></btns>
+        <btns :fileName="selectNode.label" @autoPreview="autoPreview"></btns>
         <div class="con">
             <!-- 代码编辑器 -->
             <vs-code ref="vscode" class="xx-vscode"></vs-code>
@@ -47,6 +47,7 @@ import API from '../api/'
 import Btns from '../components/Btns.vue'
 import FilesManager from '../components/filesManager.vue'
 import Note from '../components/Note.vue'
+import common from '../util/common'
 export default {
     components: { VsCode, Preview, Btns, FilesManager, Note },
     data() {
@@ -84,6 +85,15 @@ export default {
                     this.save()
                 }
             }
+            const previewDebounce = common.debounce(this.preview, 500)
+            this.$nextTick(() => {
+            // 编辑器改变时监听事件
+                this.$refs.vscode.monacoEditor.onDidChangeModelContent(() => {
+                    if (this.autoPreviewValue) {
+                        previewDebounce()
+                    }
+                })
+            })
             // 接收预览框反馈消息
             window.addEventListener('message', (e) => {
                 if (!(e.data instanceof Object)) {
@@ -319,6 +329,9 @@ export default {
             default:
                 break
             }
+        },
+        autoPreview(value) {
+            this.autoPreviewValue = value
         }
     }
 }
