@@ -6,6 +6,7 @@ class Cs {
      */
     constructor(dom) {
         this.appendContainer(dom)
+        this.appendDialog(dom)
     }
 
     // /**
@@ -50,6 +51,36 @@ class Cs {
         dom.appendChild(newInsertElement)
     }
 
+    appendDialog(dom) {
+        // 创建弹窗
+        const dialog = document.createElement('div')
+        dialog.classList.add('cs_console_dialog')
+        this.dialog = dialog
+        dom.appendChild(dialog)
+        // 创建标题
+        let newInsertElement = document.createElement('h2')
+        newInsertElement.innerText = 'codeshare控制台弹窗'
+        newInsertElement.style.textAlign = 'center'
+        dialog.appendChild(newInsertElement)
+        // 创建内容文本
+        newInsertElement = document.createElement('p')
+        newInsertElement.innerText = '弹窗内容'
+        newInsertElement.style.textAlign = 'justify'
+        newInsertElement.style.fontSize = '15px'
+        newInsertElement.style.lineHeight = '2'
+        this.dialogContentElement = newInsertElement
+        dialog.appendChild(newInsertElement)
+        // 创建关闭按钮
+        newInsertElement = document.createElement('button')
+        newInsertElement.innerText = '关闭'
+        newInsertElement.style.textAlign = 'center'
+        dialog.appendChild(newInsertElement)
+        // 绑定关闭按钮时间
+        newInsertElement.onclick = () => {
+            this.dialog.style.display = 'none'// 隐藏
+        }
+    }
+
     watchLogsAndError() {
         // 监听代码错误全局异常捕获
         window.onerror = function(message, source, lineno, colno, error) {
@@ -69,10 +100,10 @@ class Cs {
         span.innerHTML = `${line}`
         span.style.float = 'right'
         newInsertElement.appendChild(span)
-        // newInsertElement.onclick = () => {
-        //     // window.parent.postMessage(JSON.stringify({ line }), 'http://192.168.2.233:8080/')
-        //     window.parent.postMessage(JSON.stringify({ line }), 'https://codeshare2.diyxi.top/')
-        // }
+        newInsertElement.onclick = () => {
+            this.dialogContentElement.innerText = message
+            this.dialog.style.display = 'flex'
+        }
         document.getElementById('cs_logs_container').appendChild(newInsertElement)
     }
 
@@ -182,5 +213,5 @@ newInsertElement.id = '124106_codeshare_utils_c'
 document.body.appendChild(newInsertElement)
 const cs = new Cs(document.getElementById('124106_codeshare_utils_c'))
 cs.info()
-cs.dynamicLoadCss('https://codeshare2.diyxi.top/css/codesharePreview.css')
+cs.dynamicLoadCss('http://192.168.2.112:8080/css/codesharePreview.css')
 cs.watchLogsAndError()
