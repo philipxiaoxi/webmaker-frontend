@@ -101,38 +101,56 @@ export default {
          * 否则直接预览
          * @Ahthor: xiaoxi
          */
-        checkStatus() {
+        async checkStatus() {
+            // url模式
+            if (this.$route.query.url != null) {
+                console.log(this.$route.query.url)
+                const data = (await this.axios(this.$route.query.url)).data
+                this.selectNode = { label: '由url传入的代码片段无法保存，请新建代码片段。' }
+                this.initPreview({ title: 'url片段加载' }, data)
+                return
+            }
+            // 自家片段模式
             if (this.$route.query.id != null && this.$route.query.id != this.id) {
                 this.id = this.$route.query.id
                 this.axios(API.snippet.getSnippet(this.id)).then(res => {
                     if (res.data.data == null) {
                         this.$message.error('该代码片段已下架或者被删除！')
                     }
-                    // 赋值片段信息
-                    this.item = res.data.data
-                    // 赋值到标题
-                    document.title = this.item.title + ' - CodeShare'
-                    console.log(this.item)
-                    // 赋值到编辑器
-                    this.$refs.vscode.monacoEditor.getModel().setValue(res.data.data.content)
-                    // 预览
-                    this.$refs.preview.goPreview(res.data.data.content)
-                    // 告知抽屉需要重新渲染
-                    this.drawerOpenStatus = false
-                    // 抽屉自动打开
-                    if (this.item.type == 1) {
-                        this.drawer = true
-                    } else {
-                        this.$refs.vscode.setModelLanguage('html')
-                        this.$refs.filesManager.data = []
-                        this.fileInfo = {}
-                        this.selectNode = { label: '' }
-                    }
+                    this.initPreview(res.data.data, res.data.data.content)
                 }).catch((e) => {
                     console.log(e)
                 })
             } else {
                 this.preview()
+            }
+        },
+        /**
+         * 第一次片段加载
+         * @Ahthor: xiaoxi
+         * @param {*} item 片段详细信息
+         * @param {*} content 片段代码内容
+         */
+        initPreview(item, content) {
+            // 赋值片段信息
+            this.item = item
+            // 赋值到标题
+            document.title = this.item.title + ' - CodeShare'
+            console.log(this.item)
+            // 赋值到编辑器
+            this.$refs.vscode.monacoEditor.getModel().setValue(content)
+            // 预览
+            this.$refs.preview.goPreview(content)
+            // 告知抽屉需要重新渲染
+            this.drawerOpenStatus = false
+            // 抽屉自动打开
+            if (this.item.type == 1) {
+                this.drawer = true
+            } else {
+                this.$refs.vscode.setModelLanguage('html')
+                this.$refs.filesManager.data = []
+                this.fileInfo = {}
+                this.selectNode = { label: '' }
             }
         },
         /**
