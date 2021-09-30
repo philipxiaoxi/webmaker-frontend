@@ -4,14 +4,37 @@
             <div class="btns">
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                 <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
-                <divv v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</divv>
+                <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
                 <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                 </el-tooltip>
                 <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
+                <el-switch
+                v-model="autoPreview"
+                @change="autoPreviewChange"
+                active-text="开启自动预览"
+                inactive-text="关闭自动预览">
+                </el-switch>
                 <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
+                <!-- <el-popover
+                    placement="top-start"
+                    title="什么是协同开发"
+                    width="200"
+                    trigger="hover"
+                    content="协同开发将会产生一个链接供您分享给其他用户进行开发，代码会互相同步显示。">
+                    <el-switch
+                    @change="synergyChange"
+                    slot="reference"
+                    style="display: block"
+                    v-model="synergy"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-text="开启协同开发"
+                    inactive-text="关闭协同开发">
+                    </el-switch>
+                </el-popover> -->
             </div>
             <!-- <div class="status">您正在编辑:{{fileName}}</div> -->
         </div>
@@ -47,8 +70,10 @@ export default {
     },
     data() {
         return {
+            synergy: false,
             dialogVisible: false,
-            dockerDialogVisible: false
+            dockerDialogVisible: false,
+            autoPreview: false
         }
     },
     mounted() {
@@ -157,6 +182,28 @@ export default {
             }).catch((e) => {
                 this.$message.error(e)
             })
+        },
+        synergyChange(value) {
+            if (value) {
+                this.$message({
+                    message: '协同开发已开启，链接已复制。',
+                    type: 'success'
+                })
+            } else {
+                this.$message.error('协同开发已关闭。')
+            }
+        },
+        autoPreviewChange(value) {
+            if (value) {
+                this.$emit('autoPreview', value)
+                this.$message({
+                    message: '自动预览已开启。',
+                    type: 'success'
+                })
+            } else {
+                this.$emit('autoPreview', value)
+                this.$message.error('自动预览已关闭。')
+            }
         }
     }
 }
