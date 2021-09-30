@@ -4,7 +4,7 @@
 <template>
     <div class="header">
         <div class="title">
-            CodeShare代码分享
+            <img style="height:100%;" src="/img/logo.png" />
         </div>
         <div class="menu">
             <!-- 常驻选项 -->
@@ -83,6 +83,7 @@ export default {
 <style lang='less' scoped>
     .title {
         font-size: 20px;
+        height: 100%;
     }
     .header {
         z-index: 10;
