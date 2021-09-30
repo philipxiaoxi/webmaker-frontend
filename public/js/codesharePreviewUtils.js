@@ -213,5 +213,5 @@ newInsertElement.id = '124106_codeshare_utils_c'
 document.body.appendChild(newInsertElement)
 const cs = new Cs(document.getElementById('124106_codeshare_utils_c'))
 cs.info()
-cs.dynamicLoadCss('http://192.168.2.112:8080/css/codesharePreview.css')
+cs.dynamicLoadCss('https://codeshare2.diyxi.top/css/codesharePreview.css')
 cs.watchLogsAndError()
