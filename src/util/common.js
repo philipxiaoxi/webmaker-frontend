@@ -7,6 +7,15 @@ const common = {
         document.execCommand('copy')
         oInput.remove()
         return true
+    },
+    debounce(fn, delay) {
+        let timer = null
+        return () => {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                fn()
+            }, delay)
+        }
     }
 }
 module.exports = common
