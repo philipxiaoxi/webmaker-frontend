@@ -6,7 +6,8 @@
         <div class="title">
             <img style="height:100%;" src="/img/logo.png" />
         </div>
-        <div class="menu">
+        <i v-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
+        <div v-else class="menu">
             <!-- 常驻选项 -->
             <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path" :class="{active: routePath == link.path}">
                 <span>{{link.name}}</span>
@@ -32,6 +33,46 @@
                 <span style="cursor: pointer;"  @click="logout">退出</span>
             </div>
         </div>
+        <!-- 样式1的菜单栏 -->
+        <el-drawer
+            title="导航"
+            :visible.sync="drawer"
+            direction="rtl"
+            :modal-append-to-body='false'
+            size='40%'
+            >
+            <div @click="drawer = false" class="menuDrawer">
+                <!-- 常驻选项 -->
+                <router-link tag="div" v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path" :class="{active: routePath == link.path}">
+                    <span>{{link.name}}</span>
+                    <el-divider></el-divider>
+                </router-link>
+                <!-- 登录注册选项 -->
+                <div v-if="this.$store.state.userInfo.phone=='未登录'">
+                    <router-link  to="/login"  tag="div" :class="{active: routePath == '/login'}">
+                        <span>登录</span>
+                    </router-link>
+                    <el-divider></el-divider>
+                    <router-link  to="/register" tag="div" :class="{active: routePath == '/register'}">
+                        <span>注册</span>
+                    </router-link>
+                </div>
+                <!-- 用户选项 -->
+                <div v-else>
+                    <router-link   to="/my-codes" tag="div" :class="{active: routePath == '/my-codes'}">
+                        <span>我的片段</span>
+                    </router-link>
+                    <el-divider></el-divider>
+                    <router-link   to="/my" tag="div" :class="{active: routePath == '/my'}">
+                        <span>个人中心</span>
+                    </router-link>
+                    <el-divider></el-divider>
+                    <span  >{{this.$store.state.userInfo.name}}</span>
+                    <span style="margin-left:10px;cursor: pointer;"  @click="logout">退出</span>
+                </div>
+            </div>
+
+        </el-drawer>
     </div>
 </template>
 
@@ -57,7 +98,9 @@ export default {
                     path: '/forum'
                 }
             ],
-            routePath: '/'
+            routePath: '/',
+            menuStyle: 0,
+            drawer: false
         }
     },
     watch: {
@@ -66,7 +109,26 @@ export default {
             document.documentElement.scrollTop = 0
         }
     },
+    mounted() {
+        this.initAutoMenuShow()
+    },
     methods: {
+        initAutoMenuShow() {
+            const UpdateNavBar = () => {
+                if (window.innerWidth < 1000) {
+                    this.menuStyle = 1
+                } else {
+                    this.menuStyle = 0
+                }
+            }
+            UpdateNavBar()
+            window.addEventListener('resize', () => {
+                UpdateNavBar()
+            })
+        },
+        openDrawer() {
+            this.drawer = true
+        },
         logout() {
             localStorage.clear('token')
             this.$store.commit('setToken', null)
@@ -81,6 +143,11 @@ export default {
 </script>
 
 <style lang='less' scoped>
+    .menuDrawer {
+        & div {
+            cursor: pointer;
+        }
+    }
     .title {
         font-size: 20px;
         height: 100%;
