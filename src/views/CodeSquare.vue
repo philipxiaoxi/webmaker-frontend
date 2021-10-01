@@ -54,6 +54,7 @@ export default {
 }
 .el-carousel {
     margin-bottom: 20px;
+    z-index: 3;
 }
 .codes {
     display: grid;
