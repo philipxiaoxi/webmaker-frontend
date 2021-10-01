@@ -18,7 +18,7 @@
                 <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
-                <!-- <el-popover
+                <el-popover
                     placement="top-start"
                     title="什么是协同开发"
                     width="200"
@@ -34,7 +34,7 @@
                     active-text="开启协同开发"
                     inactive-text="关闭协同开发">
                     </el-switch>
-                </el-popover> -->
+                </el-popover>
             </div>
             <!-- <div class="status">您正在编辑:{{fileName}}</div> -->
         </div>
