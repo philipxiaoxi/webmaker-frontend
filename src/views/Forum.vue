@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <h1>欢迎来到 CodeShare Forum</h1>
-        <p>你可以在此交流代码片段或使用CodeShare中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
+        <h1>欢迎来到 WebMaker Forum</h1>
+        <p>你可以在此交流代码片段或使用WebMaker中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
         <el-carousel height="350px" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
                 <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
@@ -23,7 +23,7 @@ export default {
             dataList: [],
             carouselImgs: [
                 {
-                    title: 'CodeShare轻松编码网站！',
+                    title: 'WebMaker轻松编码网站！',
                     imgurl: '/img/banner/forumBanner1.png'
                 }
             ]

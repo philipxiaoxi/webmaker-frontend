@@ -4,7 +4,7 @@
             <h1>注册</h1>
             <el-alert
                 class="input"
-                title="您好，欢迎注册CodeShare，新版本处于开发阶段。"
+                title="您好，欢迎注册WebMaker，新版本处于开发阶段。"
                 type="info"
                 :closable="false">
             </el-alert>

@@ -1,7 +1,7 @@
 <template>
     <div class="docker_container">
-        <h1>CodeShare Docker Manager</h1>
-        <p>由codeshare管控的虚拟容器可以让你在web上开发任何语言。享受你的开发乐趣。</p>
+        <h1>WebMaker Docker Manager</h1>
+        <p>由WebMaker管控的虚拟容器可以让你在web上开发任何语言。享受你的开发乐趣。</p>
         <p>更新：当前申请容器是一人一容器一目录，目录代码将会保存。</p>
         <p>容器状态：{{dockerStatus}}，当容器释放后可重新申请。</p>
         <div class="xx-from-container">
