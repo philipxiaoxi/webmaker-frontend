@@ -94,7 +94,7 @@ export default {
                     path: '/search'
                 },
                 {
-                    name: 'CodeShare论坛',
+                    name: 'WebMaker论坛',
                     path: '/forum'
                 }
             ],
