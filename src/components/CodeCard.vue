@@ -27,7 +27,7 @@ export default {
     props: {
         title: {
             type: String,
-            default: 'CodeShare代码卡片展示'
+            default: 'WebMaker代码卡片展示'
         },
         author: {
             type: String,
