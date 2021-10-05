@@ -19,6 +19,7 @@
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
                 <el-popover
+                    v-if="fileInfo.type!=1 && show"
                     placement="top-start"
                     title="什么是协同开发"
                     width="200"
@@ -66,6 +67,14 @@ export default {
         fileName: {
             type: String,
             default: ''
+        },
+        fileInfo: {
+            type: Object,
+            default: () => ({})
+        },
+        show: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -184,14 +193,7 @@ export default {
             })
         },
         synergyChange(value) {
-            if (value) {
-                this.$message({
-                    message: '协同开发已开启，链接已复制。',
-                    type: 'success'
-                })
-            } else {
-                this.$message.error('协同开发已关闭。')
-            }
+            this.$emit('synergyChange', value)
         },
         autoPreviewChange(value) {
             if (value) {
