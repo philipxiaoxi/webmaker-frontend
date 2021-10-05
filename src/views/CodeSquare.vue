@@ -20,7 +20,7 @@ export default {
             cards: [],
             carouselImgs: [
                 {
-                    title: 'CodeShare轻松编码网站！',
+                    title: 'WebMaker轻松编码网站！',
                     imgurl: '/img/banner/Banner3.png'
                 },
                 {
