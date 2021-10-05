@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <!-- 工具条按钮组 -->
-        <btns :fileName="selectNode.label" @autoPreview="autoPreview"></btns>
+        <btns ref="btns" :fileName="selectNode.label" @autoPreview="autoPreview" @synergyChange="synergyChange" :fileInfo="item" :show="syncBtnShow"></btns>
         <div class="con">
             <!-- 代码编辑器 -->
             <vs-code ref="vscode" class="xx-vscode"></vs-code>
@@ -37,6 +37,7 @@
             :modal='false'>
             <note v-model="item.note"></note>
         </el-drawer>
+        <coll-dev ref="colldev" @executeEdits="executeEdits" :show="synergyChangeValue"></coll-dev>
     </div>
 </template>
 
@@ -48,8 +49,9 @@ import Btns from '../components/Btns.vue'
 import FilesManager from '../components/filesManager.vue'
 import Note from '../components/Note.vue'
 import common from '../util/common'
+import CollDev from '../components/CollDev/CollDev.vue'
 export default {
-    components: { VsCode, Preview, Btns, FilesManager, Note },
+    components: { VsCode, Preview, Btns, FilesManager, Note, CollDev },
     data() {
         return {
             id: -1,
@@ -57,7 +59,9 @@ export default {
             rightDrawer: false,
             item: {},
             drawerOpenStatus: false,
-            selectNode: { label: '' }
+            selectNode: { label: '' },
+            synergyChangeValue: false,
+            syncBtnShow: true
         }
     },
     deactivated() {
@@ -88,21 +92,25 @@ export default {
             const previewDebounce = common.debounce(this.preview, 500)
             this.$nextTick(() => {
             // 编辑器改变时监听事件
-                this.$refs.vscode.monacoEditor.onDidChangeModelContent(() => {
+                this.$refs.vscode.monacoEditor.onDidChangeModelContent((event) => {
                     if (this.autoPreviewValue) {
                         previewDebounce()
                     }
+                    if (this.synergyChangeValue && this.flag == false) {
+                        this.$refs.colldev.sendMessage('sync', JSON.stringify(event.changes))
+                    }
+                    this.flag = false
                 })
             })
             // 接收预览框反馈消息
-            window.addEventListener('message', (e) => {
-                if (!(e.data instanceof Object)) {
-                    const obj = JSON.parse(e.data)
-                    this.$refs.vscode.monacoEditor.revealPositionInCenter({ lineNumber: obj.line, column: 0 })
-                    const range = { startLineNumber: obj.line, startColumn: 0, endLineNumber: obj.line, endColumn: 10000 }
-                    this.$refs.vscode.monacoEditor.setSelection(range)
-                }
-            }, false)
+            // window.addEventListener('message', (e) => {
+            //     if (!(e.data instanceof Object)) {
+            //         const obj = JSON.parse(e.data)
+            //         this.$refs.vscode.monacoEditor.revealPositionInCenter({ lineNumber: obj.line, column: 0 })
+            //         const range = { startLineNumber: obj.line, startColumn: 0, endLineNumber: obj.line, endColumn: 10000 }
+            //         this.$refs.vscode.monacoEditor.setSelection(range)
+            //     }
+            // }, false)
             this.dragControllerMiddle()
         },
         /**
@@ -145,22 +153,44 @@ export default {
             // 赋值片段信息
             this.item = item
             // 赋值到标题
-            document.title = this.item.title + ' - CodeShare'
+            document.title = this.item.title + ' - WebMaker'
             console.log(this.item)
             // 赋值到编辑器
             this.$refs.vscode.monacoEditor.getModel().setValue(content)
+            // 启用同步
+            if (this.$route.query.sync != null) {
+                this.$message({
+                    message: '您进入了协同开发模式。',
+                    type: 'success'
+                })
+                this.$refs.colldev.initWebSocket('id', this.$route.query.sync)
+                this.syncBtnShow = false
+                this.synergyChangeValue = true
+            } else {
+                this.syncBtnShow = true
+                if (this.synergyChangeValue) {
+                    this.$refs.colldev.closeWebSocket()
+                    this.synergyChangeValue = false
+                }
+            }
             // 预览
             this.$refs.preview.goPreview(content)
             // 告知抽屉需要重新渲染
             this.drawerOpenStatus = false
             // 抽屉自动打开
             if (this.item.type == 1) {
+                if (this.synergyChangeValue) {
+                    this.$refs.btns.synergy = false
+                    this.synergyChange(false)
+                }
                 this.drawer = true
             } else {
                 this.$refs.vscode.setModelLanguage('html')
-                this.$refs.filesManager.data = []
-                this.fileInfo = {}
-                this.selectNode = { label: '' }
+                if (this.$refs.filesManager) {
+                    this.$refs.filesManager.data = []
+                    this.fileInfo = {}
+                    this.selectNode = { label: '' }
+                }
             }
         },
         /**
@@ -332,6 +362,26 @@ export default {
         },
         autoPreview(value) {
             this.autoPreviewValue = value
+        },
+        synergyChange(value) {
+            if (value) {
+                this.$message({
+                    message: '协同开发已开启，链接已复制。',
+                    type: 'success'
+                })
+                const id = this.$store.state.userInfo.id
+                common.copy(window.location.href + '&sync=' + id)
+                this.$refs.colldev.initWebSocket()
+                this.synergyChangeValue = true
+            } else {
+                this.$message.error('协同开发已关闭。')
+                this.$refs.colldev.closeWebSocket()
+                this.synergyChangeValue = false
+            }
+        },
+        executeEdits(ops) {
+            this.flag = true
+            this.$refs.vscode.monacoEditor.executeEdits('insert-code', ops)
         }
     }
 }
@@ -367,6 +417,9 @@ export default {
 }
 .container {
     margin-top: 63px;
+    position: relative;
+    height: calc(100vh - 65px);
+    overflow: hidden;
 }
 .con {
     display: flex;
