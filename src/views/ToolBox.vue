@@ -51,8 +51,7 @@ export default {
                 {
                     title: 'web前端学习架构',
                     intro: '聚集一切前端资源的导航系统。',
-                    url: 'http://www.alloyteam.com/nav/',
-                    img: 'http://www.alloyteam.com/nav/static/images/fiddler-favicon.png'
+                    url: 'http://www.alloyteam.com/nav/'
                 },
                 {
                     title: '同态生成器',
