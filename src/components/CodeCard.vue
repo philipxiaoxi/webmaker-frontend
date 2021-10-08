@@ -2,7 +2,7 @@
     <div>
         <el-card style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
             <div class="heads">
-                <img :src="RealCodeImg" alt="">
+                <img class="CodeImg" :src="RealCodeImg" alt="">
             </div>
             <div class="headimg">
                 <div class="xx-row">
@@ -83,12 +83,20 @@ export default {
 
 <style lang='less' scoped>
 .heads {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
     img {
         width: 100%;
-        height: 250px;
+        height: 100%;
         padding-bottom: 0px;
+        transition: all 0.3s;
+    }
+    img:hover {
+        transform: scale(1.1);
     }
 }
+
 .headimg {
     padding: 10px;
     display: flex;
