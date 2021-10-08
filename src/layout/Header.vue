@@ -96,6 +96,10 @@ export default {
                 {
                     name: 'WebMaker论坛',
                     path: '/forum'
+                },
+                {
+                    name: '工具箱',
+                    path: '/toolbox'
                 }
             ],
             routePath: '/',

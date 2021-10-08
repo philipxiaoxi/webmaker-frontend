@@ -11,6 +11,7 @@ import ForumPage from '../views/ForumPage.vue'
 import NewForumPage from '../views/NewForumPage.vue'
 import Register from '../views/Register.vue'
 import DockerView from '../views/DockerView.vue'
+import ToolBox from '../views/ToolBox.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -68,6 +69,11 @@ const routes = [
         path: '/dockerview',
         name: 'dockerview',
         component: DockerView
+    },
+    {
+        path: '/toolbox',
+        name: 'toolbox',
+        component: ToolBox
     }
 ]
 
