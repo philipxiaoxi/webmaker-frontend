@@ -19,7 +19,6 @@
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
                 <el-popover
-                    v-if="fileInfo.type!=1 && show"
                     placement="top-start"
                     title="什么是协同开发"
                     width="200"
