@@ -1,7 +1,50 @@
 <template>
     <div>
         <div class="container">
-            <div class="btns">
+            <div v-show="btnMode==0" class="btns">
+                <el-popover
+                placement="bottom"
+                width="400"
+                trigger="click">
+                <div class="btns-popover">
+                    <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
+                    <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
+                    <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
+                    <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
+                        <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
+                    </el-tooltip>
+                    <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
+                    <el-switch
+                    v-model="autoPreview"
+                    @change="autoPreviewChange"
+                    active-text="开启自动预览"
+                    inactive-text="关闭自动预览">
+                    </el-switch>
+                    <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
+                    <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
+                    <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
+                    <el-popover
+                        placement="top-start"
+                        title="什么是协同开发"
+                        width="200"
+                        trigger="hover"
+                        content="协同开发将会产生一个链接供您分享给其他用户进行开发，代码会互相同步显示。">
+                        <el-switch
+                        @change="synergyChange"
+                        slot="reference"
+                        style="display: block"
+                        v-model="synergy"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        active-text="开启协同开发"
+                        inactive-text="关闭协同开发">
+                        </el-switch>
+                    </el-popover>
+                </div>
+                <el-button  type="primary" round size="mini" slot="reference">全部菜单<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                </el-popover>
+            </div>
+            <div v-show="btnMode==1" class="btns">
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                 <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
                 <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
@@ -81,13 +124,28 @@ export default {
             synergy: false,
             dialogVisible: false,
             dockerDialogVisible: false,
-            autoPreview: false
+            autoPreview: false,
+            btnMode: 1
         }
     },
     mounted() {
         this.pasteEventListener()
+        this.initAutoBtnMode()
     },
     methods: {
+        initAutoBtnMode() {
+            const UpdateBtnMode = () => {
+                if (window.innerWidth < 1300) {
+                    this.btnMode = 0
+                } else {
+                    this.btnMode = 1
+                }
+            }
+            UpdateBtnMode()
+            window.addEventListener('resize', () => {
+                UpdateBtnMode()
+            })
+        },
         /**
         * 监听图片按钮粘贴事件
         * @date 2021-06-12
@@ -230,6 +288,16 @@ export default {
     align-items: center;
     &>* {
         margin-left: 10px;
+    }
+}
+.btns-popover {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    &>* {
+        margin: 5px;
     }
 }
 #code_pic:focus{
