@@ -10,7 +10,7 @@
                     <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                     <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
                     <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
-                    <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
+                    <el-tooltip id="code_pic0" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
                         <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                     </el-tooltip>
                     <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
@@ -48,7 +48,7 @@
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                 <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
                 <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
-                <el-tooltip id="code_pic" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
+                <el-tooltip id="code_pic1" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                 </el-tooltip>
                 <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
@@ -153,31 +153,35 @@ export default {
         */
         pasteEventListener() {
             // 粘贴获取截图
-            const code_pic = document.getElementById('code_pic')
-            code_pic.addEventListener('paste', (event) => {
-                const items = event.clipboardData && event.clipboardData.items
-                let file = null
-                if (items && items.length) {
+            const code_pic0 = document.getElementById('code_pic0')
+            const code_pic1 = document.getElementById('code_pic1')
+            const code_pic = [code_pic0, code_pic1]
+            for (const iterator of code_pic) {
+                iterator.addEventListener('paste', (event) => {
+                    const items = event.clipboardData && event.clipboardData.items
+                    let file = null
+                    if (items && items.length) {
                     // 检索剪切板items
-                    for (let i = 0; i < items.length; i++) {
-                        if (items[i].type.indexOf('image') !== -1) {
-                            file = items[i].getAsFile()
-                            // 此时file就是剪切板中的图片文件
-                            const code_pic_reader = new FileReader()
-                            // 解析成base64格式
-                            code_pic_reader.readAsDataURL(file)
-                            code_pic_reader.onload = () => {
-                                this.$parent.item.img = code_pic_reader.result
-                                this.$message({
-                                    message: '图片获取成功，请记得点击保存按钮。',
-                                    type: 'success'
-                                })
+                        for (let i = 0; i < items.length; i++) {
+                            if (items[i].type.indexOf('image') !== -1) {
+                                file = items[i].getAsFile()
+                                // 此时file就是剪切板中的图片文件
+                                const code_pic_reader = new FileReader()
+                                // 解析成base64格式
+                                code_pic_reader.readAsDataURL(file)
+                                code_pic_reader.onload = () => {
+                                    this.$parent.item.img = code_pic_reader.result
+                                    this.$message({
+                                        message: '图片获取成功，请记得点击保存按钮。',
+                                        type: 'success'
+                                    })
+                                }
+                                break
                             }
-                            break
                         }
                     }
-                }
-            })
+                })
+            }
         },
         handleClose() {
             this.dialogVisible = false
@@ -300,7 +304,10 @@ export default {
         margin: 5px;
     }
 }
-#code_pic:focus{
+#code_pic0:focus{
+    color: #409EFF;
+}
+#code_pic1:focus{
     color: #409EFF;
 }
 </style>
