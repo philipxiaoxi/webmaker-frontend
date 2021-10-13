@@ -48,7 +48,7 @@ export default {
     },
     computed: {
         name() {
-            return this.$store.state.userInfo.name
+            return this.$store.state.userInfo.name == null ? '匿名' : this.$store.state.userInfo.name
         },
         token() {
             return this.$store.state.token.data
@@ -71,16 +71,26 @@ export default {
                     content: '您的房间创建成功。您可以分享链接给其他伙伴进行协同开发。'
                 })
                 this.open = true
+                this.sendMessage('firstSync', '')
             }
             // 接收到消息的回调方法
             this.websocket.onmessage = (event) => {
                 const data = event.data.split('^&^')
-                // 判断是否同步代码
+                // 获取其他用户修改数据
                 console.log(data)
                 if (data[0] == 'sync') {
-                    console.log(JSON.parse(data[1]))
-                    console.log('代码进行同步操作。')
-                    this.$emit('executeEdits', JSON.parse(data[1]))
+                    this.goSync(data[1])
+                    return
+                }
+                if (data[0] == 'firstSyncReply') {
+                    this.$emit('executefirstSync', JSON.parse(data[1]))
+                    return
+                }
+                if (data[0] == 'firstSync') {
+                    // 主人回复同步
+                    if (this.$route.query.sync == null) {
+                        this.$emit('firstSync')
+                    }
                     return
                 }
                 this.messages.push({
@@ -96,6 +106,10 @@ export default {
                 })
             }
         },
+        goSync(data) {
+            data = JSON.parse(data)
+            this.$emit('executeEdits', data)
+        },
         closeWebSocket() {
             this.websocket.close()
             this.open = false
@@ -103,7 +117,7 @@ export default {
         },
         sendMessage(name, value) {
             this.websocket.send(name + '^&^' + value)
-            if (name == 'sync') {
+            if (name == 'sync' || name == 'firstSync' || name == 'firstSyncReply') {
                 return
             }
             this.messages.push({
