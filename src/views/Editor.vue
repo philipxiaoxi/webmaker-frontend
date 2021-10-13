@@ -1,14 +1,14 @@
 <template>
     <div class="container">
         <!-- 工具条按钮组 -->
-        <btns ref="btns" :fileName="selectNode.label" @autoPreview="autoPreview" @synergyChange="synergyChange" :fileInfo="item" :show="syncBtnShow"></btns>
+        <btns ref="btns" :fileName="selectNode.label" @autoPreview="autoPreview" @synergyChange="synergyChange" :fileInfo="item" v-show="syncBtnShow" :synergy="synergyChangeValue"></btns>
         <div class="con">
             <!-- 代码编辑器 -->
-            <vs-code ref="vscode" class="xx-vscode"></vs-code>
+            <vs-code ref="vscode" :class="{ 'xx-vscode': syncBtnShow, 'xx-vscode-sync': !syncBtnShow }"></vs-code>
             <!-- 收缩侧边栏 -->
             <div id="middle" class="xx-middle">⋮</div>
             <!-- 代码预览 -->
-            <div  class="xx-preview" style="position: relative;">
+            <div :class="{ 'xx-preview': syncBtnShow, 'xx-preview-sync': !syncBtnShow }" style="position: relative;">
                 <!--遮罩层 遮住iframe-->
                 <div class="iframeDiv"></div>
                 <preview ref="preview" style="height:100%;"></preview>
@@ -37,7 +37,7 @@
             :modal='false'>
             <note v-model="item.note"></note>
         </el-drawer>
-        <coll-dev ref="colldev" @executeEdits="executeEdits" :show="synergyChangeValue"></coll-dev>
+        <coll-dev ref="colldev" @executeEdits="executeEdits" @executefirstSync='executefirstSync' :show="synergyChangeValue" @firstSync='firstSync'></coll-dev>
     </div>
 </template>
 
@@ -97,21 +97,21 @@ export default {
                         previewDebounce()
                     }
                     if (this.synergyChangeValue && this.flag == false) {
-                        this.$refs.colldev.sendMessage('sync', JSON.stringify(event.changes))
+                        // 构建同步数据 包含修改者姓名 修改数据 文件类型
+                        const data = { name: this.$store.state.userInfo.name, data: event.changes, type: this.fileInfo != null ? this.fileInfo.type : 'html' }
+                        // 发送同步数据
+                        this.$refs.colldev.sendMessage('sync', JSON.stringify(data))
                     }
                     this.flag = false
                 })
             })
-            // 接收预览框反馈消息
-            // window.addEventListener('message', (e) => {
-            //     if (!(e.data instanceof Object)) {
-            //         const obj = JSON.parse(e.data)
-            //         this.$refs.vscode.monacoEditor.revealPositionInCenter({ lineNumber: obj.line, column: 0 })
-            //         const range = { startLineNumber: obj.line, startColumn: 0, endLineNumber: obj.line, endColumn: 10000 }
-            //         this.$refs.vscode.monacoEditor.setSelection(range)
-            //     }
-            // }, false)
             this.dragControllerMiddle()
+        },
+        firstSync() {
+            // 构建同步数据 包含修改者姓名 修改数据 文件类型
+            const data = { name: this.$store.state.userInfo.name, data: this.getValue(), type: this.fileInfo != null ? this.fileInfo.type : 'html' }
+            // 发送同步数据
+            this.$refs.colldev.sendMessage('firstSyncReply', JSON.stringify(data))
         },
         /**
          * 检测当前编辑器打开状态
@@ -120,6 +120,25 @@ export default {
          * @Ahthor: xiaoxi
          */
         async checkStatus() {
+            // 启用同步
+            if (this.$route.query.sync != null) {
+                this.$message({
+                    message: '您进入了协同开发模式。',
+                    type: 'success'
+                })
+                this.$refs.colldev.initWebSocket('id', this.$route.query.sync)
+                // this.fileInfo = { type: 'javascript' }
+                this.syncBtnShow = false
+                this.synergyChangeValue = true
+                this.autoPreview(true)
+            } else {
+                this.syncBtnShow = true
+                if (this.synergyChangeValue) {
+                    this.$refs.colldev.closeWebSocket()
+                    this.synergyChangeValue = false
+                    this.autoPreview(false)
+                }
+            }
             // url模式
             if (this.$route.query.url != null) {
                 console.log(this.$route.query.url)
@@ -157,32 +176,12 @@ export default {
             console.log(this.item)
             // 赋值到编辑器
             this.$refs.vscode.monacoEditor.getModel().setValue(content)
-            // 启用同步
-            if (this.$route.query.sync != null) {
-                this.$message({
-                    message: '您进入了协同开发模式。',
-                    type: 'success'
-                })
-                this.$refs.colldev.initWebSocket('id', this.$route.query.sync)
-                this.syncBtnShow = false
-                this.synergyChangeValue = true
-            } else {
-                this.syncBtnShow = true
-                if (this.synergyChangeValue) {
-                    this.$refs.colldev.closeWebSocket()
-                    this.synergyChangeValue = false
-                }
-            }
             // 预览
             this.$refs.preview.goPreview(content)
             // 告知抽屉需要重新渲染
             this.drawerOpenStatus = false
             // 抽屉自动打开
             if (this.item.type == 1) {
-                if (this.synergyChangeValue) {
-                    this.$refs.btns.synergy = false
-                    this.synergyChange(false)
-                }
                 this.drawer = true
             } else {
                 this.$refs.vscode.setModelLanguage('html')
@@ -200,13 +199,12 @@ export default {
          */
         setValue(data, selectNode) {
             this.selectNode = selectNode
-            console.log(data)
+            // 保存分析结果
+            this.fileInfo = data
             // 赋值到编辑器
             this.$refs.vscode.monacoEditor.getModel().setValue(data.data)
             // 设置语言
             this.$refs.vscode.setModelLanguage(data.type)
-            // 保存分析结果
-            this.fileInfo = data
             // 预览
             setTimeout(() => {
                 this.preview()
@@ -370,7 +368,7 @@ export default {
                     type: 'success'
                 })
                 const id = this.$store.state.userInfo.id
-                common.copy(window.location.href + '&sync=' + id)
+                common.copy(window.location.origin + '/#/editor?sync=' + id)
                 this.$refs.colldev.initWebSocket()
                 this.synergyChangeValue = true
             } else {
@@ -381,7 +379,15 @@ export default {
         },
         executeEdits(ops) {
             this.flag = true
-            this.$refs.vscode.monacoEditor.executeEdits('insert-code', ops)
+            this.$refs.vscode.monacoEditor.executeEdits('insert-code', ops.data)
+            this.$refs.vscode.setModelLanguage(ops.type)
+            this.fileInfo == null ? this.fileInfo = { type: ops.type } : this.fileInfo.type = ops.type
+        },
+        executefirstSync(ops) {
+            this.flag = true
+            this.$refs.vscode.monacoEditor.setValue(ops.data)
+            this.$refs.vscode.setModelLanguage(ops.type)
+            this.fileInfo == null ? this.fileInfo = { type: ops.type } : this.fileInfo.type = ops.type
         }
     }
 }
@@ -431,8 +437,16 @@ export default {
     height:calc(100vh - 135px) !important;
     width:calc(50% - 25px);
 }
+.xx-vscode-sync {
+    height:calc(100vh - 5px) !important;
+    width:calc(50% - 25px);
+}
 .xx-preview {
     height:calc(100vh - 135px);
+    width:calc(50% - 25px);
+}
+.xx-preview-sync {
+    height:calc(100vh - 5px);
     width:calc(50% - 25px);
 }
 .iframeDiv {
