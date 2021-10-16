@@ -5,7 +5,8 @@
                 <el-popover
                 placement="bottom"
                 width="400"
-                trigger="click">
+                trigger='hover'
+                >
                 <div class="btns-popover">
                     <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
                     <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
