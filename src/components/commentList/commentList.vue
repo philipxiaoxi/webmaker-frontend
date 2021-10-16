@@ -5,6 +5,7 @@
         :key="item.id"
         :name="item.name"
         :time="item.time"
+        :identity='item.identity'
         :replyName="item.replyName"
         :content="item.content"
         :index="index"

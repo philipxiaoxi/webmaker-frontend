@@ -23,6 +23,7 @@
                 :author="item.author"
                 :topic="item.topic"
                 :preface="item.preface"
+                :identity="item.identity"
                 :replyNum="item.replyNum"
                 :time='item.time'
                 :showPreface="false"

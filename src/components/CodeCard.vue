@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
+        <el-card class="xx-code-card" style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
             <div class="heads">
                 <img class="CodeImg" :src="RealCodeImg" alt="">
             </div>
@@ -11,7 +11,7 @@
                         <div class="title">{{title}}</div>
                         <div class="info">
                             <div class="author">{{author}}</div>
-                            <el-tag style="margin-left: 10px;margin-top: 1px;" type="info" size="mini">实习码农</el-tag>
+                            <el-tag style="margin-left: 10px;margin-top: 1px;" :type="getIdentity.type" size="mini">{{getIdentity.text}}</el-tag>
                         </div>
                     </div>
                 </div>
@@ -23,6 +23,7 @@
 
 <script>
 import API from '../api'
+import FS from '../util/FormatString'
 export default {
     props: {
         title: {
@@ -62,6 +63,11 @@ export default {
             RealCodeImg: ''
         }
     },
+    computed: {
+        getIdentity() {
+            return FS.getIdentityString(this.identity)
+        }
+    },
     mounted() {
         this.getCodeimgByFile(this.id)
     },
@@ -90,10 +96,6 @@ export default {
         width: 100%;
         height: 100%;
         padding-bottom: 0px;
-        transition: all 0.3s;
-    }
-    img:hover {
-        transform: scale(1.1);
     }
 }
 
@@ -132,6 +134,12 @@ export default {
     }
     .author {
         color: #717790;
+    }
+}
+.xx-code-card {
+    transition: all 0.2s;
+    &:hover {
+        transform: translateY(-10px);
     }
 }
 </style>

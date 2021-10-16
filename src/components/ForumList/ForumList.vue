@@ -9,6 +9,7 @@
         :preface="item.preface"
         :replyNum="item.replyNum"
         :showPreface="item.showPreface"
+        :identity="item.identity"
         @click="click(item)"
         ></forum-item>
     </div>

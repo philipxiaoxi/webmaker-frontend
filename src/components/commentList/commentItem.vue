@@ -8,7 +8,7 @@
                     <div class="title">{{name}}</div>
                     <div class="info">
                         <div class="author">{{time}}</div>
-                        <el-tag style="margin-left: 10px;margin-top: 1px;" type="info" size="mini">实习码农</el-tag>
+                        <el-tag v-if="false" style="margin-left: 10px;margin-top: 1px;" :type="getIdentity.type" size="mini">{{getIdentity.text}}</el-tag>
                     </div>
                 </div>
             </div>
@@ -35,11 +35,17 @@
 
 <script>
 import API from '../../api'
+import FS from '../../util/FormatString'
 export default {
-    props: ['name', 'time', 'replyName', 'content', 'index', 'replyId'],
+    props: ['name', 'time', 'replyName', 'content', 'index', 'replyId', 'identity'],
     data() {
         return {
             replycontent: '加载中……'
+        }
+    },
+    computed: {
+        getIdentity() {
+            return FS.getIdentityString(this.identity)
         }
     },
     methods: {

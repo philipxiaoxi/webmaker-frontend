@@ -7,7 +7,7 @@
                     <div class="title">{{title}}</div>
                     <div class="info">
                         <div class="author">{{author}}</div>
-                        <el-tag style="margin-left: 10px;margin-top: 1px;" type="info" size="mini">实习码农</el-tag>
+                        <el-tag style="margin-left: 10px;margin-top: 1px;" :type="getIdentity.type" size="mini">{{getIdentity.text}}</el-tag>
                     </div>
                 </div>
             </div>
@@ -23,8 +23,14 @@
 </template>
 
 <script>
+import FS from '../../util/FormatString'
 export default {
-    props: ['title', 'author', 'topic', 'replyNum', 'preface', 'showPreface']
+    props: ['title', 'author', 'topic', 'replyNum', 'preface', 'showPreface', 'identity'],
+    computed: {
+        getIdentity() {
+            return FS.getIdentityString(this.identity)
+        }
+    }
 }
 </script>
 
