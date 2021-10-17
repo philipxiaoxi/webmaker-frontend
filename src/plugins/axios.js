@@ -12,7 +12,8 @@ import qs from 'qs'
 const config = {
     // baseURL: process.env.baseURL || process.env.apiUrl || ""
     // baseURL: 'http://www.xiaotao2333.top:8000/'
-    baseURL: 'https://codeshare.xiaotao2333.top:344/'
+    // baseURL: 'https://codeshare.xiaotao2333.top:344/'
+    baseURL: 'https://www.xiaotao2333.top:5885/'
     // timeout: 60 * 1000, // Timeout
     // withCredentials: true, // Check cross-site Access-Control
 }

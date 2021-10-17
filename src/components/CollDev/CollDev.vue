@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import API from '../../api/index'
 export default {
     props: {
         show: {
@@ -59,11 +60,12 @@ export default {
     },
     methods: {
         initWebSocket(type = 'token', id) {
+            const wsServer = API.wsServer
             if (type == 'token') {
-                this.websocket = new WebSocket('wss://codeshare.xiaotao2333.top:344/ws?token=' + this.token)
+                this.websocket = new WebSocket(wsServer + '?token=' + this.token)
             }
             if (type == 'id') {
-                this.websocket = new WebSocket('wss://codeshare.xiaotao2333.top:344/ws?id=' + id)
+                this.websocket = new WebSocket(wsServer + '?id=' + id)
             }
             this.websocket.onopen = () => {
                 this.messages.push({
