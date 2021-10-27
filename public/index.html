@@ -28,12 +28,9 @@
     <!-- built files will be auto injected -->
     <script>
       setInterval(()=>{
-          if(window.lastHash != window.location.hash){
-            window.top.postMessage({hash: window.location.hash}, '*')
+          if(window.lastHash != window.location.hash || window.lastTitle != document.title){
+            window.top.postMessage({hash: window.location.hash, title: document.title}, '*')
             window.lastHash = window.location.hash
-          }
-          if(window.lastTitle != document.title){
-            window.top.postMessage({title: window.lastTitle}, '*')
             window.lastTitle = document.title
           }
       },50)
