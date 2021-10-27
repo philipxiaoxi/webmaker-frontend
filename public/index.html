@@ -26,5 +26,17 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      setInterval(()=>{
+          if(window.lastHash != window.location.hash){
+            window.top.postMessage({hash: window.location.hash}, '*')
+            window.lastHash = window.location.hash
+          }
+          if(window.lastTitle != document.title){
+            window.top.postMessage({title: window.lastTitle}, '*')
+            window.lastTitle = document.title
+          }
+      },50)
+    </script>
   </body>
 </html>
