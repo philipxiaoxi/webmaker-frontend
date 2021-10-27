@@ -39,11 +39,11 @@ class Cs {
         dom.classList.add('cs_console_container')
         // 创建标题
         let newInsertElement = document.createElement('h1')
-        newInsertElement.innerText = 'CodeShare控制台'
+        newInsertElement.innerText = '控制台'
         dom.appendChild(newInsertElement)
         // 创建提示词
         newInsertElement = document.createElement('p')
-        newInsertElement.innerText = 'codeshare工具类包已经加载完毕，下面将会显示您的输出信息。'
+        newInsertElement.innerText = '工具类包已经加载完毕，下面将会显示您的输出信息。'
         dom.appendChild(newInsertElement)
         // 创建打印输出容器
         newInsertElement = document.createElement('div')
@@ -59,7 +59,7 @@ class Cs {
         dom.appendChild(dialog)
         // 创建标题
         let newInsertElement = document.createElement('h2')
-        newInsertElement.innerText = 'codeshare控制台弹窗'
+        newInsertElement.innerText = '控制台弹窗'
         newInsertElement.style.textAlign = 'center'
         dialog.appendChild(newInsertElement)
         // 创建内容文本
@@ -141,7 +141,7 @@ class Cs {
 
     info() {
         console.log(`
-        CodeShare JS 调试工具脚本 2.3
+        WebMaker/CodeShare JS 调试工具脚本 2.4
         Aut: xiaoxi
         Msg：您的代码处理专家。
         Url: blog.diyxi.top
