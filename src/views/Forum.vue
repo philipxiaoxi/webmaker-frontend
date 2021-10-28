@@ -2,9 +2,9 @@
     <div class="container">
         <h1>欢迎来到 WebMaker Forum</h1>
         <p>你可以在此交流代码片段或使用WebMaker中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
-        <el-carousel height="350px" :interval="5000" arrow="always">
+        <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
-                <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
+                <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
         <div class="btns"><el-button icon="el-icon-plus" @click="goToNew" type="primary" round>发布新帖子</el-button></div>
@@ -26,10 +26,20 @@ export default {
                     title: 'WebMaker轻松编码网站！',
                     imgurl: '/img/banner/forumBanner1.png'
                 }
-            ]
+            ],
+            imgHeight: 350
         }
     },
+    activated() {
+        setTimeout(() => {
+            this.imgHeight = this.$refs.image[0].height == 0 ? 350 : this.$refs.image[0].height
+        }, 200)
+    },
     mounted() {
+        // 监听窗口变化，使得轮播图高度自适应图片高度
+        window.addEventListener('resize', () => {
+            this.imgHeight = this.$refs.image[0].height
+        })
         this.getAllForumPage()
     },
     methods: {

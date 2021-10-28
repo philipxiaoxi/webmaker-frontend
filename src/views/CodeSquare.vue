@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-        <el-carousel height="350px" :interval="5000" arrow="always">
+        <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
-                <img style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
+                <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
         <codes-show></codes-show>
@@ -31,11 +31,20 @@ export default {
                     title: '2021前端技术研讨会等你来参加！',
                     imgurl: '/img/banner/Banner2.png'
                 }
-            ]
+            ],
+            imgHeight: 350
         }
     },
+    activated() {
+        setTimeout(() => {
+            this.imgHeight = this.$refs.image[0].height == 0 ? 350 : this.$refs.image[0].height
+        }, 200)
+    },
     mounted() {
-
+        // 监听窗口变化，使得轮播图高度自适应图片高度
+        window.addEventListener('resize', () => {
+            this.imgHeight = this.$refs.image[0].height
+        })
     },
     methods: {
 
