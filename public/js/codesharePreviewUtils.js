@@ -85,6 +85,8 @@ class Cs {
         // 监听代码错误全局异常捕获
         window.onerror = function(message, source, lineno, colno, error) {
             cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 4)
+            // 通知父窗口
+            window.top.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
         }
         console.oldLog = console.log
         // 重写打印输出函数，实现获取输出内容
@@ -101,8 +103,10 @@ class Cs {
         span.style.float = 'right'
         newInsertElement.appendChild(span)
         newInsertElement.onclick = () => {
-            this.dialogContentElement.innerText = message
-            this.dialog.style.display = 'flex'
+            // 通知父窗口
+            window.top.postMessage({ line }, '*')
+            // this.dialogContentElement.innerText = message
+            // this.dialog.style.display = 'flex'
         }
         document.getElementById('cs_logs_container').appendChild(newInsertElement)
     }
@@ -213,5 +217,5 @@ newInsertElement.id = '124106_codeshare_utils_c'
 document.body.appendChild(newInsertElement)
 const cs = new Cs(document.getElementById('124106_codeshare_utils_c'))
 cs.info()
-cs.dynamicLoadCss('https://codeshare2.diyxi.top/css/codesharePreview.css')
+cs.dynamicLoadCss('https://webmaker.xiaotao2333.top:344/css/codesharePreview.css')
 cs.watchLogsAndError()

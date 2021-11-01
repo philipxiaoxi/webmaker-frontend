@@ -89,6 +89,21 @@ export default {
                     this.save()
                 }
             }
+            // 接收预览框反馈消息
+            window.addEventListener('message', (e) => {
+                const obj = e.data
+                if (obj.line) {
+                    this.$refs.vscode.monacoEditor.revealPositionInCenter({ lineNumber: obj.line, column: 0 })
+                    const range = { startLineNumber: obj.line, startColumn: 0, endLineNumber: obj.line, endColumn: 10000 }
+                    this.$refs.vscode.monacoEditor.setSelection(range)
+                }
+                if (obj.message) {
+                    this.$message({
+                        message: obj.message,
+                        type: obj.type
+                    })
+                }
+            }, false)
             const previewDebounce = common.debounce(this.preview, 500)
             this.$nextTick(() => {
             // 编辑器改变时监听事件
