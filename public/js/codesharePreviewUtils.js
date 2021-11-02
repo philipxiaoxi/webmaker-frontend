@@ -90,7 +90,7 @@ class Cs {
         window.onerror = function(message, source, lineno, colno, error) {
             cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 4)
             // 通知父窗口
-            window.top.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
+            window.parent.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
         }
         console.oldLog = console.log
         // 重写打印输出函数，实现获取输出内容
@@ -108,7 +108,7 @@ class Cs {
             if (idx >= times || end - start >= timer) { // 10秒后执行或者idx大于100次执行
                 idx = 0
                 start = null
-                window.top.postMessage({ message: '[您的代码运行出现错误]: 产生了死循环，系统强制熔断！', type: 'error' }, '*')
+                window.parent.postMessage({ message: '[您的代码运行出现错误]: 产生了死循环，系统强制熔断！', type: 'error' }, '*')
                 throw new Error('[您的代码运行出现错误]: 产生了死循环，系统强制熔断！')
             }
         }
@@ -125,7 +125,7 @@ class Cs {
         newInsertElement.appendChild(span)
         newInsertElement.onclick = () => {
             // 通知父窗口
-            window.top.postMessage({ line }, '*')
+            window.parent.postMessage({ line }, '*')
             // this.dialogContentElement.innerText = message
             // this.dialog.style.display = 'flex'
         }
