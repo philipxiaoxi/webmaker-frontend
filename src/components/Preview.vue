@@ -6,6 +6,7 @@
 
 <script>
 import API from '../api/'
+import GA from '../util/GrammarAnalysis'
 /* eslint-disable */
 export default {
     methods: {
@@ -33,6 +34,8 @@ export default {
             this.$refs.preview_iframe.src = '/mock/default.html'
             switch (type) {
                 case 'javascript':
+                    // 循环添加熔断函数
+                    content = GA.addLoopFusing(content)
                     let code = `
                         <body><\/body>
                         <script src="${window.location.origin}/js/codesharePreviewUtils.js"><\/script>
