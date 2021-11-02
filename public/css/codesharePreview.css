@@ -54,3 +54,7 @@
     padding: 20px;
     display: none;
 }
+#cs_console_container_time {
+    color: brown;
+    font-size: 14px;
+}

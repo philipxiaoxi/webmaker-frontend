@@ -49,6 +49,11 @@ class Cs {
         newInsertElement = document.createElement('p')
         newInsertElement.innerText = '工具类包已经加载完毕，下面将会显示您的输出信息。'
         dom.appendChild(newInsertElement)
+        // 创建耗时显示
+        newInsertElement = document.createElement('p')
+        newInsertElement.innerText = '耗时：0ms'
+        newInsertElement.id = 'cs_console_container_time'
+        dom.appendChild(newInsertElement)
         // 创建打印输出容器
         newInsertElement = document.createElement('div')
         newInsertElement.id = 'cs_logs_container'
@@ -88,7 +93,7 @@ class Cs {
     watchLogsAndError() {
         // 监听代码错误全局异常捕获
         window.onerror = function(message, source, lineno, colno, error) {
-            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 4)
+            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 5)
             // 通知父窗口
             window.parent.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
         }
@@ -183,7 +188,7 @@ class Cs {
         // 如果能够获得行数
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
-            line = parseInt(array[1][0].substring(1).split(':')[0]) - 4
+            line = parseInt(array[1][0].substring(1).split(':')[0]) - 5
         }
         // 判断是否对象，是对象需要格式化成文本
         if (T instanceof Object) {
