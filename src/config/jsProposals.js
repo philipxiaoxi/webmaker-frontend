@@ -34,14 +34,20 @@ export default {
             {
                 label: 'cs.dynamicLoadCss',
                 kind: monaco.languages.CompletionItemKind.Function,
-                documentation: '彩蛋：涛哥-https://blog.xiaotao233.top/',
+                documentation: '动态加载css文件',
                 insertText: 'cs.dynamicLoadCss(url)'
             },
             {
                 label: 'cs.dynamicLoadJs',
                 kind: monaco.languages.CompletionItemKind.Function,
-                documentation: '彩蛋：涛哥-https://blog.xiaotao233.top/',
+                documentation: '动态加载js文件',
                 insertText: 'cs.dynamicLoadJs(url)'
+            },
+            {
+                label: 'cs.fus',
+                kind: monaco.languages.CompletionItemKind.Function,
+                documentation: '熔断器，当循环出现死循环时执行熔断',
+                insertText: 'cs.fus() // 当循环出现死循环时执行熔断'
             },
             {
                 label: 'mjt',
