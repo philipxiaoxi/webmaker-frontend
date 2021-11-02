@@ -40,7 +40,11 @@ export default {
                         <body><\/body>
                         <script src="${window.location.origin}/js/codesharePreviewUtils.js"><\/script>
                         <script>
+                            let xiaoxiUtils_preview_1241060595_start = window.performance.now()
                             ${content}
+                            let xiaoxiUtils_preview_1241060595_end = window.performance.now()
+                            window.time = xiaoxiUtils_preview_1241060595_end - xiaoxiUtils_preview_1241060595_start
+                            document.getElementById('cs_console_container_time').innerText = '代码耗时'+ time + 'ms'
                         <\/script>
                     `
                     this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(code)}`
