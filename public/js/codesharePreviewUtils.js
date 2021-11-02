@@ -1,4 +1,5 @@
 class Cs {
+    fus = this.fusing()
     /**
      * 插入显示区域
      * @Ahthor: xiaoxi
@@ -9,6 +10,9 @@ class Cs {
         this.appendDialog(dom)
     }
 
+    changeFusing(op) {
+        this.fus = this.fusing(op)
+    }
     // /**
     //  * 安全维护函数
     //  * 等级默认3级
@@ -91,6 +95,23 @@ class Cs {
         console.oldLog = console.log
         // 重写打印输出函数，实现获取输出内容
         console.log = cs.log.bind(this)
+    }
+
+    fusing(op) {
+        const options = { times: 1000, timer: 7000, ...op }
+        const { times, timer } = options
+        let idx = 0
+        let start = new Date().getTime() // 获取当前时间戳
+        return function() {
+            idx++
+            const end = new Date().getTime() // 获取执行时间
+            if (idx >= times || end - start >= timer) { // 10秒后执行或者idx大于100次执行
+                idx = 0
+                start = null
+                window.top.postMessage({ message: '[您的代码运行出现错误]: 产生了死循环，系统强制熔断！', type: 'error' }, '*')
+                throw new Error('[您的代码运行出现错误]: 产生了死循环，系统强制熔断！')
+            }
+        }
     }
 
     // 插入到页面的显示区域函数 - codeshare辅助性函数
