@@ -27,8 +27,20 @@
                 active-text="开启协同开发"
                 inactive-text="关闭协同开发">
                 </el-switch>
+                <el-link type="primary" @click="helpDialogVisible = true">打开帮助文档</el-link>
             </div>
-
+            <el-dialog
+            v-dialogDrag
+            title="在线帮助文档"
+            :visible.sync="helpDialogVisible"
+            width="30%"
+            :modal='false'
+            :close-on-click-modal='false'
+            custom-class='xx-dialog'
+            >
+            <el-link type="primary" @click="goTo('https://webmaker.diyxi.top/docs/#/')">在新标签打开帮助文档</el-link>
+            <iframe src="https://webmaker.diyxi.top/docs/#/" style="width:100%;height:70vh;border: none;"></iframe>
+            </el-dialog>
             <el-popover
             v-show="this.widths.length  != 0"
             placement="bottom-start"
@@ -61,6 +73,7 @@ import API from '../api/'
 import common from '../util/common'
 import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
+
 export default {
     components: { NewProjectDialog, DockerManager },
     props: {
@@ -82,6 +95,7 @@ export default {
             synergy: false,
             dialogVisible: false,
             dockerDialogVisible: false,
+            helpDialogVisible: true,
             autoPreview: false,
             btnMode: 1,
             widths: []
@@ -97,6 +111,9 @@ export default {
         window.removeEventListener('resize', this.calcBtnWidth)
     },
     methods: {
+        goTo(url) {
+            window.open(url)
+        },
         initAutoBtnMode() {
             const UpdateBtnMode = () => {
                 if (window.innerWidth < 1300) {
@@ -335,5 +352,14 @@ export default {
 }
 #code_pic1:focus{
     color: #409EFF;
+}
+// 点击穿透
+.el-dialog__wrapper {
+    pointer-events:none ;
+}
+</style>
+<style>
+.xx-dialog {
+    pointer-events:auto;
 }
 </style>
