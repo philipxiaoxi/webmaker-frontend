@@ -39,7 +39,7 @@
             custom-class='xx-dialog'
             >
             <el-link type="primary" @click="goTo('https://webmaker.diyxi.top/docs/#/')">在新标签打开帮助文档</el-link>
-            <iframe src="https://webmaker.diyxi.top/docs/#/" style="width:100%;height:70vh;border: none;"></iframe>
+            <iframe src="https://webmaker.diyxi.top/docs/#/" style="width:100%;height:60vh;border: none;"></iframe>
             </el-dialog>
             <el-popover
             v-show="this.widths.length  != 0"
@@ -95,7 +95,7 @@ export default {
             synergy: false,
             dialogVisible: false,
             dockerDialogVisible: false,
-            helpDialogVisible: true,
+            helpDialogVisible: false,
             autoPreview: false,
             btnMode: 1,
             widths: []
