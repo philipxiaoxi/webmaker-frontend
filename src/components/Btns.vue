@@ -30,6 +30,7 @@
             </div>
 
             <el-popover
+            v-show="this.widths.length  != 0"
             placement="bottom-start"
             width="250"
             trigger="hover">
@@ -143,7 +144,7 @@ export default {
             willBeRemovedEle = this.$refs.btnsPopover.children[this.$refs.btnsPopover.childElementCount - 1]
             if (!willBeRemovedEle) return
             // 当剩余空间大于元素宽度时
-            while (rest > this.widths[this.widths.length - 1]) {
+            while (rest > this.widths[this.widths.length - 1] + 20) {
                 // 移除元素
                 willBeRemovedEle.remove()
                 // 加入到btns容器
@@ -152,6 +153,14 @@ export default {
                 this.widths.pop()
                 // 下一元素判断
                 willBeRemovedEle = this.$refs.btnsPopover.children[this.$refs.btnsPopover.childElementCount - 1]
+                // 获取容器宽度
+                containerWidth = this.$refs.container.offsetWidth - 50
+                // 获取按钮组宽度
+                btnsWidth = this.$refs.btns.offsetWidth
+                // 获取按钮组子元素数量
+                btnsCount = this.$refs.btns.childElementCount
+                // 剩余空间
+                rest = containerWidth - btnsWidth
                 // 元素为空时跳出循环
                 if (!willBeRemovedEle) break
             }
@@ -287,7 +296,7 @@ export default {
         margin: 5px !important;
     }
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
 }
 .container {
     display: flex;
