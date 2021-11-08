@@ -6,6 +6,7 @@
 
 <script>
 import API from '../api/'
+import Decorator from '../util/Decorator'
 import GA from '../util/GrammarAnalysis'
 /* eslint-disable */
 export default {
@@ -36,6 +37,7 @@ export default {
                 case 'javascript':
                     // 循环添加熔断函数
                     content = GA.addLoopFusing(content)
+                    content = Decorator.autowired.transform(content)
                     let code = `
                         <body><\/body>
                         <script src="${window.location.origin}/js/codesharePreviewUtils.js"><\/script>
