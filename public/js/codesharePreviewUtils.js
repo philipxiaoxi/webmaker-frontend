@@ -198,6 +198,7 @@ class Cs {
         }
         // 插入到显示区域
         this.insertLog(T, 'log-item', line)
+        window.parent.postMessage({ log: { content: T, line } }, '*')
     }
 
     setExample(Examples) {
