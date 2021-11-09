@@ -18,6 +18,7 @@
                 <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
+                <el-button type="primary" round size="mini" @click="openConsole('mock/webMakerConsole.html','listen')">控制台</el-button>
                 <el-switch
                 @change="synergyChange"
                 style="display: block"
@@ -27,7 +28,7 @@
                 active-text="开启协同开发"
                 inactive-text="关闭协同开发">
                 </el-switch>
-                <el-link type="primary" @click="helpDialogVisible = true">打开帮助文档</el-link>
+                <el-link type="primary" @click="openConsole('https://webmaker.diyxi.top/docs/')">打开帮助文档</el-link>
             </div>
             <el-dialog
             v-dialogDrag
@@ -111,6 +112,34 @@ export default {
         window.removeEventListener('resize', this.calcBtnWidth)
     },
     methods: {
+        openConsole(url, type) {
+            const iHeight = window.screen.availHeight / 1.5
+            const iWidth = window.screen.availWidth / 2.5
+            // 获得窗口的垂直位置
+            var iTop = (window.screen.availHeight - 30 - iHeight) / 2
+            // 获得窗口的水平位置
+            var iLeft = (window.screen.availWidth - 10 - iWidth) / 2
+            if (type == 'listen') {
+                // 判断窗口是否以及关闭
+                if (this.newWindow != undefined && !this.newWindow.closed) {
+                    this.newWindow.focus()
+                    return
+                } else {
+                    this.newWindow = window.open(url, name, 'height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',status=no,toolbar=no,menubar=no,location=no,resizable=no,scrollbars=0,titlebar=no')
+                }
+                // 绑定一次消息传递
+                if (!this.flag) {
+                    const fn = (e) => {
+                        const obj = e.data
+                        this.newWindow.postMessage({ ...obj }, '*')
+                    }
+                    window.addEventListener('message', fn, false)
+                    this.flag = true
+                }
+            } else {
+                window.open(url, name, 'height=' + iHeight + ',innerHeight=' + iHeight + ',width=' + iWidth + ',innerWidth=' + iWidth + ',top=' + iTop + ',left=' + iLeft + ',status=no,toolbar=no,menubar=no,location=no,resizable=no,scrollbars=0,titlebar=no')
+            }
+        },
         goTo(url) {
             window.open(url)
         },
