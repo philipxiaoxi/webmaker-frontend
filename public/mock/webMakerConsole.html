@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebMaker超级控制台</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+    <!-- 引入样式 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.3/theme-chalk/index.min.css" rel="stylesheet">
+    <!-- 引入组件库 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.3/index.min.js"></script>
+    <!-- 引入控制台样式 -->
+    <link href="/css/codesharePreview.css" rel="stylesheet">
+</head>
+
+<!-- 这里写CSS -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div style="text-align: center;">
+            <h1>WebMaker超级控制台</h1>
+            <p>WebMaker超级控制台相比之前内嵌式控制台速度更快，更多请了解<el-link type="primary">WebMaker超级控制台帮助文档</el-link></p>
+        </div>
+        <div id="124106_codeshare_utils_c" class="cs_console_container">
+            <div id="cs_logs_container">
+                <div class="log-item" v-for='(item, i) in logs' @click="sendMessage(item.line)">
+                    <span v-html='item.content'></span>
+                    <span style="float: right;">{{item.line}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 这里写脚本 -->
+    <script>
+    const params = {
+        el: '#app',
+        data: {
+            logs: []
+        },
+        mounted() {
+            this.listenMessage()
+        },
+        methods: {
+            listenMessage() {
+                // 接收反馈消息
+                window.addEventListener('message', (e) => {
+                    const obj = e.data
+                    if(obj.log) {
+                        this.logs.push(obj.log)
+                    }
+                }, false)
+            },
+            sendMessage(line) {
+                console.log(line)
+                window.parent.opener.postMessage({ line }, '*')
+            }
+        }
+    }
+    let app = new Vue(params)
+    </script>
+</body>
+</html>
