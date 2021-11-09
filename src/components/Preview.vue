@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="loading" :element-loading-text="texts[index]">
         <iframe class="xx-iframe" frameborder='0' sandbox="allow-scripts allow-popups allow-forms allow-modals" ref="preview_iframe" style="width:100%;height:100%;"></iframe>
     </div>
 </template>
@@ -10,6 +10,21 @@ import Decorator from '../util/Decorator'
 import GA from '../util/GrammarAnalysis'
 /* eslint-disable */
 export default {
+    data() {
+        return {
+            loading: false,
+            index: -1,
+            texts: [
+                '加载过慢时请使用国内CDN资源',
+                '拼命加载中',
+                'JS文件预览时可以使用CS类的资源',
+                '写了死循环？没关系WebMaker会自动帮您熔断',
+                '有个人前来嫖代码……',
+                '在编写html代码？试试输入vue或者html',
+                '看看帮助文档，有一堆快捷操作哦',
+            ]
+        }
+    },
     methods: {
         // 该预览方式有xss、csrf攻击的可能性
         // goPreview(content, type) {
@@ -32,6 +47,13 @@ export default {
         //     }
         // },
         goPreview(content, type) {
+            this.index++
+            if(this.index >= this.texts.length) {
+                this.index = 0
+            }
+            console.log(this.index)
+            // 加载动画
+            this.loading = true
             this.$refs.preview_iframe.src = '/mock/default.html'
             switch (type) {
                 case 'javascript':
@@ -52,9 +74,13 @@ export default {
                     this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(code)}`
                     break;
                 default:
+                    const script = `<div id='webmaker_utils_c_124106'></div><script src="${window.location.origin}/js/webMakerHtmlUtils.js"><\/script>`
                     const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.$parent.item.id}/" />`
-                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(base + content)}`
+                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(script + base + content)}`
                     break;
+            }
+            this.$refs.preview_iframe.onload = ()=> {
+                this.loading = false
             }
         },
         /**
