@@ -31,11 +31,10 @@ function makeJsPreview(script) {
 function makeHtmlPreview(script, itemId) {
     const code = `
         <base href="${API.getServer()}common/getSnippetProjectFile/${itemId}/" />
-        <link href="${window.location.origin}/css/webMakerPreviewUtils.css" rel="stylesheet" type="text/css" />
         <div id='124106_codeshare_utils_c'></div>
         <script src="${window.location.origin}/js/webMakerPreviewUtils.js"></script>
         <script>
-            const cs = new Cs(document.getElementById('124106_codeshare_utils_c'), false, 8)
+            const cs = new Cs(document.getElementById('124106_codeshare_utils_c'), false, 7)
         </script>
         ${script}
     `
