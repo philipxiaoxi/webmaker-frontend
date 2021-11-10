@@ -5,10 +5,7 @@
 </template>
 
 <script>
-import API from '../api/'
-import Decorator from '../util/Decorator'
-import GA from '../util/GrammarAnalysis'
-/* eslint-disable */
+import PreviewTemplate from '../util/PreviewTemplate.js'
 export default {
     data() {
         return {
@@ -21,34 +18,14 @@ export default {
                 '写了死循环？没关系WebMaker会自动帮您熔断',
                 '有个人前来嫖代码……',
                 '在编写html代码？试试输入vue或者html',
-                '看看帮助文档，有一堆快捷操作哦',
+                '看看帮助文档，有一堆快捷操作哦'
             ]
         }
     },
     methods: {
-        // 该预览方式有xss、csrf攻击的可能性
-        // goPreview(content, type) {
-        //     console.log(type)
-        //     this.$refs.preview_iframe.src = '/mock/default.html'
-        //     content = this.SecurityMaintenance(content)
-        //     this.$refs.preview_iframe.onload = () => {
-        //         if (!this.$refs.preview_iframe.contentWindow) {
-        //             return
-        //         }
-        //         switch (type) {
-        //             case 'javascript':
-        //                 this.writeJsC(content)
-        //                 break;
-        //             default:
-        //                 this.writeHtml(content)
-        //                 break;
-        //         }
-
-        //     }
-        // },
         goPreview(content, type) {
             this.index++
-            if(this.index >= this.texts.length) {
+            if (this.index >= this.texts.length) {
                 this.index = 0
             }
             console.log(this.index)
@@ -56,30 +33,16 @@ export default {
             this.loading = true
             this.$refs.preview_iframe.src = '/mock/default.html'
             switch (type) {
-                case 'javascript':
-                    // 循环添加熔断函数
-                    content = GA.addLoopFusing(content)
-                    content = Decorator.autowired.transform(content)
-                    let code = `
-                        <body><\/body>
-                        <script src="${window.location.origin}/js/codesharePreviewUtils.js"><\/script>
-                        <script>
-                            let xiaoxiUtils_preview_1241060595_start = window.performance.now()
-                            ${content}
-                            let xiaoxiUtils_preview_1241060595_end = window.performance.now()
-                            window.time = xiaoxiUtils_preview_1241060595_end - xiaoxiUtils_preview_1241060595_start
-                            document.getElementById('cs_console_container_time').innerText = '代码耗时'+ time + 'ms'
-                        <\/script>
-                    `
-                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(code)}`
-                    break;
-                default:
-                    const script = `<div id='webmaker_utils_c_124106'></div><script src="${window.location.origin}/js/webMakerHtmlUtils.js"><\/script>`
-                    const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.$parent.item.id}/" />`
-                    this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(script + base + content)}`
-                    break;
+            case 'javascript':
+                content = PreviewTemplate.makeJsPreview(content)
+                this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+                break
+            default:
+                content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item.id)
+                this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+                break
             }
-            this.$refs.preview_iframe.onload = ()=> {
+            this.$refs.preview_iframe.onload = () => {
                 this.loading = false
             }
         },
@@ -90,34 +53,17 @@ export default {
          * @param {*} content
          */
         SecurityMaintenance(content) {
-            let words = [
+            const words = [
                 'parent',
                 'localStorage',
                 'token',
                 'document',
                 'window'
-                ]
+            ]
             for (const iterator of words) {
-                content = content.replaceAll(iterator ,'禁止使用')
+                content = content.replaceAll(iterator, '禁止使用')
             }
             return content
-        },
-        writeHtml(content) {
-            const base = `<base href="${API.getServer()}common/getSnippetProjectFile/${this.$parent.item.id}/" />`
-            this.$refs.preview_iframe.contentWindow.document.write(base + content) // 动态写入返回页面到iframe
-            this.$refs.preview_iframe.contentWindow.document.close()
-        },
-        writeJsC(content) {
-            this.$refs.preview_iframe.contentWindow.document.write(
-                `
-                    <body><\/body>
-                    <script src="/js/codesharePreviewUtils.js"><\/script>
-                    <script>
-                        ${content}
-                    <\/script>
-                `
-            ) // 动态写入返回页面到iframe
-            this.$refs.preview_iframe.contentWindow.document.close()
         }
     }
 }

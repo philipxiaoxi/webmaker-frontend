@@ -11,7 +11,7 @@
     <!-- 引入组件库 -->
     <script src="https://cdn.bootcdn.net/ajax/libs/element-ui/2.15.3/index.min.js"></script>
     <!-- 引入控制台样式 -->
-    <link href="/css/codesharePreview.css" rel="stylesheet">
+    <link href="/css/webMakerPreviewUtils.css" rel="stylesheet">
 </head>
 
 <!-- 这里写CSS -->
@@ -26,7 +26,8 @@
     <div id="app">
         <div style="text-align: center;">
             <h1>WebMaker超级控制台</h1>
-            <p>WebMaker超级控制台相比之前内嵌式控制台速度更快，更多请了解<el-link type="primary">WebMaker超级控制台帮助文档</el-link></p>
+            <p>WebMaker超级控制台是独立窗口的控制台。<el-link type="primary">WebMaker超级控制台帮助文档</el-link></p>
+            <button @click="clear">清空</button>
         </div>
         <div id="124106_codeshare_utils_c" class="cs_console_container">
             <div id="cs_logs_container">
@@ -61,6 +62,9 @@
             sendMessage(line) {
                 console.log(line)
                 window.parent.opener.postMessage({ line }, '*')
+            },
+            clear() {
+                this.logs = []
             }
         }
     }

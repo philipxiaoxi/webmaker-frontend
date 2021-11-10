@@ -1,42 +1,28 @@
+// eslint-disable-next-line no-unused-vars
 class Cs {
     fus = this.fusing()
+
     /**
-     * 插入显示区域
      * @Ahthor: xiaoxi
-     * @param {*} dom
+     * @param {*} dom 插入区域
+     * @param {*} selfShow 是否自我展示
+     * @param {*} lineOffset 基准行
      */
-    constructor(dom) {
-        this.appendContainer(dom)
-        this.appendDialog(dom)
+    constructor(dom, selfShow = true, lineOffset = 0) {
+        // 是否自我展示
+        this.selfShow = selfShow
+        this.baseline = lineOffset
+        if (this.selfShow) {
+            this.appendContainer(dom)
+            this.appendDialog(dom)
+        }
+        this.info()
+        this.watchLogsAndError()
     }
 
     changeFusing(op) {
         this.fus = this.fusing(op)
     }
-    // /**
-    //  * 安全维护函数
-    //  * 等级默认3级
-    //  * @Ahthor: xiaoxi
-    //  * @param {*} level
-    //  */
-    // SecurityMaintenance(level = 3) {
-    //     switch (level) {
-    //     case 3:
-    //         // 禁止localStorage
-    //         window.localStorage.getItem = tips
-    //         window.localStorage.setItem = tips
-    //         // 禁止访问cookie
-    //         window.document.cookie = tips()
-    //         // 禁止访问父级
-    //         window.parent = null
-    //         break
-    //     default:
-    //         break
-    //     }
-    //     function tips(params) {
-    //         return '为了安全起见，该方法已经被禁用。'
-    //     }
-    // }
 
     appendContainer(dom) {
         // 添加样式
@@ -92,14 +78,14 @@ class Cs {
 
     watchLogsAndError() {
         // 监听代码错误全局异常捕获
-        window.onerror = function(message, source, lineno, colno, error) {
-            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 5)
+        window.onerror = (message, source, lineno, colno, error) => {
+            this.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - this.baseline)
             // 通知父窗口
             window.parent.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
         }
         console.oldLog = console.log
         // 重写打印输出函数，实现获取输出内容
-        console.log = cs.log.bind(this)
+        console.log = this.log.bind(this)
     }
 
     fusing(op) {
@@ -134,7 +120,9 @@ class Cs {
             // this.dialogContentElement.innerText = message
             // this.dialog.style.display = 'flex'
         }
-        document.getElementById('cs_logs_container').appendChild(newInsertElement)
+        if (this.selfShow) {
+            document.getElementById('cs_logs_container').appendChild(newInsertElement)
+        }
     }
 
     dynamicLoadCss(url) {
@@ -171,16 +159,23 @@ class Cs {
 
     info() {
         console.log(`
-        WebMaker/CodeShare JS 调试工具脚本 2.4
-        Aut: xiaoxi
-        Msg：您的代码处理专家。
-        Url: blog.diyxi.top
-        `)
++-+-+-+-+-+-+-+-+ +-+-+-+-+-+
+|W|e|b|M|a|k|e|r| |U|t|i|l|s|
++-+-+-+-+-+-+-+-+ +-+-+-+-+-+
+通用调试工具脚本
+Version: 2.5.0
+date   : 2021-11-10
+Aut    : xiaoxi
+Msg    ：您的代码处理专家。
+Url    : blog.diyxi.top
++-+-+-+-+-+-+-+-+ +-+-+-+-+-+
+`)
     }
 
-    log(T, err = new Error()) {
+    log(...T) {
+        const err = new Error()
         // 调用原先的打印
-        console.oldLog(T)
+        console.oldLog(...T)
         // 匹配所在行数
         const regexp = /:[0-9]+:[0-9]+/g
         let array = []
@@ -188,17 +183,51 @@ class Cs {
         // 如果能够获得行数
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
-            line = parseInt(array[1][0].substring(1).split(':')[0]) - 5
-        }
-        // 判断是否对象，是对象需要格式化成文本
-        if (T instanceof Object) {
-            T = JSON.stringify(T, null, 4)
-            T = T.replaceAll(' ', '&nbsp;')
-            T = T.replaceAll('\n', '<br>')
+            line = parseInt(array[1][0].substring(1).split(':')[0]) - this.baseline
         }
         // 插入到显示区域
-        this.insertLog(T, 'log-item', line)
-        window.parent.postMessage({ log: { content: T, line } }, '*')
+        const arr = Array.prototype.slice.apply(arguments)
+        let logText = ''
+        function toJson(T, num = 4, newLine = true) {
+            T = JSON.stringify(T, null, num)
+            T = T.replaceAll(' ', '&nbsp;')
+            if (newLine) {
+                T = T.replaceAll('\n', '<br>')
+            }
+            return T
+        }
+        for (const iterator of arr) {
+            const type = Object.prototype.toString.call(iterator)
+            console.oldLog(type)
+            let htmlStr = ''
+            switch (type) {
+            case '[object Number]':
+                htmlStr = `<span style="color: green;">${iterator}</span>`
+                break
+            case '[object String]':
+                htmlStr = `<span>${iterator.replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\n', '<br>')}</span>`
+                break
+            case '[object Object]':
+                htmlStr = `<span style="color: rgb(121,38,117);">${toJson(iterator)}</span>`
+                break
+            case '[object Array]':
+                htmlStr = `<span style="color: rgb(26,26,166);">${toJson(iterator, 2, false)}</span>`
+                break
+            case '[object Boolean]':
+                htmlStr = `<span style="color: rgb(26,26,166);">${iterator}</span>`
+                break
+            case '[object Function]':
+                htmlStr = `<span><span style="color: rgb(121,38,117); font-size: 15px;"> F </span><code>${iterator}</code></span>`
+                break
+            default:
+                htmlStr = `<span>${iterator}</span>`
+                break
+            }
+            logText += htmlStr + ' '
+        }
+
+        this.insertLog(logText, 'log-item', line)
+        window.parent.postMessage({ log: { content: logText, line } }, '*')
     }
 
     setExample(Examples) {
@@ -206,26 +235,26 @@ class Cs {
     }
 
     judge() {
-        if (cs.runCode == null) {
-            cs.insertLog('[ERROR]: ' + 'runCode代码为空，无法进行判断。', 'log-item-red', '[cs处理器]')
+        if (this.runCode == null) {
+            this.insertLog('[ERROR]: ' + 'runCode代码为空，无法进行判断。', 'log-item-red', '[cs处理器]')
             return
         }
-        if (cs.Examples == null) {
-            cs.insertLog('[ERROR]: ' + 'Examples为空，无法进行判断。', 'log-item-red', '[cs处理器]')
+        if (this.Examples == null) {
+            this.insertLog('[ERROR]: ' + 'Examples为空，无法进行判断。', 'log-item-red', '[cs处理器]')
             return
         }
         for (const item of this.Examples) {
-            const out = cs.runCode(item.key)
+            const out = this.runCode(item.key)
             this.insertLog(
                 `输入：${JSON.stringify(item.key)}，正确输出：${item.value}，您的输出：${out}。`
                 , 'log-item'
                 , '[cs处理器]')
             if (JSON.stringify(out) != JSON.stringify(item.value)) {
-                cs.insertLog('[ERROR]: ' + '以上用例未通过。', 'log-item-red', '[cs处理器]')
+                this.insertLog('[ERROR]: ' + '以上用例未通过。', 'log-item-red', '[cs处理器]')
                 return
             }
         }
-        cs.insertLog('[WINNER]: ' + '恭喜你！所有用例通过！', 'log-item-green', '[cs处理器]')
+        this.insertLog('[WINNER]: ' + '恭喜你！所有用例通过！', 'log-item-green', '[cs处理器]')
     }
 
     setLogContainerFontSize(type) {
@@ -239,10 +268,3 @@ class Cs {
         }
     }
 }
-const newInsertElement = document.createElement('div')
-newInsertElement.id = '124106_codeshare_utils_c'
-document.body.appendChild(newInsertElement)
-const cs = new Cs(document.getElementById('124106_codeshare_utils_c'))
-cs.info()
-cs.dynamicLoadCss('https://webmaker.xiaotao2333.top:344/css/codesharePreview.css')
-cs.watchLogsAndError()
