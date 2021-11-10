@@ -8,7 +8,6 @@ class Cs {
     watchLogsAndError() {
         // 监听代码错误全局异常捕获
         window.onerror = function(message, source, lineno, colno, error) {
-            cs.insertLog('[ERROR]: ' + message, 'log-item-red', lineno - 5)
             // 通知父窗口
             window.parent.postMessage({ message: '[您的代码运行出现错误]: ' + message, type: 'error' }, '*')
         }
@@ -85,7 +84,7 @@ class Cs {
         // 如果能够获得行数
         if (err.stack != null) {
             array = [...err.stack.matchAll(regexp)]
-            line = parseInt(array[1][0].substring(1).split(':')[0]) - 5
+            line = parseInt(array[1][0].substring(1).split(':')[0])
         }
         // 判断是否对象，是对象需要格式化成文本
         if (T instanceof Object) {
