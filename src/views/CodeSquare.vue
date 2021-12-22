@@ -5,14 +5,16 @@
                 <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
+        <square-tools></square-tools>
         <codes-show></codes-show>
     </div>
 </template>
 
 <script>
 import CodesShow from '../components/CodesShow.vue'
+import SquareTools from '../components/SquareTools.vue'
 export default {
-    components: { CodesShow },
+    components: { CodesShow, SquareTools },
     data() {
         return {
             pageCount: 1,
