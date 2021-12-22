@@ -4,19 +4,23 @@
             <code-card headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n"  @clickPreview="codePreview(item)"  @clickCard="goTo(item)" :identity="item.identity" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
         </div>
         <div class="obItem" style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
+        <code-preview :item='item' :dialogVisible.sync="codePreviewDialogVisible"></code-preview>
     </div>
 </template>
 
 <script>
 import CodeCard from '../components/CodeCard.vue'
 import API from '../api/'
+import CodePreview from './CodePreview.vue'
 export default {
-    components: { CodeCard },
+    components: { CodeCard, CodePreview },
     data() {
         return {
             pageCount: 1,
             pageIndex: 0,
-            cards: []
+            cards: [],
+            codePreviewDialogVisible: false,
+            item: {}
         }
     },
     props: {
@@ -98,7 +102,8 @@ export default {
             this.$router.push({ path: '/editor', query: { id: item.id } })
         },
         codePreview(item) {
-            console.log(item)
+            this.codePreviewDialogVisible = true
+            this.item = item
         }
     }
 }

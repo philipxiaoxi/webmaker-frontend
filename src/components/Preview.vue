@@ -7,6 +7,12 @@
 <script>
 import PreviewTemplate from '../util/PreviewTemplate.js'
 export default {
+    props: {
+        item: {
+            type: Object,
+            default: () => {}
+        }
+    },
     data() {
         return {
             loading: false,
@@ -38,7 +44,8 @@ export default {
                 this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             default:
-                content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item.id)
+                console.log(this.$parent)
+                content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item == undefined ? this.item.id : this.$parent.item.id)
                 this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             }
