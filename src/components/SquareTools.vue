@@ -6,7 +6,7 @@
             </div>
             <div class="title">代码和测试</div>
             <p>通过在线编写代码来测试前端HTML/CSS/JS新特性，同时更快地了解代码原理。</p>
-            <el-button  size="small" class="xx-btn">开始在线编码</el-button>
+            <el-button  size="small" class="xx-btn" @click="$router.push({ path: '/editor' })">开始在线编码</el-button>
         </div>
         <div class="square-crad">
             <div class="card-icon">
@@ -14,7 +14,7 @@
             </div>
             <div class="title">发现和学习</div>
             <p>查看别人经典代码动画特效，理解它们是如何实现的。从而提升自己的学习开发能力。</p>
-            <el-button  size="small" class="xx-btn">搜索全站代码</el-button>
+            <el-button  size="small" class="xx-btn" @click="$router.push({ path: '/search' })">搜索全站代码</el-button>
         </div>
         <div class="square-crad">
             <div class="card-icon">
@@ -22,7 +22,7 @@
             </div>
             <div class="title">交流和分享</div>
             <p>通过查看别人代码，您可以留言和作者交流实现的思路，同时可以将代码分享嵌入到你自己的博客文章。</p>
-            <el-button size="small" class="xx-btn">进入微论坛</el-button>
+            <el-button size="small" class="xx-btn" @click="$router.push({ path: '/forum' })">进入微论坛</el-button>
         </div>
     </div>
 </template>
