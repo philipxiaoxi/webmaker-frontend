@@ -64,7 +64,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: end;
+    justify-content: flex-end;
     &>.title {
         font-size: 35px;
     }

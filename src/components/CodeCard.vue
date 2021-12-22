@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card class="xx-code-card" style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
+        <el-card @click.native="$emit('clickCard')" class="xx-code-card" style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
             <div class="heads">
                 <img class="CodeImg" :src="RealCodeImg" alt="">
             </div>
@@ -15,7 +15,9 @@
                         </div>
                     </div>
                 </div>
-                <i class="el-icon-share"></i>
+                <div @click.stop="$emit('clickPreview')" class="icon" title="预览">
+                    <i class="el-icon-view"></i>
+                </div>
             </div>
         </el-card>
     </div>
@@ -82,6 +84,9 @@ export default {
             } else {
                 this.RealCodeImg = this.codeimg
             }
+        },
+        codePreview() {
+            console.log('通知预览')
         }
     }
 }
@@ -109,6 +114,7 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
+        width: 100%;
     }
     img {
         width: 50px;
@@ -119,6 +125,10 @@ export default {
     }
 }
 .tips {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 0;
     .info {
         display: flex;
         flex-direction: row;
@@ -130,7 +140,6 @@ export default {
         font-size: 1.1em;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 260px;
     }
     .author {
         color: #717790;
@@ -140,6 +149,23 @@ export default {
     transition: all 0.2s;
     &:hover {
         transform: translateY(-10px);
+    }
+    &:hover .icon {
+        opacity: 1;
+        transition: all 0.2s;
+    }
+}
+.icon {
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+    opacity: 0;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    &:hover {
+        background: #444857;
+        color: #fff;
     }
 }
 </style>

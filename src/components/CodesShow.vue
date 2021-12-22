@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="codes">
-            <code-card headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n" @click.native="goTo(item)" :identity="item.identity" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
+            <code-card headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n"  @clickPreview="codePreview(item)"  @clickCard="goTo(item)" :identity="item.identity" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
         </div>
         <div class="obItem" style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
     </div>
@@ -96,6 +96,9 @@ export default {
         },
         goTo(item) {
             this.$router.push({ path: '/editor', query: { id: item.id } })
+        },
+        codePreview(item) {
+            console.log(item)
         }
     }
 }
