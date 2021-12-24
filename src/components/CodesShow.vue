@@ -129,7 +129,10 @@ export default {
             this.codeQuickPreview.top = (window.event.clientY + 200 > window.innerHeight ? window.innerHeight - 200 : window.event.clientY) - 10
             this.codeQuickPreview.left = (window.event.clientX + 350 > window.innerWidth ? window.innerWidth - 350 : window.event.clientX) - 10
             this.codeQuickPreview.show = true
-            this.$refs.codeQuickPreview.goPreview(item)
+            if (this.item != item) {
+                this.$refs.codeQuickPreview.goPreview(item)
+            }
+            this.item = item
         },
         hoverPreviewCancel() {
             this.codeQuickPreview.show = false
