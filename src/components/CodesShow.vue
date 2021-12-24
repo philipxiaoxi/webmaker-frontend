@@ -1,26 +1,49 @@
 <template>
     <div>
         <div class="codes">
-            <code-card headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n"  @clickPreview="codePreview(item)"  @clickCard="goTo(item)" :identity="item.identity" :id="item.id" :title="item.title" :author="item.name" v-for="item in cards" :key="item.id"></code-card>
+            <code-card
+            headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n"
+            @hoverPreview="codePreview(item)"
+            @hoverPreviewCancel="hoverPreviewCancel(item)"
+            @clickCard="goTo(item)"
+            :identity="item.identity"
+            :id="item.id"
+            :title="item.title"
+            :author="item.name"
+            v-for="item in cards"
+            :key="item.id"
+            ></code-card>
         </div>
         <div class="obItem" style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
-        <code-preview :item='item' :dialogVisible.sync="codePreviewDialogVisible"></code-preview>
+        <code-quick-preview
+        :top='codeQuickPreview.top'
+        :left='codeQuickPreview.left'
+        v-show="codeQuickPreview.show"
+        @mouseover.native="codeQuickPreview.show = true"
+        @mouseleave.native="codeQuickPreview.show = false"
+        ref='codeQuickPreview'
+        ></code-quick-preview>
     </div>
 </template>
 
 <script>
 import CodeCard from '../components/CodeCard.vue'
 import API from '../api/'
-import CodePreview from './CodePreview.vue'
+import CodeQuickPreview from './CodeQuickPreview.vue'
 export default {
-    components: { CodeCard, CodePreview },
+    components: { CodeCard, CodeQuickPreview },
     data() {
         return {
             pageCount: 1,
             pageIndex: 0,
             cards: [],
             codePreviewDialogVisible: false,
-            item: {}
+            item: {},
+            codeQuickPreview: {
+                top: 0,
+                left: 0,
+                show: false
+            }
         }
     },
     props: {
@@ -102,8 +125,14 @@ export default {
             this.$router.push({ path: '/editor', query: { id: item.id } })
         },
         codePreview(item) {
-            this.codePreviewDialogVisible = true
-            this.item = item
+            console.log(window.event)
+            this.codeQuickPreview.top = (window.event.clientY + 200 > window.innerHeight ? window.innerHeight - 200 : window.event.clientY) - 10
+            this.codeQuickPreview.left = (window.event.clientX + 350 > window.innerWidth ? window.innerWidth - 350 : window.event.clientX) - 10
+            this.codeQuickPreview.show = true
+            this.$refs.codeQuickPreview.goPreview(item)
+        },
+        hoverPreviewCancel() {
+            this.codeQuickPreview.show = false
         }
     }
 }

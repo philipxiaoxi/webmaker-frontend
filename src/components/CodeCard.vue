@@ -15,7 +15,10 @@
                         </div>
                     </div>
                 </div>
-                <div @click.stop="$emit('clickPreview')" class="icon" title="预览">
+                <div
+                @mouseover="hover = true"
+                @mouseleave="hover = false"
+                class="icon" title="预览">
                     <i class="el-icon-view"></i>
                 </div>
             </div>
@@ -62,7 +65,17 @@ export default {
     },
     data() {
         return {
-            RealCodeImg: ''
+            RealCodeImg: '',
+            hover: false
+        }
+    },
+    watch: {
+        hover() {
+            if (this.hover) {
+                this.$emit('hoverPreview')
+            } else {
+                this.$emit('hoverPreviewCancel')
+            }
         }
     },
     computed: {
