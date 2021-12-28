@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import './util/directives'
+import './css/base.css'
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(mavonEditor)
