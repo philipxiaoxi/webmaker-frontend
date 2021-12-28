@@ -5,12 +5,12 @@ import Axios from 'axios'
  */
 class SmartMerge {
     labels = []
-    constructor(code) {
+    constructor(code, cb) {
         const obj = ScanLabels.scan(code)
         this.labels = obj.labels
         this.div = obj.div
         LabelsParse.prase(this.labels).then(() => {
-            console.log(this.div.innerHTML)
+            cb(this.div.innerHTML)
         })
     }
 }

@@ -56,8 +56,11 @@ export default {
             })
         },
         merge() {
-            const sm = new SmartMerge(this.$refs.vscode.monacoEditor.getModel().getValue())
+            const sm = new SmartMerge(this.$refs.vscode.monacoEditor.getModel().getValue(), this.showResult)
             console.log(sm.labels)
+        },
+        showResult(res) {
+            this.$refs.vscode2.monacoEditor.getModel().setValue(res)
         }
     }
 }
