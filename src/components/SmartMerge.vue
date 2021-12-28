@@ -4,7 +4,7 @@
 
         </p>
         <div>
-            <el-button>智慧合并片段</el-button>
+            <el-button @click="merge">智慧合并片段</el-button>
         </div>
         <div class="flex-row my-20">
             <vs-code class="vscode" ref="vscode"></vs-code>
@@ -15,6 +15,7 @@
 
 <script>
 import VsCode from './VsCode.vue'
+import SmartMerge from '../util/SmartMerge'
 export default {
     name: 'SmartMerge',
     components: { VsCode },
@@ -53,6 +54,10 @@ export default {
 <wm:include file="https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/卡片类/card.html"></wm:include>
 `)
             })
+        },
+        merge() {
+            const sm = new SmartMerge(this.$refs.vscode.monacoEditor.getModel().getValue())
+            console.log(sm.labels)
         }
     }
 }
