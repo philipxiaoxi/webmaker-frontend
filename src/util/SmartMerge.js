@@ -22,7 +22,7 @@ const ScanLabels = {
         const labels = []
         const placeholder = document.createElement('div')
         placeholder.innerHTML = code
-        const nodes = placeholder.childNodes
+        const nodes = placeholder.querySelectorAll('*')
         for (const node of nodes) {
             if (node.tagName != undefined && node.tagName.startsWith('WM:')) {
                 labels.push({ name: node.tagName, target: node })
@@ -59,7 +59,7 @@ const LabelsParse = {
         const father = shell.parentNode
         for (const child of childs) {
             const node = child.cloneNode(true)
-            father.append(node)
+            father.insertBefore(node, shell)
         }
         shell.remove()
     }
