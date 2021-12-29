@@ -9,7 +9,7 @@ class SmartMerge {
         const obj = ScanLabels.scan(code)
         this.labels = obj.labels
         this.div = obj.div
-        LabelsParse.prase(this.labels).then(() => {
+        LabelsParse.prase(this.labels, { style: this.div.querySelector('style'), script: this.div.querySelector('script') }).then(() => {
             cb(this.div.innerHTML)
         })
     }
@@ -35,17 +35,39 @@ const ScanLabels = {
  * 标签解析器
  */
 const LabelsParse = {
-    prase(labels) {
+    prase(labels, div) {
         const events = []
         for (const label of labels) {
-            events.push(this[label.name.split(':')[1].toLowerCase()](label))
+            events.push(this[label.name.split(':')[1].toLowerCase()](label, div))
         }
         return Promise.all(events)
     },
-    include(label) {
+    include(label, div) {
         const url = label.target.getAttribute('file')
+        const name = this.getFileNameByPath(url)
         const parse = (code) => {
-            label.target.innerHTML = code
+            const placeholder = document.createElement('div')
+            placeholder.innerHTML = code
+            const styles = placeholder.querySelectorAll('style')
+            for (const style of styles) {
+                div.style.innerHTML += `\n/* ${name}组件样式代码 */ \n` + style.innerHTML
+                style.remove()
+            }
+            const scripts = placeholder.querySelectorAll('script')
+            for (const script of scripts) {
+                if (script.src != '') {
+                    continue
+                } else {
+                    div.script.innerHTML += `\n/* ${name}组件脚本代码 */ \n` + script.innerHTML
+                    script.remove()
+                }
+            }
+
+            /* eslint-disable */
+            label.target.parentNode.insertBefore(document.createTextNode('\n'), label.target)
+            label.target.parentNode.insertBefore(document.createComment(`${name}组件html代码- 参考：${url}`), label.target)
+            label.target.parentNode.insertBefore(document.createTextNode('\n'), label.target)
+            label.target.innerHTML = `${placeholder.innerHTML}`
             this.removeShell(label.target)
         }
         return Axios({ url: url, method: 'get' }).then((res) => {
@@ -62,6 +84,11 @@ const LabelsParse = {
             father.insertBefore(node, shell)
         }
         shell.remove()
+    },
+    getFileNameByPath(path) {
+        var index = path.lastIndexOf('/') // lastIndexOf("/")  找到最后一个  /  的位置
+        var fileName = path.substr(index + 1) // substr() 截取剩余的字符，即得文件名xxx.doc
+        return fileName
     }
 }
 export default SmartMerge
