@@ -25,15 +25,18 @@
                 <el-tab-pane label="可视化拖拽">
                     <div class="flex-row">
                         <div style="width:50%;">
-                            <ul class="sections">
-                                <li draggable @dragstart="drag($event, 'flex-1-1')">布局(元素垂直放置)</li>
-                                <li draggable @dragstart="drag($event, 'flex-1-2')">布局(元素横向放置)</li>
-                                <li draggable @dragstart="drag($event, 'img')">图片(宽高100%)</li>
-                                <li draggable @dragstart="drag($event, 'btn')">按钮</li>
+                            <ul class="sections" @mousedown="itemsClick" @mouseup="dragend">
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'flex-1-1')">布局(元素垂直放置)</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'flex-1-2')">布局(元素横向放置)</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'img')">图片(宽高100%)</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'btn')">按钮</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'title')">默认标题</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'component2')">测试占位组件（标题）</li>
+                                <li draggable @dragend="dragend" @dragstart="drag($event, 'component')">测试占位组件（滚动图）</li>
                             </ul>
+                            <el-button @click="gen">生成低代码</el-button>
                         </div>
                         <div container='stage' class="stage" @drop="drop($event)" @dragover="allowDrop($event)">
-
                         </div>
                     </div>
 
@@ -76,18 +79,7 @@ export default {
         init() {
             this.$nextTick(() => {
                 /* eslint-disable */
-                this.$refs.vscode.monacoEditor.getModel().setValue(
-                    `<!-- 代码片段合并实验性 -->
-<link rel="stylesheet" href="https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/基础样式/base.css">
-<!-- 引入轮播图 -->
-<wm:include file="https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/轮播类/carousel2.html"></wm:include>
-<!-- 引入卡片 -->
-<wm:include file="https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/卡片类/card.html"></wm:include>
-
-<style></style>
-<script><\/script> 
-`
-                ); /* eslint-enable */
+                this.$refs.vscode.monacoEditor.getModel().setValue(''); /* eslint-enable */
             })
         },
         merge() {
@@ -101,8 +93,30 @@ export default {
             this.$refs.vscode2.monacoEditor.getModel().setValue(res)
             this.$refs.preview.goPreview(res)
         },
+        itemsClick() {
+            document.documentElement.style.setProperty('--p', '20px')
+            document.documentElement.style.setProperty('--m', '20px')
+            document.documentElement.style.setProperty('--b', 'dashed 2px gray')
+        },
+        gen() {
+            const stage = document.getElementsByClassName('stage')[0]
+            /* eslint-disable */
+            this.$refs.vscode.monacoEditor.getModel().setValue(
+                '<link rel="stylesheet" href="https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/基础样式/base.css">' +
+                stage.innerHTML +
+                '<style><\/style>' +
+                '<script><\/script>'
+            )
+             /* eslint-enable */
+        },
         drag(event, type) {
             event.dataTransfer.setData('type', type)
+        },
+        dragend() {
+            console.log('拖拽结束')
+            document.documentElement.style.setProperty('--p', '0px')
+            document.documentElement.style.setProperty('--m', '0px')
+            document.documentElement.style.setProperty('--b', 'none')
         },
         allowDrop(event) {
             event.preventDefault()
@@ -110,26 +124,21 @@ export default {
         drop(event) {
             event.preventDefault()
             const div = document.createElement('div')
-            div.draggable = 'true'
-            div.style.position = 'relative'
             const type = event.dataTransfer.getData('type')
             if (type == 'flex-1-1') {
                 div.classList.add('flex-column')
                 div.classList.add('ai-center')
                 div.classList.add('jc-center')
-                div.style.margin = '20px'
-                div.style.border = 'dashed 1px grey'
-                div.style.padding = '20px'
+                div.classList.add('item-defalut')
             }
             if (type == 'flex-1-2') {
                 div.classList.add('flex-row')
                 div.classList.add('ai-center')
                 div.classList.add('jc-center')
-                div.style.margin = '20px'
-                div.style.border = 'dashed 1px grey'
-                div.style.padding = '20px'
+                div.classList.add('item-defalut')
             }
             if (type == 'img') {
+                div.classList.add('item-defalut')
                 const img = document.createElement('img')
                 img.style.width = '100%'
                 img.style.height = '100%'
@@ -139,17 +148,39 @@ export default {
             if (type == 'btn') {
                 const btn = document.createElement('button')
                 btn.innerText = '默认按钮'
+                btn.classList.add('btn')
                 div.appendChild(btn)
             }
+            if (type == 'title') {
+                const btn = document.createElement('h1')
+                btn.innerText = '默认标题'
+                div.appendChild(btn)
+            }
+            if (type == 'component') {
+                div.classList.add('item-defalut')
+                div.classList.add('felx-column')
+                const wm = document.createElement('wm:include')
+                wm.setAttribute('file', 'https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/轮播类/carousel2.html')
+                div.appendChild(wm)
+                wm.innerText = '占位滚动图组件-(宽高自动)'
+                wm.classList.add('wm-style')
+            }
+            if (type == 'component2') {
+                div.classList.add('item-defalut')
+                div.classList.add('felx-column')
+                const wm = document.createElement('wm:include')
+                wm.setAttribute('file', 'https://www.xiaotao2333.top:5885/common/getSnippetProjectFile/131/标题/title.html')
+                div.appendChild(wm)
+                wm.innerText = '占位标题组件-(宽高自动)'
+                wm.classList.add('wm-style')
+            }
             div.onmouseenter = (event) => {
-                div.style.border = 'dotted 4px red'
-                div.parentNode.style.border = 'dashed 1px grey'
+                div.classList.add('item-select')
+                div.parentNode.classList.remove('item-select')
             }
             div.onmouseleave = (event) => {
-                div.style.border = 'dashed 1px grey'
-                if (div.parentNode.getAttribute('container') != 'stage') {
-                    div.parentNode.style.border = 'dotted 4px red'
-                }
+                div.classList.remove('item-select')
+                div.parentNode.classList.add('item-select')
             }
             const childs = event.target.children
             const mouseXY = { offsetX: event.offsetX, offsetY: event.offsetY }
@@ -208,6 +239,38 @@ export default {
     width: 50%;
     overflow-y: scroll;
     height: 500px;
+    position: relative;
 }
 
+</style>
+<style>
+:root{
+    --p:0px;
+    --m:0px;
+    --b:none;
+}
+.item-defalut {
+    min-height: 50px;
+    position: relative;
+    box-sizing: border-box;
+    margin: var(--m);
+    padding: var(--p);
+    border: var(--b);
+}
+.item-select {
+    border: dashed 2px gray;
+}
+.btn {
+    border: none;outline: none;
+    padding: 5px 20px;
+    margin: 20px;
+    background-color: #008EEC;
+    color: white;
+}
+.wm-style {
+    border: #008EEC 3px solid;
+    display: flex;
+    line-height: 50px;
+    flex-direction: column;
+}
 </style>
