@@ -250,7 +250,6 @@ export default {
     --b:none;
 }
 .item-defalut {
-    min-height: 50px;
     position: relative;
     box-sizing: border-box;
     margin: var(--m);

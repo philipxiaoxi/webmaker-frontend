@@ -12,6 +12,7 @@ import NewForumPage from '../views/NewForumPage.vue'
 import Register from '../views/Register.vue'
 import DockerView from '../views/DockerView.vue'
 import ToolBox from '../views/ToolBox.vue'
+import LowCode from '../views/LowCode.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -74,6 +75,11 @@ const routes = [
         path: '/toolbox',
         name: 'toolbox',
         component: ToolBox
+    },
+    {
+        path: '/lowcode',
+        name: 'lowcode',
+        component: LowCode
     }
 ]
 
