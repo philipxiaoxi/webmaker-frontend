@@ -12,6 +12,10 @@
                             <el-button  @click="cleanStage" size="small">清空画布</el-button>
                             <el-button type="primary" @click="gen" size="small">生成低代码</el-button>
                         </div>
+                        <div>
+                            <span>显示框架：</span>
+                            <el-switch @change="showCliChange" v-model="showCli"></el-switch>
+                        </div>
                     </div>
                     <div container='stage' class="stage" @drop="drop($event)" @dragover="allowDrop($event)">
                     </div>
@@ -19,10 +23,10 @@
                         <div>
                             <el-form label-position="top" label-width="80px">
                                 <el-form-item label="class样式名称">
-                                    <el-input></el-input>
+                                    <el-input placeholder="默认系统随机" v-model="itemInfo.itemClassName"></el-input>
                                 </el-form-item>
                                 <el-form-item label="绑定的class样式">
-                                    <el-select v-model="itemClassList"  filterable multiple  placeholder="请选择">
+                                    <el-select v-model="itemInfo.itemClassList"  filterable multiple  placeholder="请选择">
                                         <el-option-group
                                         v-for="group in classNameOptions"
                                         :key="group.label"
@@ -36,10 +40,11 @@
                                         </el-option-group>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="活动形式">
-                                    <el-input></el-input>
+                                <el-form-item label="自定义样式">
+                                    <el-input type="textarea" v-model="itemInfo.itemStyle"></el-input>
                                 </el-form-item>
                             </el-form>
+                            <el-button @click="changeitemClassList">应用</el-button>
                         </div>
                     </div>
                 </div>
@@ -75,8 +80,15 @@ export default {
     components: { VsCode, Preview, XxDialog },
     data() {
         return {
+            showCli: false,
             dialogVisible: false,
-            itemClassList: [],
+            itemInfo: {
+                itemClassList: [],
+                itemStyle: '',
+                itemClassName: '',
+                target: null
+            },
+
             classNameOptions: classNameOptions,
             fromData: [
                 {
@@ -126,6 +138,22 @@ export default {
         this.init()
     },
     methods: {
+        changeitemClassList() {
+            console.log(this.itemInfo.itemClassList)
+            this.itemInfo.target.removeAttribute('class')
+            for (const className of this.itemInfo.itemClassList) {
+                this.itemInfo.target.classList.add(className)
+            }
+            this.itemInfo.target.removeAttribute('style')
+            this.itemInfo.target.setAttribute('style', this.itemInfo.itemStyle)
+        },
+        showCliChange() {
+            if (this.showCli) {
+                this.itemsShow()
+            } else {
+                this.itemHiden()
+            }
+        },
         addComponent(data) {
             this.components.push(
                 {
@@ -156,6 +184,11 @@ export default {
             document.documentElement.style.setProperty('--m', '20px')
             document.documentElement.style.setProperty('--b', 'dashed 2px gray')
         },
+        itemHiden() {
+            document.documentElement.style.setProperty('--p', '0px')
+            document.documentElement.style.setProperty('--m', '0px')
+            document.documentElement.style.setProperty('--b', 'none')
+        },
         cleanStage() {
             document.querySelector('.stage').innerHTML = ''
         },
@@ -178,9 +211,9 @@ export default {
         },
         dragend() {
             console.log('拖拽结束')
-            document.documentElement.style.setProperty('--p', '0px')
-            document.documentElement.style.setProperty('--m', '0px')
-            document.documentElement.style.setProperty('--b', 'none')
+            if (!this.showCli) {
+                this.itemHiden()
+            }
         },
         allowDrop(event) {
             event.preventDefault()
@@ -202,14 +235,12 @@ export default {
                 div.classList.add('item-defalut')
             }
             if (type == 'img') {
-                div.classList.add('item-defalut')
-                const img = document.createElement('img')
-                img.style.width = '100%'
-                img.style.height = '100%'
-                img.src = 'https://sdfsdf.dev/300x300.png'
+                div = document.createElement('img')
+                div.style.width = '100%'
+                div.style.height = '100%'
+                div.src = 'https://sdfsdf.dev/300x300.png'
                 // 点击时候为里面的元素标记
                 div.setAttribute('insert', true)
-                div.appendChild(img)
             }
             if (type == 'btn') {
                 div = document.createElement('button')
@@ -232,19 +263,23 @@ export default {
                 div.classList.add('item-select')
                 div.parentNode.classList.remove('item-select')
                 div.onclick = (e) => {
-                    if (div.getAttribute('insert')) {
-                        console.log(div.childNodes[0])
-                    } else {
-                        console.log(div)
-                    }
-
+                    let target = null
+                    // if (div.getAttribute('insert')) {
+                    //     target = div.childNodes[0]
+                    // } else {
+                    //     target = div
+                    // }
+                    target = div
+                    this.itemInfo.target = target
+                    this.itemInfo.itemStyle = target.getAttribute('style')
+                    this.itemInfo.itemClassList = Array.prototype.slice.call(target.classList, 0)
+                    console.log(target.classList)
                     e.stopPropagation() // 阻止事件冒泡
                 }
             }
             div.onmouseleave = (event) => {
                 div.classList.remove('item-select')
                 div.parentNode.classList.add('item-select')
-                div.onclick = () => {}
             }
             const childs = event.target.children
             const mouseXY = { offsetX: event.offsetX, offsetY: event.offsetY }
