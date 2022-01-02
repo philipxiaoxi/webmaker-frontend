@@ -5,6 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:dev": "vue-cli-service build --mode development",
+    "build:prod": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
@@ -37,11 +39,13 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "javascript-obfuscator": "^3.0.0",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "vue-cli-plugin-axios": "0.0.4",
     "vue-template-compiler": "^2.6.11",
     "vuepress": "^1.8.2",
-    "vuepress-plugin-autobar": "github:boboidream/vuepress-bar"
+    "vuepress-plugin-autobar": "github:boboidream/vuepress-bar",
+    "webpack-obfuscator": "^2.6.0"
   }
 }
