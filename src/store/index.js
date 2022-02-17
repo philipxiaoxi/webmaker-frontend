@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        id: 'father',
         token: '',
         userInfo: { phone: '未登录' }
     },
