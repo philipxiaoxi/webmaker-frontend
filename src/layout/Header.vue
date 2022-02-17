@@ -106,7 +106,7 @@ export default {
                     path: '/toolbox'
                 }
             ],
-            routePath: '/',
+            routePath: this.$route.path,
             menuStyle: 0,
             drawer: false
         }
