@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
+        <el-carousel :height="imgHeight+'px'" :interval="8000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
                 <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
@@ -22,12 +22,12 @@ export default {
             cards: [],
             carouselImgs: [
                 {
-                    title: 'WebMaker轻松编码网站！',
-                    imgurl: '/img/banner/Banner3.png'
+                    title: '低代码平台上线啦！',
+                    imgurl: '/img/banner/Banner1.png'
                 },
                 {
-                    title: '构建服务一体化的代码共享平台。',
-                    imgurl: '/img/banner/Banner1.png'
+                    title: 'WebMaker轻松编码网站！',
+                    imgurl: '/img/banner/Banner3.png'
                 },
                 {
                     title: '2021前端技术研讨会等你来参加！',
