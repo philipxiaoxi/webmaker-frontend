@@ -82,23 +82,27 @@ export default {
         return {
             routeLink: [
                 {
-                    name: '片段广场',
+                    name: '首页',
                     path: '/'
                 },
                 {
-                    name: '代码编辑',
+                    name: '编辑',
                     path: '/editor'
                 },
                 {
-                    name: '搜索片段',
+                    name: '容器',
+                    path: '/container'
+                },
+                {
+                    name: '片段',
                     path: '/search'
                 },
                 {
-                    name: 'WebMaker论坛',
+                    name: '论坛',
                     path: '/forum'
                 },
                 {
-                    name: '工具箱',
+                    name: '创意',
                     path: '/toolbox'
                 }
             ],
