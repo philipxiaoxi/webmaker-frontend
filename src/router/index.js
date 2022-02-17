@@ -13,7 +13,7 @@ import Register from '../views/Register.vue'
 import DockerView from '../views/DockerView.vue'
 import ToolBox from '../views/ToolBox.vue'
 import LowCode from '../views/LowCode.vue'
-import Container from '../views/Container.vue'
+// import Container from '../views/Container.vue'
 
 Vue.use(VueRouter)
 
@@ -82,11 +82,6 @@ const routes = [
         path: '/lowcode',
         name: 'lowcode',
         component: LowCode
-    },
-    {
-        path: '/container',
-        name: 'container',
-        component: Container
     }
 ]
 
