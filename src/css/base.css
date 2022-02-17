@@ -1,10 +1,10 @@
 /*
  * 快速构建页面基底样式
 */
-* {
+/* * {
     margin: 0;
     padding: 0;
-}
+} */
 img {
     object-fit: cover;
 }
