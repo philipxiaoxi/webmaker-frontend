@@ -10,15 +10,13 @@
             :img='item.img'
             ></link-icon>
         </div>
-        <creative-factory></creative-factory>
     </div>
 </template>
 
 <script>
 import LinkIcon from '../components/LinkIcon.vue'
-import CreativeFactory from '../components/CreativeFactory.vue'
 export default {
-    components: { LinkIcon, CreativeFactory },
+    components: { LinkIcon },
     data() {
         return {
             linksList: [
