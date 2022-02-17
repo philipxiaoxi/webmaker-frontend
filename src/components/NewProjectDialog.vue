@@ -14,6 +14,9 @@
                 <div class="tag">{{item.tag}}</div>
             </div>
         </div>
+        <div class="py-10">
+            <el-alert   title="虚拟容器开发现已升级，将不再此处新建。请在编辑页面工具栏进入。" type="info" :closable="false"></el-alert>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>
             <el-button type="primary" @click="handleClick()">确 定</el-button>
@@ -56,12 +59,12 @@ export default {
                     title: '完整项目',
                     tag: '完整项目具有目录管理器功能，您可以开发多文件的前端项目。',
                     icon: 'el-icon-folder'
-                },
-                {
-                    title: '虚拟容器',
-                    tag: '由codeshare管控的虚拟容器可以让你在web上开发任何语言。',
-                    icon: 'el-icon-coin'
                 }
+                // {
+                //     title: '虚拟容器',
+                //     tag: '由codeshare管控的虚拟容器可以让你在web上开发任何语言。',
+                //     icon: 'el-icon-coin'
+                // }
             ]
         }
     },
