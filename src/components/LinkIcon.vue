@@ -46,7 +46,6 @@ export default {
 
 <style lang="less" scoped>
 .linkicon {
-    box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
     border-radius: 3px;
     cursor: pointer;
     margin: 15px;
