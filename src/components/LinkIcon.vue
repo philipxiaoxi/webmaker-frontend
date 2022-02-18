@@ -26,11 +26,19 @@ export default {
         url: {
             type: String,
             default: ''
+        },
+        type: {
+            type: String,
+            default: 'url'
         }
     },
     methods: {
         goTo(url) {
-            window.open(url)
+            if (this.type == 'url') {
+                window.open(url)
+            } else {
+                this.$router.push({ path: url })
+            }
         }
     }
 }
@@ -38,6 +46,8 @@ export default {
 
 <style lang="less" scoped>
 .linkicon {
+    box-shadow: 0 4px 8px rgb(0 0 0 / 3%);
+    border-radius: 3px;
     cursor: pointer;
     margin: 15px;
     background-color: #FFFF;
