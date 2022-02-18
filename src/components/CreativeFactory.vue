@@ -1,15 +1,13 @@
 <template>
     <div>
-        <h1>创意工厂</h1>
-        <smart-merge></smart-merge>
+        <p>暂无实验性功能体验噢~</p>
     </div>
 </template>
 
 <script>
-import SmartMerge from './SmartMerge.vue'
 export default {
     name: 'CreativeFactory',
-    components: { SmartMerge },
+    components: { },
     props: {
         top: {
             type: Number,
