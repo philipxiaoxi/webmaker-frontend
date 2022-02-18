@@ -1,7 +1,18 @@
 <template>
     <div class="container">
-        <h1>前端工具箱</h1>
-        <div class="links-container">
+        <big-title class=" px-20">扩展功能</big-title>
+        <div class="link-container grid-cols-3 gap-sm">
+            <link-icon
+            v-for="(item,i) in extendsList" :key="item.title + i"
+            :title="item.title"
+            :intro="item.intro"
+            :url="item.url"
+            :type="item.type"
+            :img='item.img'
+            ></link-icon>
+        </div>
+        <big-title class=" px-20">前端工具箱</big-title>
+        <div class="link-container grid-cols-3 gap-sm">
             <link-icon
             v-for="(item,i) in linksList" :key="item.title + i"
             :title="item.title"
@@ -10,13 +21,17 @@
             :img='item.img'
             ></link-icon>
         </div>
+        <big-title class=" p-20">创意工厂</big-title>
+        <creative-factory></creative-factory>
     </div>
 </template>
 
 <script>
+import BigTitle from '../components/BigTitle.vue'
+import CreativeFactory from '../components/CreativeFactory.vue'
 import LinkIcon from '../components/LinkIcon.vue'
 export default {
-    components: { LinkIcon },
+    components: { LinkIcon, BigTitle, CreativeFactory },
     data() {
         return {
             linksList: [
@@ -69,6 +84,15 @@ export default {
                     intro: '113万首音频供您下载。',
                     url: 'https://www.aigei.com/sound'
                 }
+            ],
+            extendsList: [
+                {
+                    title: 'WebMaker低代码平台',
+                    intro: '拖拽生成网页、自定义引入第三方组件、智能解析网页元素并合并、生成原生HTML代码。',
+                    url: '/lowcode',
+                    type: 'path',
+                    img: 'https://toastlog.com/img/logos/cssscan.svg'
+                }
             ]
         }
     }
@@ -85,11 +109,7 @@ export default {
     margin-top: 80px;
     margin-bottom: 20px;
 }
-.links-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+.link-container {
+    margin-bottom: 20px;
 }
 </style>
