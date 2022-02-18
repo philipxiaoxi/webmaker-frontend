@@ -360,3 +360,33 @@ export default {
     text-align:left;
 }
 </style>
+<style>
+:root{
+    --p:0px;
+    --m:0px;
+    --b:none;
+}
+.item-defalut {
+    position: relative;
+    box-sizing: border-box;
+    margin: var(--m);
+    padding: var(--p);
+    border: var(--b);
+}
+.item-select {
+    border: dashed 2px gray;
+}
+.btn {
+    border: none;outline: none;
+    padding: 5px 20px;
+    margin: 20px;
+    background-color: #008EEC;
+    color: white;
+}
+.wm-style {
+    border: #008EEC 3px solid;
+    display: flex;
+    line-height: 50px;
+    flex-direction: column;
+}
+</style>
