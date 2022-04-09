@@ -346,12 +346,14 @@ export default {
 .pane-height-full {
     height: calc(100vh - 140px);
     width: 100%;
+    overflow: hidden;
 }
 .stage {
     overflow-y: scroll;
     flex:1;
     background-color: #DCDFE6;
     height: calc(100vh - 140px);
+    overflow: hidden;
 }
 .settings {
     align-self: start;

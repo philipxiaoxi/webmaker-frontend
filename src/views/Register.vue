@@ -125,6 +125,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 .card {
     background-color: #fff;

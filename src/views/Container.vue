@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <mico-app-inside src="https://docker.diyxi.top/#/"></mico-app-inside>
+        <mico-app src="https://docker.diyxi.top/#/"></mico-app>
     </div>
 </template>
 
 <script>
-import MicoAppInside from '../components/MircoApp/MicoAppInside.vue'
+import MicoApp from '../components/MircoApp/MicoApp.vue'
 export default {
-    components: { MicoAppInside },
+    components: { MicoApp },
     data() {
         return {
             src: ''
@@ -34,5 +34,6 @@ export default {
     margin-top: 60px;
     width: 100%;
     height: calc(100vh - 60px);
+    overflow: hidden;
 }
 </style>

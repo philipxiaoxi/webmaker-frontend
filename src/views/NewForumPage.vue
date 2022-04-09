@@ -103,5 +103,6 @@ export default {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 145px);
+    overflow: hidden;
 }
 </style>

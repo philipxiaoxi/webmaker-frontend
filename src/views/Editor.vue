@@ -451,18 +451,22 @@ export default {
 .xx-vscode {
     height:calc(100vh - 135px) !important;
     width:calc(50% - 25px);
+    overflow: hidden;
 }
 .xx-vscode-sync {
     height:calc(100vh - 5px) !important;
     width:calc(50% - 25px);
+    overflow: hidden;
 }
 .xx-preview {
     height:calc(100vh - 135px);
     width:calc(50% - 25px);
+    overflow: hidden;
 }
 .xx-preview-sync {
     height:calc(100vh - 5px);
     width:calc(50% - 25px);
+    overflow: hidden;
 }
 .iframeDiv {
     width: 100%;
