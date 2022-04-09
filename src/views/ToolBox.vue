@@ -92,6 +92,12 @@ export default {
                     url: '/lowcode',
                     type: 'path',
                     img: 'https://toastlog.com/img/logos/cssscan.svg'
+                },
+                {
+                    title: '咸鱼云网盘',
+                    intro: 'webmaker即将与咸鱼云强强联合，文件存储等服务。',
+                    url: '/disk',
+                    type: 'path'
                 }
             ]
         }

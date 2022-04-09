@@ -9,14 +9,16 @@
         </keep-alive>
         <!-- 微前端组件容器 -->
         <container v-show="$route.path == '/container'"></container>
+        <salted-fish v-show="$route.path == '/disk'"></salted-fish>
     </div>
 </template>
 
 <script>
 import Header from '../layout/Header.vue'
-import Container from './Container.vue'
+import Container from './mircoAppView/Container.vue'
+import SaltedFish from './mircoAppView/SaltedFish.vue'
 export default {
-    components: { Header, Container }
+    components: { Header, Container, SaltedFish }
 
 }
 </script>

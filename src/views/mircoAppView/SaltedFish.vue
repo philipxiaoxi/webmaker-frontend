@@ -1,11 +1,11 @@
 <template>
-    <div class="container">
-        <mico-app src="https://docker.diyxi.top/#/"></mico-app>
+    <div class="disk-container">
+        <mico-app class="mico-app" :src="src"></mico-app>
     </div>
 </template>
 
 <script>
-import MicoApp from '../components/MircoApp/MicoApp.vue'
+import MicoApp from '../../components/MircoApp/MicoApp.vue'
 export default {
     components: { MicoApp },
     data() {
@@ -14,15 +14,15 @@ export default {
         }
     },
     mounted() {
-        if (this.$route.path == '/container') {
-            this.src = 'https://docker.diyxi.top/#/'
+        if (this.$route.path == '/disk') {
+            this.src = 'https://disk.xiaotao2333.top:344/#/'
         }
     },
     // 监听,当路由发生变化的时候执行
     watch: {
         $route(to, from) {
-            if (this.src == '' && to.path == '/container') {
-                this.src = 'https://docker.diyxi.top/#/'
+            if (this.src == '' && to.path == '/disk') {
+                this.src = 'https://disk.xiaotao2333.top:344/#/'
             }
         }
     }
@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.container {
+.disk-container {
     margin-top: 60px;
     width: 100%;
     height: calc(100vh - 60px);
