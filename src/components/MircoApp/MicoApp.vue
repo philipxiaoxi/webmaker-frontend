@@ -39,6 +39,7 @@ export default {
     },
     methods: {
         sendStore(state) {
+            if (this.src === '') return
             this.$refs.mircoapp.contentWindow.postMessage(state, '*')
             console.log('[MircoApp]: Store数据已发送给子前端')
         }
