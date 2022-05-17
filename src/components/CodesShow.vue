@@ -2,7 +2,7 @@
     <div>
         <div class="codes">
             <code-card
-            :headimg="'https://api.dzzui.com/api/avatar?time='+ Math.random()"
+            :headimg="'https://api.dzzui.com/api/avatar?time=' + item.id"
             @hoverPreview="codePreview(item)"
             @hoverPreviewCancel="hoverPreviewCancel(item)"
             @clickCard="goTo(item)"
@@ -44,7 +44,8 @@ export default {
                 top: 0,
                 left: 0,
                 show: false
-            }
+            },
+            index: 0
         }
     },
     computed: {
