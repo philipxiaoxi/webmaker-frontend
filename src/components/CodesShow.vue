@@ -2,7 +2,7 @@
     <div>
         <div class="codes">
             <code-card
-            headimg="https://disk.xiaotao2333.top:344/api/user/avatar/n"
+            :headimg="'https://api.dzzui.com/api/avatar?time='+ Math.random()"
             @hoverPreview="codePreview(item)"
             @hoverPreviewCancel="hoverPreviewCancel(item)"
             @clickCard="goTo(item)"
@@ -30,6 +30,7 @@
 import CodeCard from '../components/CodeCard.vue'
 import API from '../api/'
 import CodeQuickPreview from './CodeQuickPreview.vue'
+import md5 from 'md5'
 export default {
     components: { CodeCard, CodeQuickPreview },
     data() {
@@ -44,6 +45,11 @@ export default {
                 left: 0,
                 show: false
             }
+        }
+    },
+    computed: {
+        getEmailHash() {
+            return md5(this.$store.state.userInfo.email)
         }
     },
     props: {
