@@ -2,7 +2,7 @@
     <div class="ForumItemContainer" @click="$emit('click')">
         <div class="container">
             <div class="xx-row">
-                <img src="https://disk.xiaotao2333.top:344/api/user/avatar/n" alt="">
+                <img :src="'https://cravatar.cn/avatar/' + email">
                 <div class="tips">
                     <div class="title">{{title}}</div>
                     <div class="info">
@@ -25,7 +25,7 @@
 <script>
 import FS from '../../util/FormatString'
 export default {
-    props: ['title', 'author', 'topic', 'replyNum', 'preface', 'showPreface', 'identity'],
+    props: ['title', 'author', 'topic', 'replyNum', 'preface', 'showPreface', 'identity', 'email'],
     computed: {
         getIdentity() {
             return FS.getIdentityString(this.identity)

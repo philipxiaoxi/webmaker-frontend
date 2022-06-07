@@ -2,7 +2,7 @@
     <div>
         <div class="codes">
             <code-card
-            :headimg="'https://api.dzzui.com/api/avatar?time=' + item.id"
+            :headimg="'https://cravatar.cn/avatar/' + item.email"
             @hoverPreview="codePreview(item)"
             @hoverPreviewCancel="hoverPreviewCancel(item)"
             @clickCard="goTo(item)"

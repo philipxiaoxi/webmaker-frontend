@@ -3,7 +3,7 @@
         <el-divider></el-divider>
         <div class="container">
             <div class="xx-row">
-                <img src="https://disk.xiaotao2333.top:344/api/user/avatar/n" alt="">
+                <img :src="'https://cravatar.cn/avatar/' + email" alt="name">
                 <div class="tips">
                     <div class="title">{{name}}</div>
                     <div class="info">
@@ -43,7 +43,7 @@
 import API from '../../api'
 import FS from '../../util/FormatString'
 export default {
-    props: ['name', 'time', 'replyName', 'content', 'index', 'replyId', 'identity'],
+    props: ['name', 'time', 'replyName', 'content', 'index', 'replyId', 'identity', 'email'],
     data() {
         return {
             replycontent: '加载中……'

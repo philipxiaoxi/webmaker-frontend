@@ -4,6 +4,7 @@
         v-for="item in data"
         :key="item.id"
         :title="item.title"
+        :email="item.email"
         :author="item.author"
         :topic="item.topic"
         :preface="item.preface"

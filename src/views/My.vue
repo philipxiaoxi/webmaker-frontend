@@ -3,8 +3,12 @@
         <div class="info-card">
         <el-tabs tab-position="left" style="height: 100%;">
             <el-tab-pane label="个人信息">
+                <div class="headimg flex-col">
+                    <img :src="getHeadImgSrc" :alt="this.$store.state.userInfo.name">
+                    <el-button size="mini" style="margin: 10px;" type="primary" plain @click="setHeadImg">设置我的头像</el-button>
+                </div>
                 <el-descriptions title="个人信息"  border>
-                    <el-descriptions-item label="姓名">{{this.$store.state.userInfo.name}}<el-tag style="margin-left: 10px;">{{getString(this.$store.state.userInfo.identity)}}</el-tag></el-descriptions-item>
+                    <el-descriptions-item label="姓名">{{this.$store.state.userInfo.name}}<el-tag style="margin-left: 10px;" :type="getString(this.$store.state.userInfo.identity).type">{{getString(this.$store.state.userInfo.identity).text}}</el-tag></el-descriptions-item>
                     <el-descriptions-item label="性别">{{this.$store.state.userInfo.sex}}</el-descriptions-item>
                     <el-descriptions-item label="手机号">{{this.$store.state.userInfo.phone}}</el-descriptions-item>
                     <el-descriptions-item label="个性签名">{{this.$store.state.userInfo.sign}}</el-descriptions-item>
@@ -37,6 +41,8 @@
 import API from '../api/'
 import XxDialog from '../components/XxDialog.vue'
 import FS from '../util/FormatString'
+import md5 from 'js-md5'
+
 export default {
     components: { XxDialog },
     data() {
@@ -46,9 +52,23 @@ export default {
             fromData: []
         }
     },
+    computed: {
+        getHeadImgSrc() {
+            return 'https://cravatar.cn/avatar/' + md5(this.$store.state.userInfo.email || '')
+        }
+    },
     mounted() {
     },
     methods: {
+        setHeadImg() {
+            this.$confirm('您将跳转到第三方互联网公共头像服务，是否跳转?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                window.open('https://cravatar.cn/')
+            })
+        },
         saveInfo(userInfo) {
             this.axios(API.user.updateUser(userInfo)).then(() => {
                 this.$message({
@@ -114,6 +134,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.headimg {
+    width: 120px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.headimg img {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #EEE;
+    border-radius: 500rem;
+    text-align: left;
+}
 .container{
     position: relative;
     margin-top: 80px;
