@@ -2,11 +2,11 @@
     <div class="container">
         <h1>欢迎来到 WebMaker Forum</h1>
         <p>你可以在此交流代码片段或使用WebMaker中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
-        <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
+        <!-- <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
                 <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
-        </el-carousel>
+        </el-carousel> -->
         <div class="btns"><el-button icon="el-icon-plus" @click="goToNew" type="primary" round>发布新帖子</el-button></div>
         <forum-list @click="goTo" :data='dataList'></forum-list>
     </div>

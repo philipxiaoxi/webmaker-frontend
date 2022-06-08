@@ -94,7 +94,7 @@ export default {
                     path: '/container'
                 },
                 {
-                    name: '片段',
+                    name: '搜索',
                     path: '/search'
                 },
                 {
