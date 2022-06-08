@@ -1,24 +1,23 @@
-# codeshare2.0
+# WebMaker在线帮助文档
 
-## Project setup
-```
-npm install
-```
+线上主站链接：https://webmaker.diyxi.top/
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+`WebMaker`是在线协同代码开发平台，分享你的代码片段，享受开源的互利共赢的乐趣。
 
-### Compiles and minifies for production
-```
-npm run build
-```
+您可以在issue提出任何的想法，我会进行评估并在公开的项目管理当中按计划开发。
 
-### Lints and fixes files
-```
-npm run lint
-```
+在线编写代码是将现代化编程和计算机网络功能结合起来的一种新型的编码协同模式，改变了过去复杂的环境配置、重复性工作的本地开发模式。以科学方式管理代码片段和项目，将代码片段以及项目进行功能分割，共享给其他用户。对于任何技能的开发人员来说，这是一个有用的、解放性的在线代码协同编辑平台，特别是对学习编码的人来说，很好的提高了编码效率和片段利用效率，同时也提高了开发者的水平和能力。   开发人员直接打开浏览器就可以访问到平台随时随地进行开发，用完即走，无需配置环境，极大的提高了开发效率。
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+社区需要您进行贡献，您如果在使用了`WebMaker`片段代码觉得满意的话您可以上传您的片段代码以共享给其他用户或者把`WebMaker`推荐给您的朋友，感谢！
+
+## 使用帮助
+
+更多详细及功能介绍请打开 https://webmaker.diyxi.top/docs/#/ 此链接。
+
+## 快速部署
+
+目前尚未编写部署文档。
+
+## 开发帮助
+
+目前尚未编写开发文档。
