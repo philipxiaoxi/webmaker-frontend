@@ -3,6 +3,7 @@ node_modules
 /dist
 /docs/.vuepress/dist
 src/plugins/axios.js
+src/api/index.js
 
 # local env files
 .env.local
