@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="py-10">
-            <el-alert   title="虚拟容器开发现已升级，将不再此处新建。请在编辑页面工具栏进入。" type="info" :closable="false"></el-alert>
+            <el-alert   title="虚拟容器提供完整的开发环境及协同开发的功能，如果是大型项目推荐使用虚拟容器，点击导航栏的容器即可申请。" type="warning" :closable="false"></el-alert>
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="handleClose">取 消</el-button>

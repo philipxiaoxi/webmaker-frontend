@@ -11,7 +11,7 @@ const FS = {
         case 3:
             return { text: '来源网络', type: 'info' }
         default:
-            return { text: 'WebMaker初级实习作者', type: 'info' }
+            return { text: '未获得称号', type: 'info' }
         }
     }
 }
