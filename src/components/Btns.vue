@@ -2,10 +2,23 @@
     <div>
         <div ref="container" class="container">
             <div ref="btns" v-show="btnMode==1" class="btns">
+                <div class="author">
+                    <img :src="'https://cravatar.cn/avatar/' + this.fileInfo.email" alt="作者头像">
+                    <div>
+                        <div class="title" @click="switchEditTitle(); $nextTick(()=>{$refs.titleInput.focus()})" v-show="!editTitle">{{$parent.item.title || '点击此处设置片段标题'}}</div>
+                        <el-input ref="titleInput" @blur="switchEditTitle" v-show="editTitle" size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
+                        <div class="tips">
+                            {{$parent.item.name || '草稿片段'}}
+                            <el-tag size="mini" :type="getString($parent.item.identity).type">
+                                {{getString($parent.item.identity).text !== '未获得称号'?getString($parent.item.identity).text: "未保存"}}
+                            </el-tag>
+                        </div>
+                    </div>
+                </div>
+
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
-                <el-input size="mini" v-model="$parent.item.title" placeholder="请输入内容" style="width:200px;"></el-input>
                 <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
-                <el-tooltip id="code_pic1" class="item" effect="dark" content="鼠标点击一下，Ctrl+V粘贴图片，自动获取代码首页大图" placement="top-start">
+                <el-tooltip id="code_pic1" class="item" effect="dark" content="鼠标点击，Ctrl+V粘贴，上传代码封面图片。" placement="top-start">
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                 </el-tooltip>
                 <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
@@ -19,7 +32,7 @@
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
                 <el-button type="primary" round size="mini" @click="openConsole('mock/webMakerConsole.html','listen')">控制台</el-button>
-                <el-switch
+                <!-- <el-switch
                 @change="synergyChange"
                 style="display: block"
                 v-model="synergy"
@@ -27,7 +40,7 @@
                 inactive-color="#ff4949"
                 active-text="开启协同开发"
                 inactive-text="关闭协同开发">
-                </el-switch>
+                </el-switch> -->
                 <el-link type="primary" @click="openConsole('https://webmaker.diyxi.top/docs/')">打开帮助文档</el-link>
             </div>
             <el-dialog
@@ -74,6 +87,7 @@ import API from '../api/'
 import common from '../util/common'
 import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
+import FS from '../util/FormatString'
 
 export default {
     components: { NewProjectDialog, DockerManager },
@@ -89,6 +103,10 @@ export default {
         show: {
             type: Boolean,
             default: true
+        },
+        userId: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -99,7 +117,8 @@ export default {
             helpDialogVisible: false,
             autoPreview: false,
             btnMode: 1,
-            widths: []
+            widths: [],
+            editTitle: false
         }
     },
     mounted() {
@@ -112,6 +131,12 @@ export default {
         window.removeEventListener('resize', this.calcBtnWidth)
     },
     methods: {
+        getString(value) {
+            return FS.getIdentityString(value)
+        },
+        switchEditTitle() {
+            this.editTitle = !this.editTitle
+        },
         openConsole(url, type) {
             const iHeight = window.screen.availHeight / 1.5
             const iWidth = window.screen.availWidth / 2.5
@@ -337,6 +362,35 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.author {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0px !important;
+    &>div {
+        height: 50px;
+    }
+    img {
+        width: 50px;
+        height: 50px;
+        border: 1px solid #EEE;
+        border-radius: 500rem;
+        margin-right: 10px;
+    }
+    .title {
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 30px;
+        max-width: 200px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+    .tips {
+        color: #717790;
+        font-size: 14px;
+    }
+}
 .btnsPopover {
     &>* {
         margin: 5px !important;
@@ -356,7 +410,7 @@ export default {
     }
 }
 .btns {
-    margin: 10px;
+    margin: 5px;
     text-align: left;
     margin-left: 15px;
     display: flex;
