@@ -1,29 +1,27 @@
 <template>
-    <div class="container">
-        <mico-app :src="src"></mico-app>
-    </div>
+    <div id="container"></div>
 </template>
 
 <script>
-import MicoApp from '../../components/MircoApp/MicoApp.vue'
+import { loadMicroApp } from 'qiankun'
+
 export default {
-    components: { MicoApp },
     data() {
         return {
             src: ''
         }
     },
     mounted() {
-        if (this.$route.path == '/container') {
-            this.src = 'https://docker.diyxi.top/#/'
-        }
+        this.loadApp()
     },
-    // 监听,当路由发生变化的时候执行
-    watch: {
-        $route(to, from) {
-            if (this.src == '' && to.path == '/container') {
-                this.src = 'https://docker.diyxi.top/#/'
+    methods: {
+        loadApp() {
+            const app = {
+                name: 'docker',
+                entry: 'http://192.168.31.67:4001/',
+                container: '#container'
             }
+            loadMicroApp(app)
         }
     }
 }
