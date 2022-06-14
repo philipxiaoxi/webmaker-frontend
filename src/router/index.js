@@ -84,12 +84,7 @@ const routes = [
         component: LowCode
     },
     {
-        path: '/container',
-        name: 'container',
-        component: Container
-    },
-    {
-        path: '/container/mycontainer',
+        path: '/container*',
         name: 'container',
         component: Container
     }
