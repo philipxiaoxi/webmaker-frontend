@@ -9,7 +9,7 @@
         <i v-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
         <div v-else class="menu">
             <!-- 常驻选项 -->
-            <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path" :class="{active: routePath == link.path}">
+            <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path[0]" :class="{active: link.path.includes(routePath)}">
                 <span>{{link.name}}</span>
             </router-link>
             <!-- 登录注册选项 -->
@@ -43,7 +43,7 @@
             >
             <div @click="drawer = false" class="menuDrawer">
                 <!-- 常驻选项 -->
-                <router-link tag="div" v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path" :class="{active: routePath == link.path}">
+                <router-link tag="div" v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path[0]" :class="{active: link.path.includes(routePath)}">
                     <span>{{link.name}}</span>
                     <el-divider></el-divider>
                 </router-link>
@@ -83,27 +83,27 @@ export default {
             routeLink: [
                 {
                     name: '首页',
-                    path: '/'
+                    path: ['/']
                 },
                 {
                     name: '编辑',
-                    path: '/editor'
+                    path: ['/editor']
                 },
                 {
                     name: '容器',
-                    path: '/container'
+                    path: ['/container', '/container/mycontainer']
                 },
                 {
                     name: '搜索',
-                    path: '/search'
+                    path: ['/search']
                 },
                 {
                     name: '论坛',
-                    path: '/forum'
+                    path: ['/forum']
                 },
                 {
                     name: '创意',
-                    path: '/toolbox'
+                    path: ['/toolbox']
                 }
             ],
             routePath: this.$route.path,

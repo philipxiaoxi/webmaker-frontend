@@ -28,7 +28,7 @@ export default {
         loadApp() {
             const app = {
                 name: 'docker',
-                entry: 'http://192.168.31.67:4001/',
+                entry: 'https://wmdocker.xiaotao2333.top:344/',
                 container: '#container'
             }
             this.dockerApp = loadMicroApp(app)
