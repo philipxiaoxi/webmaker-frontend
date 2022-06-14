@@ -64,7 +64,7 @@ export default {
     margin: 0 auto;
     margin-top: 80px;
     box-sizing: border-box;
-    box-shadow: 0 10px 50px rgb(0 0 0 / 10%);
+    // box-shadow: 0 10px 50px rgb(0 0 0 / 10%);
     background-color: white;
 }
 .container {
