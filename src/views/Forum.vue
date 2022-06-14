@@ -31,15 +31,15 @@ export default {
         }
     },
     activated() {
-        setTimeout(() => {
-            this.imgHeight = this.$refs.image[0].height == 0 ? 350 : this.$refs.image[0].height
-        }, 200)
+        // setTimeout(() => {
+        //     this.imgHeight = this.$refs.image[0].height == 0 ? 350 : this.$refs.image[0].height
+        // }, 200)
     },
     mounted() {
         // 监听窗口变化，使得轮播图高度自适应图片高度
-        window.addEventListener('resize', () => {
-            this.imgHeight = this.$refs.image[0].height
-        })
+        // window.addEventListener('resize', () => {
+        //     this.imgHeight = this.$refs.image[0].height
+        // })
         this.getAllForumPage()
     },
     methods: {
