@@ -103,7 +103,7 @@ export default {
                 },
                 {
                     name: '创意',
-                    path: ['/toolbox']
+                    path: ['/toolbox', '/lowcode', '/disk']
                 }
             ],
             routePath: this.$route.path,
