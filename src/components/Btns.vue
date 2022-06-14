@@ -157,6 +157,7 @@ export default {
             })
         },
         calcBtnWidth() {
+            if (this.$route.path !== '/editor') return
             // 获取容器宽度
             let containerWidth = this.$refs.container.offsetWidth - 50
             // 获取按钮组宽度
