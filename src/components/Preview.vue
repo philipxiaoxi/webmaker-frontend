@@ -53,6 +53,10 @@ export default {
             this.$refs.preview_iframe.onload = () => {
                 this.loading = false
             }
+            // 加载时间太长，用户等不耐烦，最长3s自动关闭加载提示
+            setTimeout(() => {
+                this.loading = false
+            }, 3000)
         },
         /**
          * 安全维护函数
