@@ -36,6 +36,7 @@ export default {
                     console.log(e)
                     this.$message.error(e)
                     localStorage.clear('token')
+                    this.$store.commit('setToken', null)
                 })
             })
             return p

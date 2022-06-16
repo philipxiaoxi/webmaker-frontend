@@ -20,16 +20,30 @@ export default {
     },
     mounted() {
         this.loadApp()
-    },
-    activated() {
         this.sendStore()
+    },
+    // activated() {
+    //     this.sendStore()
+    // },
+    computed: {
+        state() {
+            return { ...this.$store.state }
+        }
+    },
+    watch: {
+        // 监听Vuex并传递给子前端
+        state() {
+            // 发送给子前端
+            this.sendStore()
+        }
     },
     methods: {
         loadApp() {
             const app = {
                 name: 'docker',
-                entry: 'https://wmdocker.xiaotao2333.top:344/',
-                container: '#container'
+                entry: 'http://10.0.236.10:4001/',
+                container: '#container',
+                props: { state: this.$store.state }
             }
             this.dockerApp = loadMicroApp(app)
         },
@@ -42,6 +56,7 @@ export default {
                         clearInterval(timer)
                         res()
                     }
+                    console.log(status)
                     if (status === 'NOT_LOADED' || status === 'NOT_MOUNTED' || status === 'LOAD_ERROR') {
                         clearInterval(timer)
                         rej(new Error('微应用加载错误' + status))
