@@ -32,6 +32,7 @@
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
                 <el-button type="primary" round size="mini" @click="openConsole('mock/webMakerConsole.html','listen')">控制台</el-button>
+                <el-button type="primary" round size="mini" @click="$router.push({ path: '/container/mycontainer' })">我的容器</el-button>
                 <!-- <el-switch
                 @change="synergyChange"
                 style="display: block"

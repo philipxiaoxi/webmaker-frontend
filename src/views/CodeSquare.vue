@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-carousel :height="imgHeight+'px'" :interval="8000" arrow="always">
+        <el-carousel :height="imgHeight+'px'" :interval="10000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
                 <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
@@ -22,7 +22,7 @@ export default {
             cards: [],
             carouselImgs: [
                 {
-                    title: '低代码平台上线啦！',
+                    title: '申请免费的虚拟容器，无论是 挂机下载、远程开发、写笔记、海外加速通通一站式解决。',
                     imgurl: '/img/banner/Banner1.png'
                 },
                 {
@@ -30,7 +30,7 @@ export default {
                     imgurl: '/img/banner/Banner3.png'
                 },
                 {
-                    title: '2021前端技术研讨会等你来参加！',
+                    title: '开源开放，为你服务，24小时不间断提供网页托管、虚拟容器服务。',
                     imgurl: '/img/banner/Banner2.png'
                 }
             ],
