@@ -10,11 +10,11 @@
         </div>
         <div class="square-crad">
             <div class="card-icon">
-                <i class="el-icon-search"></i>
+                <i class="el-icon-connection"></i>
             </div>
-            <div class="title">发现和学习</div>
-            <p>查看别人经典代码动画特效，理解它们是如何实现的。从而提升自己的学习开发能力。</p>
-            <el-button  size="small" class="xx-btn" @click="$router.push({ path: '/search' })">搜索全站代码</el-button>
+            <div class="title">容器化服务</div>
+            <p>您可以申请在线web访问linux桌面系统、vscode远程开发等容器服务，为您的开发上云。</p>
+            <el-button  size="small" class="xx-btn" @click="$router.push({ path: '/container' })">立即申请</el-button>
         </div>
         <div class="square-crad">
             <div class="card-icon">
@@ -74,7 +74,8 @@ export default {
         color: #fff;
     }
     &>p {
-        text-align: justify;
+        line-height: 1.5;
+        font-family: sans-serif;
     }
     margin-top: 30px;
     margin-bottom: 40px;

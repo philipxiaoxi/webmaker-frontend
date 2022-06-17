@@ -99,7 +99,7 @@ export default {
                 },
                 {
                     name: '论坛',
-                    path: ['/forum']
+                    path: ['/forum', '/forumpage']
                 },
                 {
                     name: '创意',
