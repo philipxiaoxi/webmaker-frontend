@@ -28,7 +28,7 @@ export default {
                 this.axios.get('/api/getUserInfo').then(res => {
                     resolve(res)
                     this.$message({
-                        message: `欢迎您回来，${res.data.data.name}`,
+                        message: `欢迎您回来，${res.data.data.name || 'coder~ 您还未设置昵称，请尽快设置您的昵称。'}`,
                         type: 'success'
                     })
                     this.$store.commit('setUserInfo', res.data.data)
