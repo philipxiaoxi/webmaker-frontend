@@ -53,13 +53,13 @@ export default {
             steps: [
                 {
                     id: 1,
-                    title: '代码注释要求占比 10%',
+                    title: '代码注释建议至少占比 10%',
                     desc: '良好的注释能够使得后面阅读您的代码的人能够快速读懂。',
                     function: this.commentsLen
                 },
                 {
                     id: 2,
-                    title: '至少填写100字笔记介绍代码情况',
+                    title: '至少填写50字笔记介绍代码情况',
                     desc: '开源项目都有一个README.md文档，用于简单介绍项目的功能和意义，代码片段也是如此。',
                     function: this.noteCharLen
                 },
@@ -81,7 +81,7 @@ export default {
                     desc: '开源无国界，请勿在代码中传递一些价值观，我们仅讨论技术和代码实现。'
                 },
                 {
-                    id: 5,
+                    id: 6,
                     title: '代码安全审查',
                     desc: '系统会进行一个初步的安全审查。'
                 }
@@ -145,12 +145,12 @@ export default {
         commentsLen(item, step) {
             const { content } = item
             // 每行信息
-            const lines = content.split('\n')
+            const lines = content?.split('\n') || []
             // 匹配出注释的行数
             const commentNum = lines.filter(line => new RegExp('^(//|/\\*|\\*|\\*/|<!)', 'g').test(line.trimStart())).length
             const commentRatio = (Math.round(commentNum / lines.length * 10000) / 100)
             if (commentRatio < 10) {
-                step.status = 'error'
+                step.status = 'finish'
                 step.result = `您的注释占比率为：${commentRatio}%`
                 return false
             }
@@ -159,7 +159,7 @@ export default {
         noteCharLen(item, step) {
             const { note } = item
             const len = note?.length || 0
-            if (len < 100) {
+            if (len < 50) {
                 step.status = 'error'
                 step.result = `您的笔记长度为：${len}个字`
                 return false
@@ -171,8 +171,8 @@ export default {
              * 由于前期考虑不周，未作图片是否上传的标记，后端如果未上传会返回默认图片
              * 因此这里比较图片内容是否包含默认图片的关键词
             */
-            const res = await this.axios.get(`/common/getImg/${item.id}`)
-            if (res.data.includes('Ci}j!>')) {
+            const res = await this.axios.get(`/common/getImg/${item.id || -1}`)
+            if (res?.data.includes('Ci}j!>')) {
                 step.status = 'error'
                 step.result = '您尚未上传图片，请点击工具栏图片图标按提示上传，然后点击保存按钮。'
                 return false
