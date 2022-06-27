@@ -22,17 +22,24 @@
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
                 </el-tooltip>
                 <el-button type="primary" round size="mini" @click="$parent.preview()">预览</el-button>
+                <span class="btn-title">自动预览</span>
                 <el-switch
                 v-model="autoPreview"
-                @change="autoPreviewChange"
-                active-text="开启自动预览"
-                inactive-text="关闭自动预览">
+                @change="autoPreviewChange">
+                </el-switch>
+                <span class="btn-title">开源</span>
+                <el-switch
+                :active-value="1"
+                :inactive-value="0"
+                v-model="$parent.item.openSource"
+                @change="openSourceChange">
                 </el-switch>
                 <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
                 <el-button type="primary" round size="mini" @click="openConsole('mock/webMakerConsole.html','listen')">控制台</el-button>
                 <el-button type="primary" round size="mini" @click="$router.push({ path: '/container/mycontainer' })">我的容器</el-button>
+                <el-button type="primary" round size="mini" @click="dialogReviewVisible = true">代码审查</el-button>
                 <!-- <el-switch
                 @change="synergyChange"
                 style="display: block"
@@ -80,6 +87,12 @@
         width="50%">
         <docker-manager></docker-manager>
         </el-dialog>
+        <!-- 代码审查界面 -->
+        <code-review
+        :dialogReviewVisible.sync="dialogReviewVisible"
+        @updateDialogReviewVisible="dialogReviewVisible = false"
+        :item="$parent.item"
+        ></code-review>
     </div>
 </template>
 
@@ -89,9 +102,10 @@ import common from '../util/common'
 import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
 import FS from '../util/FormatString'
+import CodeReview from './modals/CodeReview.vue'
 
 export default {
-    components: { NewProjectDialog, DockerManager },
+    components: { NewProjectDialog, DockerManager, CodeReview },
     props: {
         fileName: {
             type: String,
@@ -116,6 +130,7 @@ export default {
             dialogVisible: false,
             dockerDialogVisible: false,
             helpDialogVisible: false,
+            dialogReviewVisible: false,
             autoPreview: false,
             btnMode: 1,
             widths: [],
@@ -347,6 +362,12 @@ export default {
         synergyChange(value) {
             this.$emit('synergyChange', value)
         },
+        openSourceChange() {
+            if (this.$parent.item.openSource == 1) {
+                this.$parent.item.openSource = 0
+                this.dialogReviewVisible = true
+            }
+        },
         autoPreviewChange(value) {
             if (value) {
                 this.$emit('autoPreview', value)
@@ -364,6 +385,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.btn-title {
+    font-size: 14px;
+}
 .author {
     display: flex;
     flex-direction: row;

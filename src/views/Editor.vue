@@ -117,6 +117,7 @@ export default {
                         // 发送同步数据
                         this.$refs.colldev.sendMessage('sync', JSON.stringify(data))
                     }
+                    this.item.content = this.getValue()
                     this.flag = false
                 })
             })
