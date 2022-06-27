@@ -74,6 +74,16 @@ export default {
                     title: '代码运行时不能产生任何错误',
                     desc: '基本要求，至少要保证代码运行不能产生任何错误。',
                     function: this.snippetErrorCheck
+                },
+                {
+                    id: 5,
+                    title: '敏感内容审查',
+                    desc: '开源无国界，请勿在代码中传递一些价值观，我们仅讨论技术和代码实现。'
+                },
+                {
+                    id: 5,
+                    title: '代码安全审查',
+                    desc: '系统会进行一个初步的安全审查。'
                 }
             ],
             currentStep: 0,
@@ -130,7 +140,6 @@ export default {
                 }
             }
             this.showOpenSourceBtn = flag
-            if (flag) this.openSource()
         },
         // 代码注释质量检查
         commentsLen(item, step) {
