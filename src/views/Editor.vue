@@ -35,7 +35,7 @@
             direction="rtl"
             size='50%'
             :modal='false'>
-            <note v-model="item.note"></note>
+            <note v-model="item.note" height="99%" editType="wysiwyg"></note>
         </el-drawer>
         <coll-dev ref="colldev" @executeEdits="executeEdits" @executefirstSync='executefirstSync' :show="synergyChangeValue" @firstSync='firstSync'></coll-dev>
     </div>

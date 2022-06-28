@@ -30,15 +30,7 @@
                 :showPreface="false"
             ></forum-item>
             <div>
-                <mavon-editor
-                style="border: none;z-index: 0;"
-                :autofocus="false"
-                :toolbarsFlag='false'
-                :boxShadow='false'
-                :subfield='false'
-                :editable='false'
-                defaultOpen='preview'
-                v-model="item.content"/>
+                <note v-model="item.content" :preview="true"></note>
             </div>
         </div>
         <div>
@@ -47,7 +39,7 @@
         <div class="reply-tools">
             <el-divider></el-divider>
             <h1><i class="el-icon-s-promotion"></i>回复{{form.replyName}} ：</h1>
-            <note :boxShadow='false' v-model="form.content"></note>
+            <note v-model="form.content"></note>
             <div class="btns">
                 <el-button type="primary" round @click="insertForumReply">回复TA</el-button>
             </div>

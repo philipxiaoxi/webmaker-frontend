@@ -26,15 +26,7 @@
             :content="replycontent">
             </el-popover>
            <el-tag v-popover:replyShow v-if="replyName != null"><i class="el-icon-s-promotion"></i>回复[{{replyName}}]的评论</el-tag>
-            <mavon-editor
-            style="border: none;z-index: 0;min-height: auto;"
-            :autofocus="false"
-            :toolbarsFlag='false'
-            :boxShadow='false'
-            :subfield='false'
-            :editable='false'
-            defaultOpen='preview'
-            v-model="content"/>
+            <note v-model="content" :preview="true"></note>
         </div>
     </div>
 </template>
@@ -42,7 +34,10 @@
 <script>
 import API from '../../api'
 import FS from '../../util/FormatString'
+import Note from '../Note.vue'
+
 export default {
+    components: { Note },
     props: ['name', 'time', 'replyName', 'content', 'index', 'replyId', 'identity', 'email'],
     data() {
         return {
