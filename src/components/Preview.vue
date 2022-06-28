@@ -1,6 +1,14 @@
 <template>
     <div v-loading="loading" :element-loading-text="texts[index]">
-        <iframe :key="timer" :src="src" class="xx-iframe" frameborder='0' sandbox="allow-scripts allow-popups allow-forms allow-modals" ref="preview_iframe" style="width:100%;height:100%;"></iframe>
+        <iframe
+        :key="timer"
+        :src="src"
+        class="xx-iframe"
+        frameborder='0'
+        sandbox="allow-scripts allow-popups allow-forms allow-modals"
+        ref="preview_iframe"
+        style="width:100%;height:100%;"
+        ></iframe>
     </div>
 </template>
 
@@ -34,11 +42,15 @@ export default {
     methods: {
         goPreview(content, type) {
             this.timer = new Date().getTime()
+            this.$nextTick(() => {
+                this.$refs.preview_iframe.onload = () => {
+                    this.loading = false
+                }
+            })
             this.index++
             if (this.index >= this.texts.length) {
                 this.index = 0
             }
-            console.log(this.index)
             // 加载动画
             this.loading = true
             this.src = '/mock/default.html'
@@ -48,13 +60,9 @@ export default {
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             default:
-                console.log(this.$parent)
                 content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item == undefined ? this.item.id : this.$parent.item.id)
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
-            }
-            this.$refs.preview_iframe.onload = () => {
-                this.loading = false
             }
             // 加载时间太长，用户等不耐烦，最长3s自动关闭加载提示
             setTimeout(() => {
