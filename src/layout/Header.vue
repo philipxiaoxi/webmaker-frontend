@@ -102,7 +102,7 @@ export default {
                     path: ['/forum', '/forumpage', '/newforumpage']
                 },
                 {
-                    name: '创意',
+                    name: '应用',
                     path: ['/toolbox', '/lowcode', '/disk']
                 }
             ],

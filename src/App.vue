@@ -51,6 +51,28 @@ body {
   padding: 0px;
   background-color: #f2f3f5;
 }
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 2px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+    /* width: px;*/
+}
+
+*::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
