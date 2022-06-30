@@ -2,7 +2,7 @@
     <div :style="{backgroundColor: this.bgColor}" class="linkicon" @click="goTo(url)">
         <div class="title">{{title}}</div>
         <div class="intro">
-            <img :src="img" />
+            <img :src="imgSrc"  @error="imgLoadError"/>
             <div class="text">{{intro}}</div>
         </div>
         <div v-show="editMode" @click.stop="$emit('close', id)" class="close"><i class="el-icon-error"></i></div>
@@ -44,7 +44,19 @@ export default {
             default: ''
         }
     },
+    data() {
+        return {
+            imgSrc: ''
+        }
+    },
+    mounted() {
+        const urlObject = new URL(this.url)
+        this.imgSrc = urlObject.origin + '/favicon.ico'
+    },
     methods: {
+        imgLoadError() {
+            this.imgSrc = this.img
+        },
         goTo(url) {
             if (this.type == 'url') {
                 window.open(url)

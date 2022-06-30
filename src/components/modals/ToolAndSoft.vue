@@ -189,6 +189,7 @@ export default {
                 title: '您的应用已入库。',
                 message: '您可以点击添加来添加到您的应用库当中。'
             })
+            this.loadApp()
         }
     }
 }
