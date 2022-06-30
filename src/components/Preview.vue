@@ -1,6 +1,14 @@
 <template>
     <div v-loading="loading" :element-loading-text="texts[index]">
-        <iframe class="xx-iframe" frameborder='0' sandbox="allow-scripts allow-popups allow-forms allow-modals" ref="preview_iframe" style="width:100%;height:100%;"></iframe>
+        <iframe
+        :key="timer"
+        :src="src"
+        class="xx-iframe"
+        frameborder='0'
+        sandbox="allow-scripts allow-popups allow-forms allow-modals"
+        ref="preview_iframe"
+        style="width:100%;height:100%;"
+        ></iframe>
     </div>
 </template>
 
@@ -26,32 +34,35 @@ export default {
                 '在编写html代码？试试输入vue或者html',
                 '看看帮助文档，有一堆快捷操作哦',
                 '如果你想获得更好的体验，不如试试虚拟容器'
-            ]
+            ],
+            src: '',
+            timer: 1
         }
     },
     methods: {
         goPreview(content, type) {
+            this.timer = new Date().getTime()
+            this.$nextTick(() => {
+                this.$refs.preview_iframe.onload = () => {
+                    this.loading = false
+                }
+            })
             this.index++
             if (this.index >= this.texts.length) {
                 this.index = 0
             }
-            console.log(this.index)
             // 加载动画
             this.loading = true
-            this.$refs.preview_iframe.src = '/mock/default.html'
+            this.src = '/mock/default.html'
             switch (type) {
             case 'javascript':
                 content = PreviewTemplate.makeJsPreview(content)
-                this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+                this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             default:
-                console.log(this.$parent)
                 content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item == undefined ? this.item.id : this.$parent.item.id)
-                this.$refs.preview_iframe.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
+                this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
-            }
-            this.$refs.preview_iframe.onload = () => {
-                this.loading = false
             }
             // 加载时间太长，用户等不耐烦，最长3s自动关闭加载提示
             setTimeout(() => {

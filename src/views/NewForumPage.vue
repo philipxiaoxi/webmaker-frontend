@@ -5,7 +5,7 @@
         <div class="editor-tools">
             <el-divider></el-divider>
             <el-input v-model="form.title" placeholder="请输入标题"></el-input>
-            <note style="height: calc(100% - 170px);" :boxShadow='false' v-model="form.content"></note>
+            <note height="100%" style="height: calc(100% - 170px);" v-model="form.content"></note>
             <div class="btns">
                 <el-button type="primary" round @click="dialogVisible = true">下一步</el-button>
             </div>

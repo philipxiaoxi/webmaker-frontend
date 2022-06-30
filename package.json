@@ -12,6 +12,7 @@
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
+    "@toast-ui/editor": "^3.1.7",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.5",
     "esprima": "^4.0.1",

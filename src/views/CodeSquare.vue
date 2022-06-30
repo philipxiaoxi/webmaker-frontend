@@ -22,12 +22,12 @@ export default {
             cards: [],
             carouselImgs: [
                 {
-                    title: '申请免费的虚拟容器，无论是 挂机下载、远程开发、写笔记、海外加速通通一站式解决。',
-                    imgurl: '/img/banner/Banner1.png'
-                },
-                {
                     title: 'WebMaker轻松编码网站！',
                     imgurl: '/img/banner/Banner3.png'
+                },
+                {
+                    title: '申请免费的虚拟容器，无论是 挂机下载、远程开发、写笔记、海外加速通通一站式解决。',
+                    imgurl: '/img/banner/Banner1.png'
                 },
                 {
                     title: '开源开放，为你服务，24小时不间断提供网页托管、虚拟容器服务。',

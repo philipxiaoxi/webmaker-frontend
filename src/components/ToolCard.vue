@@ -1,21 +1,25 @@
 <template>
-    <div :style="{backgroundColor: this.bgColor}" class="linkicon" @click="goTo(url)">
-        <div class="title">{{title}}</div>
-        <div class="intro">
-            <img :src="imgSrc"  @error="imgLoadError"/>
-            <div class="text">{{intro}}</div>
+    <div class="mx-20" :class="$style.card">
+        <div class="flex-row ai-center">
+            <img class="headImg" :src="imgSrc" @error="imgLoadError"/>
+            <div class="mx-10">{{title}}</div>
         </div>
-        <div v-show="editMode" @click.stop="$emit('close', id)" class="close"><i class="el-icon-error"></i></div>
+        <div class="desc">{{intro}}</div>
+        <div class="tags">
+            <el-tag
+            v-for="(tag , i) in tags"
+            :type="tag.type"
+            size="mini"
+            :key="tag.content + i"
+            >{{tag.content}}</el-tag>
+        </div>
+        <div class="flex-row jc-end"><el-button size="small" @click="$emit('addApp', id)">添加</el-button></div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        editMode: {
-            type: Boolean,
-            default: false
-        },
         id: {
             type: Number
         },
@@ -39,9 +43,9 @@ export default {
             type: String,
             default: 'url'
         },
-        bgColor: {
-            type: String,
-            default: ''
+        tags: {
+            type: Array,
+            default: () => ([])
         }
     },
     data() {
@@ -50,12 +54,19 @@ export default {
         }
     },
     mounted() {
-        const urlObject = new URL(this.url)
-        this.imgSrc = urlObject.origin + '/favicon.ico'
+        if (this.type === 'url') {
+            const urlObject = new URL(this.url)
+            this.imgSrc = urlObject.origin + '/favicon.ico'
+        } else {
+            this.imgSrc = this.img
+        }
     },
     methods: {
         imgLoadError() {
             this.imgSrc = this.img
+        },
+        getIcon() {
+
         },
         goTo(url) {
             if (this.type == 'url') {
@@ -68,56 +79,37 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.linkicon {
-    position: relative;
-    border-radius: 3px;
-    cursor: pointer;
-    margin: 15px;
-    background-color: #FFFF;
+<style lang="less" module>
+.card {
+    padding: 8px 16px 12px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    text-align: left;
-    transition: all 0.3s;
-    &>div {
-        margin:  10px 20px;
-    }
-    .title {
-        font-size: 16px;
-        color: #409EFF;
-        font-weight: bold;
-    }
-    .intro {
-        display: flex;
-        flex-direction: row;
-        & > .text {
+    background-color: #f2f3f59c;
+    border-radius: 6px;
+    box-sizing: border-box;
+    :global {
+        .tags {
+            margin: 5px 0;
+            & > * {
+                margin-right: 5px;
+            }
+        }
+        .desc {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            margin-top: 5px;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgb(153, 153, 153);
+            line-height: 18px;
         }
-        &>div {
-            margin-left: 10px;
-            font-size: 15px;
-        }
-        img {
-            width: 40px;
-            height: 40px;
+        .headImg {
+            width: 25px;
+            height: 25px;
         }
     }
-    .close {
-        position: absolute;
-        right: -30px;
-        top: -20px;
-        z-index: 999;
-        font-size: 35px;
-    }
-}
-.linkicon:hover{
-    transform: translateY(-2px);
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 </style>

@@ -35,7 +35,7 @@
             direction="rtl"
             size='50%'
             :modal='false'>
-            <note v-model="item.note"></note>
+            <note v-model="item.note" height="99%" editType="wysiwyg"></note>
         </el-drawer>
         <coll-dev ref="colldev" @executeEdits="executeEdits" @executefirstSync='executefirstSync' :show="synergyChangeValue" @firstSync='firstSync'></coll-dev>
     </div>
@@ -117,6 +117,7 @@ export default {
                         // 发送同步数据
                         this.$refs.colldev.sendMessage('sync', JSON.stringify(data))
                     }
+                    this.item.content = this.getValue()
                     this.flag = false
                 })
             })

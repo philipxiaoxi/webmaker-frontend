@@ -99,10 +99,10 @@ export default {
                 },
                 {
                     name: '论坛',
-                    path: ['/forum', '/forumpage']
+                    path: ['/forum', '/forumpage', '/newforumpage']
                 },
                 {
-                    name: '创意',
+                    name: '应用',
                     path: ['/toolbox', '/lowcode', '/disk']
                 }
             ],
