@@ -24,12 +24,15 @@ export default {
     },
     methods: {
         loadApp() {
-            if (this.src == '' && this.$route.path == '/insideApp') {
+            if (this.$route.path === '/insideApp') {
                 const url = this.$route.query.url
                 if (url === undefined || url === '') {
-                    this.$alert('子应用加载失败，请检查地址是否正确。部分网站禁止第三方网站内嵌显示，请选择新窗口打开模式。', '错误', {
+                    this.$alert(`
+                    子应用加载失败，请检查地址是否正确。部分网站禁止第三方网站内嵌显示，请选择新窗口打开模式。
+                    `, '错误', {
                         confirmButtonText: '确定'
                     })
+                    return
                 }
                 this.src = url
             }

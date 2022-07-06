@@ -1,6 +1,13 @@
 <template>
     <div class="mirco-app-container" v-loading="loading" element-loading-text="子应用加载中">
-        <iframe ref='mircoapp' :src="src" sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts allow-popups" frameborder="0"></iframe>
+        <iframe
+        :key="timer"
+        ref='mircoapp'
+        :src="src"
+        sandbox="allow-same-origin allow-top-navigation allow-forms allow-scripts allow-popups"
+        frameborder="0"
+        >
+        </iframe>
     </div>
 </template>
 
@@ -15,14 +22,8 @@ export default {
     data() {
         return {
             form: {},
-            loading: true
-        }
-    },
-    mounted() {
-        this.$refs.mircoapp.onload = () => {
-            // this.$refs.mircoapp.contentWindow.postMessage(this.state, '*')
-            // console.log('[MircoApp]: Store数据已发送给子前端')
-            this.loading = false
+            loading: true,
+            timer: 1
         }
     },
     computed: {
@@ -35,6 +36,16 @@ export default {
         state(newState) {
             // 发送给子前端
             // this.sendStore(newState)
+        },
+        src() {
+            this.timer = new Date().getTime()
+            this.$nextTick(() => {
+                this.$refs.mircoapp.onload = () => {
+                    // this.$refs.mircoapp.contentWindow.postMessage(this.state, '*')
+                    // console.log('[MircoApp]: Store数据已发送给子前端')
+                    this.loading = false
+                }
+            })
         }
     },
     methods: {

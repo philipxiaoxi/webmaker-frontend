@@ -100,7 +100,7 @@
                 placeholder="请选择打开方式"
                 style="width: 100%;">
                     <el-option label="新标签页" value="blank"></el-option>
-                    <el-option label="内置容器" value="inside"></el-option>
+                    <el-option label="内置容器" value="insideApp"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item
@@ -182,6 +182,9 @@ export default {
         addCustomApp() {
             const customApps = loadStorage('customApps')
             this.appInfo.id = new Date().getTime()
+            if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
+                this.appInfo.type = this.appInfo.open
+            }
             customApps.push(this.appInfo)
             saveStorage(customApps, 'customApps')
             this.dialogVisible = false

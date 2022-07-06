@@ -50,18 +50,27 @@ export default {
         }
     },
     mounted() {
-        const urlObject = new URL(this.url)
-        this.imgSrc = urlObject.origin + '/favicon.ico'
+        if (this.type === 'url') {
+            const urlObject = new URL(this.url)
+            this.imgSrc = urlObject.origin + '/favicon.ico'
+        } else {
+            this.imgSrc = this.img
+        }
     },
     methods: {
         imgLoadError() {
             this.imgSrc = this.img
         },
         goTo(url) {
-            if (this.type == 'url') {
-                window.open(url)
-            } else {
-                this.$router.push({ path: url })
+            if (this.type == 'url') window.open(url)
+            if (this.type == 'path') this.$router.push({ path: url })
+            if (this.type == 'insideApp') {
+                this.$router.push({
+                    path: 'insideApp',
+                    query: {
+                        url
+                    }
+                })
             }
         }
     }
