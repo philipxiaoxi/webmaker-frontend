@@ -14,15 +14,24 @@ export default {
         }
     },
     mounted() {
-        if (this.$route.path == '/disk') {
-            this.src = 'https://disk.xiaotao2333.top:344/#/'
-        }
+        this.loadApp()
     },
     // 监听,当路由发生变化的时候执行
     watch: {
         $route(to, from) {
-            if (this.src == '' && to.path == '/disk') {
-                this.src = 'https://disk.xiaotao2333.top:344/#/'
+            this.loadApp()
+        }
+    },
+    methods: {
+        loadApp() {
+            if (this.src == '' && this.$route.path == '/insideApp') {
+                const url = this.$route.query.url
+                if (url === undefined || url === '') {
+                    this.$alert('子应用加载失败，请检查地址是否正确。部分网站禁止第三方网站内嵌显示，请选择新窗口打开模式。', '错误', {
+                        confirmButtonText: '确定'
+                    })
+                }
+                this.src = url
             }
         }
     }

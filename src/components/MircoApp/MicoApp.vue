@@ -20,8 +20,8 @@ export default {
     },
     mounted() {
         this.$refs.mircoapp.onload = () => {
-            this.$refs.mircoapp.contentWindow.postMessage(this.state, '*')
-            console.log('[MircoApp]: Store数据已发送给子前端')
+            // this.$refs.mircoapp.contentWindow.postMessage(this.state, '*')
+            // console.log('[MircoApp]: Store数据已发送给子前端')
             this.loading = false
         }
     },
@@ -34,15 +34,15 @@ export default {
         // 监听Vuex并传递给子前端
         state(newState) {
             // 发送给子前端
-            this.sendStore(newState)
+            // this.sendStore(newState)
         }
     },
     methods: {
-        sendStore(state) {
-            if (this.src === '') return
-            this.$refs.mircoapp.contentWindow.postMessage(state, '*')
-            console.log('[MircoApp]: Store数据已发送给子前端')
-        }
+        // sendStore(state) {
+        //     if (this.src === '') return
+        //     this.$refs.mircoapp.contentWindow.postMessage(state, '*')
+        //     console.log('[MircoApp]: Store数据已发送给子前端')
+        // }
     }
 }
 </script>

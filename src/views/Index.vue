@@ -9,7 +9,7 @@
         </keep-alive>
         <!-- 微前端组件容器 -->
         <!-- <container v-show="$route.path == '/container'"></container> -->
-        <salted-fish v-show="$route.path == '/disk'"></salted-fish>
+        <salted-fish v-show="$route.path == '/insideApp'"></salted-fish>
     </div>
 </template>
 

@@ -103,7 +103,7 @@ export default {
                 },
                 {
                     name: '应用',
-                    path: ['/toolbox', '/lowcode', '/disk']
+                    path: ['/toolbox', '/lowcode', '/insideApp']
                 }
             ],
             routePath: this.$route.path,

@@ -94,4 +94,10 @@ export default {
 .editor {
     text-align: left;
 }
+:global {
+    .toastui-editor-contents {
+        font-size: 1.1rem;
+        font-family: sans-serif;
+    }
+}
 </style>
