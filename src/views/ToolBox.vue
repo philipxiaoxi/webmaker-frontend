@@ -17,6 +17,8 @@
             :url="item.url"
             :img='item.img'
             :type="item.type"
+            :auth="item.auth"
+            :extra="item.extra"
             :editMode="editMode"
             @close="delApp"
             >

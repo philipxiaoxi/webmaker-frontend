@@ -100,23 +100,32 @@
                 placeholder="请选择打开方式"
                 style="width: 100%;">
                     <el-option label="新标签页" value="blank"></el-option>
-                    <el-option label="内置容器" value="inside"></el-option>
+                    <el-option label="内置容器" value="insideApp"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item
-            v-show="appInfo.type === 'app' || (appInfo.type === 'url' && appInfo.open === 'inside')"
-            label="授权信息">
-                <el-alert
-                    title="授权信息获取需要应用自身有相应的生命周期和函数接收，请勿轻易授权全站权限，建议只在绿色认证应用授权。"
-                    type="warning"
-                    :closable="false">
-                </el-alert>
-                <el-checkbox-group v-model="appInfo.auth" prop="auth">
-                    <el-checkbox label="userId" name="type">仅身份鉴别</el-checkbox>
-                    <el-checkbox label="userInfo" name="type">个人基本信息</el-checkbox>
-                    <el-checkbox label="token" name="type">全站权限(请勿轻易授权)</el-checkbox>
-                </el-checkbox-group>
-            </el-form-item>
+            <template v-if="appInfo.type === 'app' || (appInfo.type === 'url' && appInfo.open === 'insideApp')">
+                <el-form-item
+                label="授权信息">
+                    <p :class="$style['xx-alert']">
+                        【用户鉴别】是仅提供一个标识用于确定是你，类似于匿名访问，网站无法得知您的真实身份。<br>
+                        【个人信息】是网站可得知您的个人信息与真实身份。<br>
+                        【全站权限】是网站可拥有你账号下所有的权限，控制整个站点，建议绿色应用才给予授权。<br>
+                    </p>
+                    <el-select style="margin-top: 10px;width: 100%;" v-model="appInfo.auth" placeholder="请选择">
+                        <el-option label="用户鉴别(建议)" value="userId"></el-option>
+                        <el-option label="个人信息" value="userInfo"></el-option>
+                        <el-option label="全站权限(谨慎选择)" value="token"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="额外信息">
+                    <el-input
+                    type="textarea"
+                    autosize
+                    placeholder="请输入额外需要传输的信息，默认为空"
+                    v-model="appInfo.extra">
+                    </el-input>
+                </el-form-item>
+            </template>
         </el-form>
         <div style="margin: 20px 0;"></div>
         <span slot="footer" class="dialog-footer">
@@ -144,7 +153,8 @@ export default {
                 category: '我的应用',
                 type: 'url',
                 open: 'blank',
-                auth: []
+                auth: 'userId',
+                extra: ''
             },
             rules: {
                 url: [{ required: true, message: '请输入应用地址', trigger: 'blur' }],
@@ -182,6 +192,9 @@ export default {
         addCustomApp() {
             const customApps = loadStorage('customApps')
             this.appInfo.id = new Date().getTime()
+            if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
+                this.appInfo.type = this.appInfo.open
+            }
             customApps.push(this.appInfo)
             saveStorage(customApps, 'customApps')
             this.dialogVisible = false
@@ -212,5 +225,9 @@ export default {
             }
         }
     }
+}
+.xx-alert {
+    padding: 10px;
+    background-color: rgba(236, 236, 236, 0.548);
 }
 </style>

@@ -9,16 +9,16 @@
         </keep-alive>
         <!-- 微前端组件容器 -->
         <!-- <container v-show="$route.path == '/container'"></container> -->
-        <salted-fish v-show="$route.path == '/insideApp'"></salted-fish>
+        <inside-app v-show="$route.path == '/insideApp'"></inside-app>
     </div>
 </template>
 
 <script>
 import Header from '../layout/Header.vue'
 // import Container from './mircoAppView/Container.vue'
-import SaltedFish from './mircoAppView/SaltedFish.vue'
+import InsideApp from './mircoAppView/InsideApp.vue'
 export default {
-    components: { Header, SaltedFish }
+    components: { Header, InsideApp }
 
 }
 </script>
