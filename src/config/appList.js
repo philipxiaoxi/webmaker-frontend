@@ -106,6 +106,7 @@ export const appList = [
         url: 'https://disk.xiaotao2333.top:344/#/public',
         img: 'https://disk.xiaotao2333.top:344/api/static/defaultAvatar.png',
         category: '推荐应用',
+        auth: 'token',
         tags: [
             { type: 'success', content: '绿色认证' },
             { type: 'danger', content: '账户不互通' }
@@ -163,6 +164,18 @@ export const appList = [
             { type: 'success', content: '绿色认证' },
             { type: 'danger', content: '私人专属' }
         ]
+    },
+    {
+        category: '我的应用',
+        type: 'insideApp',
+        open: 'insideApp',
+        auth: 'token',
+        extra: '{"username":"xiaoxi","password":"xiaoxi233"}',
+        url: 'http://docker.xiaotao2333.top:8010/#/login',
+        title: '咸鱼云适配版(测试版 http未加密)',
+        intro: '咸鱼云适配版，支持一键帮您登录咸鱼云，额外新增了一些互通的功能。',
+        img: 'https://disk.xiaotao2333.top:344/api/static/defaultAvatar.png',
+        id: 1657457894439
     }
 ]
 

@@ -17,6 +17,14 @@ export default {
         src: {
             type: String,
             default: ''
+        },
+        auth: {
+            type: String,
+            default: 'userId'
+        },
+        extra: {
+            type: String,
+            default: '{}'
         }
     },
     data() {
@@ -34,26 +42,47 @@ export default {
     watch: {
         // 监听Vuex并传递给子前端
         state(newState) {
-            // 发送给子前端
-            // this.sendStore(newState)
+            this.sendStore()
         },
         src() {
+            this.refresh()
+        },
+        auth() {
+            this.refresh()
+        },
+        extra() {
+            this.refresh()
+        }
+    },
+    methods: {
+        sendStore() {
+            if (this.src === '') return
+            let data = null
+            if (this.auth === 'userId') data = { id: this.$store.getters.userId }
+            if (this.auth === 'userInfo') data = { userInfo: this.$store.getters.userInfo }
+            if (this.auth === 'token') data = { token: this.$store.getters.token }
+            data.extra = this.extra
+            this.$refs.mircoapp.contentWindow.postMessage({
+                message: 'AUTH',
+                type: this.auth,
+                data
+            }, '*')
+            console.log('=========================================')
+            console.log(this.$store.getters.userId, this.auth)
+            console.log('[MircoApp]: Store数据已发送给子前端', data)
+            console.log('[MircoApp]: 授权方式：', this.auth)
+            console.log('[MircoApp]: 数据内容：', data)
+            console.log('=========================================')
+        },
+        refresh() {
             this.timer = new Date().getTime()
             this.$nextTick(() => {
                 this.$refs.mircoapp.onload = () => {
-                    // this.$refs.mircoapp.contentWindow.postMessage(this.state, '*')
-                    // console.log('[MircoApp]: Store数据已发送给子前端')
+                    this.sendStore()
                     this.loading = false
                 }
             })
         }
-    },
-    methods: {
-        // sendStore(state) {
-        //     if (this.src === '') return
-        //     this.$refs.mircoapp.contentWindow.postMessage(state, '*')
-        //     console.log('[MircoApp]: Store数据已发送给子前端')
-        // }
     }
 }
 </script>

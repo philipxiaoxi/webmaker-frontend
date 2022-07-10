@@ -31,6 +31,10 @@ export default {
             type: String,
             default: '默认介绍'
         },
+        auth: {
+            type: String,
+            default: 'userId'
+        },
         url: {
             type: String,
             default: ''
@@ -42,6 +46,10 @@ export default {
         bgColor: {
             type: String,
             default: ''
+        },
+        extra: {
+            type: String,
+            default: '{}'
         }
     },
     data() {
@@ -64,6 +72,8 @@ export default {
         goTo(url) {
             if (this.type == 'url') window.open(url)
             if (this.type == 'path') this.$router.push({ path: url })
+            this.$store.commit('setAuth', this.auth)
+            this.$store.commit('setExtra', this.extra)
             if (this.type == 'insideApp') {
                 this.$router.push({
                     path: 'insideApp',
