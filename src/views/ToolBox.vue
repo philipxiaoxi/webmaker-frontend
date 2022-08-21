@@ -8,21 +8,30 @@
             </el-alert>
             <el-button size="mini" @click="editMode = !editMode">{{ editMode? '完成' : '编辑' }}</el-button>
         </div>
-        <div class="link-container grid-cols-3 gap-sm">
-            <link-icon
-            v-for="(item,i) in appList" :key="item.title + i"
-            :id="item.id"
-            :title="item.title"
-            :intro="item.intro"
-            :url="item.url"
-            :img='item.img'
-            :type="item.type"
-            :auth="item.auth"
-            :extra="item.extra"
-            :editMode="editMode"
-            @close="delApp"
+        <div>
+            <draggable
+              v-model="appList"
+              v-bind="dragOptions"
+              @start="drag = true"
+              @end="draggableEnd"
             >
-            </link-icon>
+            <transition-group type="transition" :name="!drag ? 'flip-list' : null" class="link-container grid-cols-3 gap-sm">
+              <link-icon
+              v-for="(item) in appList" :key="item.id"
+              :id="item.id"
+              :title="item.title"
+              :intro="item.intro"
+              :url="item.url"
+              :img='item.img'
+              :type="item.type"
+              :auth="item.auth"
+              :extra="item.extra"
+              :editMode="editMode"
+              :drag="drag"
+              @close="delApp">
+              </link-icon>
+            </transition-group>
+            </draggable>
         </div>
         <el-empty v-if="appList.length <= 0" description="快去添加喜欢的应用与网站趴~"></el-empty>
         <div class="rightBtn" @click="rightDrawer = !rightDrawer"><i class="el-icon-caret-left"></i></div>
@@ -43,38 +52,67 @@ import LinkIcon from '../components/LinkIcon.vue'
 import ToolAndSoft from '../components/modals/ToolAndSoft.vue'
 import { appList } from '../config/appList'
 import { loadStorage, saveStorage } from '../util/LocalStorage'
+import Draggable from 'vuedraggable'
 
 export default {
-    components: { LinkIcon, ToolAndSoft },
+    components: { LinkIcon, ToolAndSoft, Draggable },
     data() {
         return {
             rightDrawer: false,
             appList: [],
-            editMode: false
+            editMode: false,
+            drag: false
         }
     },
     mounted() {
         this.updateApps()
     },
+    computed: {
+        dragOptions() {
+            return {
+                animation: 300,
+                group: 'description',
+                disabled: false,
+                ghostClass: 'ghost'
+            }
+        }
+    },
     methods: {
+        async draggableEnd() {
+            this.drag = false
+            console.log('end')
+            console.log(this.appList)
+            await saveStorage(this.appList.map(item => item.id))
+            this.$message({
+                message: '已保存当前布局。',
+                type: 'success'
+            })
+        },
         // 获取用户添加的应用
         async getAddAppList(ids) {
-            this.appList = []
+            const allAppList = []
             for (const id of ids) {
-                const allAppList = appList.concat(await loadStorage('customApps'))
-                const appInfo = allAppList.find(item => item.id === id)
-                if (appInfo) this.appList.push(appInfo)
+                const allAppListId = appList.concat(await loadStorage('customApps'))
+                const appInfo = allAppListId.find(item => item.id === id)
+                if (appInfo) allAppList.push(appInfo)
             }
+            this.appList = allAppList
         },
         async updateApps() {
             const appIds = await loadStorage()
             this.getAddAppList(appIds)
         },
-        async delApp(id) {
-            const appIds = await loadStorage()
-            appIds.splice(appIds.indexOf(id), 1)
-            await saveStorage(appIds)
-            this.updateApps()
+        delApp(id) {
+            this.$confirm('真的要删除此应用吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                const appIds = await loadStorage()
+                appIds.splice(appIds.indexOf(id), 1)
+                await saveStorage(appIds)
+                this.updateApps()
+            }).catch()
         }
     }
 }
@@ -106,6 +144,15 @@ export default {
 }
 .shake {
     animation: go 3s linear infinite;
+}
+.ghost {
+  border:  1px solid #00aeff;
+}
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
 }
 @keyframes go {
   0% {

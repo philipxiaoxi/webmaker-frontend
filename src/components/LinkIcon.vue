@@ -1,5 +1,5 @@
 <template>
-    <div :style="{backgroundColor: this.bgColor}" class="linkicon" @click="goTo(url)">
+    <div :style="{backgroundColor: this.bgColor}" class="linkicon" @click="goTo(url)" :class="{ 'linkicon-tr': !drag }">
         <div class="title">{{title}}</div>
         <div class="intro">
             <img :src="imgSrc"  @error="imgLoadError"/>
@@ -50,6 +50,10 @@ export default {
         extra: {
             type: String,
             default: '{}'
+        },
+        drag: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -70,7 +74,6 @@ export default {
             this.imgSrc = this.img
         },
         goTo(url) {
-            console.log(this)
             if (this.type == 'url') window.open(url)
             if (this.type == 'path') this.$router.push({ path: url })
             this.$store.commit('setAuth', this.auth)
@@ -89,9 +92,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.linkicon-tr {
+    transition: box-shadow 0.3s;
+}
 .linkicon {
     position: relative;
     border-radius: 3px;
+    user-select: none;
     cursor: pointer;
     margin: 15px;
     background-color: #FFFF;
@@ -100,7 +107,9 @@ export default {
     justify-content: center;
     align-items: flex-start;
     text-align: left;
-    transition: all 0.3s;
+    i {
+        color: #f56c6c;
+    }
     &>div {
         margin:  10px 20px;
     }
@@ -136,8 +145,7 @@ export default {
         font-size: 35px;
     }
 }
-.linkicon:hover{
-    transform: translateY(-2px);
+.linkicon:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 </style>

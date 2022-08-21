@@ -2,7 +2,7 @@
     <div :class="$style['tool-and-soft']">
         <div class="mx-20">
             <el-alert
-                title="欢迎来到应用中心，添加您喜欢的应用与网站，以及对他们分类，未来会有更多有趣有用的应用与网站在此展示，您也可以自由的添加。目前是测试阶段，数据仅保存在本地，没有同步备份的功能。"
+                title="欢迎来到应用中心，添加您喜欢的应用与网站，未来会有更多有趣有用的应用与网站在此展示，您也可以自由的添加，同步备份到您的私人账号上。"
                 type="success"
                 :closable="false">
             </el-alert>
@@ -11,7 +11,7 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
                 <div style="margin-left: 10px;" class="my-10">
-                    <el-button icon="el-icon-edit-outline" @click="mode = 1; dialogVisible = true">添加</el-button>
+                    <el-button icon="el-icon-edit-outline" @click="mode = 1; dialogVisible = true" >新建</el-button>
                 </div>
             </div>
         </div>
@@ -142,6 +142,7 @@
 import ToolCard from '../ToolCard.vue'
 import { appList, categorys } from '../../config/appList'
 import { loadStorage, saveStorage } from '../../util/LocalStorage'
+
 export default {
     components: { ToolCard },
 
@@ -227,6 +228,10 @@ export default {
                 return
             }
             this.appInfo = app
+            // 需要转换一下type类型以确保打开方式
+            if (this.appInfo.type === 'insideApp' || this.appInfo.type === 'blank') {
+                this.appInfo.type = 'url'
+            }
             console.log(app)
             // mode 2 为编辑模式
             this.mode = 2
