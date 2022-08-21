@@ -11,7 +11,7 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
                 <div style="margin-left: 10px;" class="my-10">
-                    <el-button icon="el-icon-edit-outline" @click="dialogVisible = true">添加</el-button>
+                    <el-button icon="el-icon-edit-outline" @click="mode = 1; dialogVisible = true">添加</el-button>
                 </div>
             </div>
         </div>
@@ -29,6 +29,8 @@
                         :tags="item.tags"
                         :type="item.type"
                         @addApp="addApp"
+                        @delete="deleteApp"
+                        @edit="editApp"
                         ></tool-card>
                         <el-empty v-if="appList.filter(e=>e.category === category).length <= 0" description="暂无应用"></el-empty>
                     </div>
@@ -36,7 +38,7 @@
             </el-tabs>
         </div>
         <el-dialog
-        title="添加自定义应用"
+        :title="`${mode === 1 ? '添加' : '编辑'}自定义应用`"
         :visible.sync="dialogVisible"
         :modal-append-to-body="true"
         :append-to-body="true"
@@ -130,7 +132,7 @@
         <div style="margin: 20px 0;"></div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addCustomApp">确 定</el-button>
+            <el-button type="primary" @click="submit">确 定</el-button>
         </span>
         </el-dialog>
     </div>
@@ -160,18 +162,21 @@ export default {
                 url: [{ required: true, message: '请输入应用地址', trigger: 'blur' }],
                 title: [{ required: true, message: '请输入应用名称', trigger: 'blur' }],
                 intro: [{ required: true, message: '请输入应用描述', trigger: 'blur' }]
-            }
+            },
+            mode: 1
         }
     },
     mounted() {
         this.loadApp()
     },
     methods: {
-        loadApp() {
-            this.appList = appList.concat(loadStorage('customApps'))
+        async loadApp() {
+            this.appList = appList.concat(await loadStorage('customApps'))
+            console.log(this.appList)
         },
-        addApp(id) {
-            const appIds = loadStorage()
+        async addApp(id) {
+            const appIds = await loadStorage()
+            console.log(appIds)
             const app = appIds.find(item => item === id)
             if (app) {
                 this.$notify.error({
@@ -181,28 +186,89 @@ export default {
                 return
             }
             appIds.push(id)
-            saveStorage(appIds)
-            this.$notify({
-                title: '成功',
-                message: '应用已添加到您的应用库。'
+            saveStorage(appIds).then(() => {
+                this.$notify({
+                    title: '成功',
+                    message: '应用已添加到您的应用库。'
+                })
+                this.$emit('update')
             })
+        },
+        /**
+         * 删除自定义应用
+         */
+        async deleteApp(id) {
+            const customApps = await loadStorage('customApps')
+            const index = customApps.findIndex(item => item.id === id)
+            if (index === -1) {
+                this.$message.error('此应用为官方应用，不可以删除哦')
+                return
+            }
+            const apps = await loadStorage()
+            const appIndex = apps.findIndex(item => item.id === id)
+            if (appIndex !== -1) {
+                apps.splice(appIndex, 1)
+                await saveStorage(apps)
+            }
+            customApps.splice(index, 1)
+            await saveStorage(customApps, 'customApps')
+            this.$message({ message: '删除成功！', type: 'success' })
+            this.loadApp()
             this.$emit('update')
         },
-
-        addCustomApp() {
-            const customApps = loadStorage('customApps')
-            this.appInfo.id = new Date().getTime()
-            if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
-                this.appInfo.type = this.appInfo.open
+        /**
+         * 编辑应用
+         */
+        async editApp(id) {
+            const customApps = await loadStorage('customApps')
+            const app = customApps.find(item => item.id === id)
+            if (!app) {
+                this.$message.error('此应用为官方应用，不可以编辑哦')
+                return
             }
-            customApps.push(this.appInfo)
-            saveStorage(customApps, 'customApps')
-            this.dialogVisible = false
-            this.$notify({
-                title: '您的应用已入库。',
-                message: '您可以点击添加来添加到您的应用库当中。'
-            })
-            this.loadApp()
+            this.appInfo = app
+            console.log(app)
+            // mode 2 为编辑模式
+            this.mode = 2
+            this.dialogVisible = true
+        },
+        async submit() {
+            if (this.mode === 1) {
+                const customApps = await loadStorage('customApps')
+                this.appInfo.id = new Date().getTime()
+                // 需要转换一下type类型以确保打开方式
+                if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
+                    this.appInfo.type = this.appInfo.open
+                }
+                customApps.push(this.appInfo)
+                saveStorage(customApps, 'customApps').then(() => {
+                    this.dialogVisible = false
+                    this.$notify({
+                        title: '您的应用已入库。',
+                        message: '您可以点击添加来添加到您的应用库当中。'
+                    })
+                    this.loadApp()
+                })
+            }
+            if (this.mode === 2) {
+                const id = this.appInfo.id
+                const customApps = await loadStorage('customApps')
+                const index = customApps.findIndex(item => item.id === id)
+                // 需要转换一下type类型以确保打开方式
+                if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
+                    this.appInfo.type = this.appInfo.open
+                }
+                customApps[index] = this.appInfo
+                console.log(this.appInfo)
+                await saveStorage(customApps, 'customApps')
+                this.dialogVisible = false
+                this.loadApp()
+                this.$emit('update')
+                this.$notify({
+                    title: '您的应用已更新。',
+                    message: '您可以点击添加来添加到您的应用库当中。'
+                })
+            }
         }
     }
 }

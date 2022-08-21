@@ -70,6 +70,7 @@ export default {
             this.imgSrc = this.img
         },
         goTo(url) {
+            console.log(this)
             if (this.type == 'url') window.open(url)
             if (this.type == 'path') this.$router.push({ path: url })
             this.$store.commit('setAuth', this.auth)

@@ -58,22 +58,22 @@ export default {
     },
     methods: {
         // 获取用户添加的应用
-        getAddAppList(ids) {
+        async getAddAppList(ids) {
             this.appList = []
             for (const id of ids) {
-                const allAppList = appList.concat(loadStorage('customApps'))
+                const allAppList = appList.concat(await loadStorage('customApps'))
                 const appInfo = allAppList.find(item => item.id === id)
                 if (appInfo) this.appList.push(appInfo)
             }
         },
-        updateApps() {
-            const appIds = loadStorage()
+        async updateApps() {
+            const appIds = await loadStorage()
             this.getAddAppList(appIds)
         },
-        delApp(id) {
-            const appIds = loadStorage()
+        async delApp(id) {
+            const appIds = await loadStorage()
             appIds.splice(appIds.indexOf(id), 1)
-            saveStorage(appIds)
+            await saveStorage(appIds)
             this.updateApps()
         }
     }
