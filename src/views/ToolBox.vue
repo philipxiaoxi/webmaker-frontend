@@ -32,7 +32,7 @@
                     :key="item.id"
                 >
                     <!-- 应用组件 -->
-                    <app-component v-if="item.cardType === 'component'" :app="item" :editMode="editMode" @close="delApp"></app-component>
+                    <app-component v-if="item.type === 'component'" :app="item" :editMode="editMode" @close="delApp"></app-component>
                     <!-- 链接型组件 -->
                     <link-icon
                     v-else
@@ -53,14 +53,7 @@
         <el-empty v-else description="快去添加喜欢的应用与网站趴~"></el-empty>
         <div class="rightBtn" @click="rightDrawer = !rightDrawer"><i class="el-icon-caret-left"></i></div>
         <!-- 工具箱抽屉内容 -->
-        <el-drawer
-            title="应用大全"
-            :visible.sync="rightDrawer"
-            direction="rtl"
-            size='450px'
-            :append-to-body='true'>
-            <tool-and-soft @update="updateApps"></tool-and-soft>
-        </el-drawer>
+        <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps"></tool-and-soft>
     </div>
 </template>
 
@@ -82,7 +75,7 @@ export default {
             loading: true
         }
     },
-    mounted() {
+    activated() {
         this.updateApps()
     },
     computed: {
@@ -152,8 +145,12 @@ export default {
             }
         },
         async updateApps() {
-            const appIds = await loadStorage()
-            this.getAddAppList(appIds)
+            loadStorage().then(appIds => {
+                this.getAddAppList(appIds)
+            }).catch((error) => {
+                this.loading = false
+                this.$message.error(error)
+            })
         },
         delApp(id) {
             this.$confirm('真的要删除此应用吗?', '提示', {
