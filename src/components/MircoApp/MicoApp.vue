@@ -42,7 +42,7 @@ export default {
     watch: {
         // 监听Vuex并传递给子前端
         state(newState) {
-            this.sendStore()
+            this.refresh()
         },
         src() {
             this.refresh()
@@ -78,8 +78,10 @@ export default {
             this.timer = new Date().getTime()
             this.$nextTick(() => {
                 this.$refs.mircoapp.onload = () => {
-                    this.sendStore()
-                    this.loading = false
+                    setTimeout(() => {
+                        this.sendStore()
+                        this.loading = false
+                    }, 500)
                 }
             })
         }

@@ -1,8 +1,20 @@
 <template>
     <div class="mx-20" :class="$style.card">
+    <div class="card-container">
         <div class="flex-row ai-center">
             <img class="headImg" :src="imgSrc" @error="imgLoadError"/>
-            <div class="mx-10">{{title}}</div>
+            <div class="flex-row jc-between flex-1">
+                <div class="mx-10" style="align-self: center;">{{title}}</div>
+                <div class="card-btn">
+                    <i class="el-icon-edit" @click="$emit('edit', id)"></i>
+                    <el-popconfirm
+                    :title="`确定删除${title}吗？删除后不可恢复。`"
+                    @confirm="$emit('delete', id)"
+                    >
+                    <i class="el-icon-close" slot="reference"></i>
+                    </el-popconfirm>
+                </div>
+            </div>
         </div>
         <div class="desc">{{intro}}</div>
         <div class="tags">
@@ -14,6 +26,7 @@
             >{{tag.content}}</el-tag>
         </div>
         <div class="flex-row jc-end"><el-button size="small" @click="$emit('addApp', id)">添加</el-button></div>
+    </div>
     </div>
 </template>
 
@@ -87,7 +100,24 @@ export default {
     background-color: #f2f3f59c;
     border-radius: 6px;
     box-sizing: border-box;
+
     :global {
+        .card-container:hover .card-btn {
+            opacity: 1;
+        }
+        .card-btn {
+            cursor: pointer;
+            opacity: 0;
+             i {
+                padding: 5px;
+            }
+            .el-popover__reference-wrapper i {
+                color: red;
+            }
+            :hover {
+                background-color: #d9d9d9;
+            }
+        }
         .tags {
             margin: 5px 0;
             & > * {

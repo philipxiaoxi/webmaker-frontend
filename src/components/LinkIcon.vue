@@ -1,11 +1,11 @@
 <template>
-    <div :style="{backgroundColor: this.bgColor}" class="linkicon" @click="goTo(url)">
+    <div :style="{backgroundColor: this.bgColor}" class="linkicon" :class="{ 'linkicon-tr': !drag }" @click="goTo(url)" >
         <div class="title">{{title}}</div>
         <div class="intro">
             <img :src="imgSrc"  @error="imgLoadError"/>
             <div class="text">{{intro}}</div>
         </div>
-        <div v-show="editMode" @click.stop="$emit('close', id)" class="close"><i class="el-icon-error"></i></div>
+        <div v-show="editMode" @click.stop="$emit('close', id)" class="close"><i class="el-icon-close"></i></div>
     </div>
 </template>
 
@@ -50,6 +50,10 @@ export default {
         extra: {
             type: String,
             default: '{}'
+        },
+        drag: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -70,6 +74,7 @@ export default {
             this.imgSrc = this.img
         },
         goTo(url) {
+            if (this.editMode) return
             if (this.type == 'url') window.open(url)
             if (this.type == 'path') this.$router.push({ path: url })
             this.$store.commit('setAuth', this.auth)
@@ -88,18 +93,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.linkicon-tr {
+    transition: box-shadow 0.3s;
+}
 .linkicon {
     position: relative;
+    height: 100%;
     border-radius: 3px;
+    user-select: none;
     cursor: pointer;
-    margin: 15px;
+    // margin: 15px;
     background-color: #FFFF;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     text-align: left;
-    transition: all 0.3s;
     &>div {
         margin:  10px 20px;
     }
@@ -132,11 +141,27 @@ export default {
         right: -30px;
         top: -20px;
         z-index: 999;
-        font-size: 35px;
+        font-size: 15px;
+        cursor: pointer;
+        background: white;
+        border-radius: 50%;
+        background-color: #f56c6c;
+        color: white;
+        padding: 5px;
+        box-sizing: border-box;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        > i {
+            margin-left: 1px;
+        }
     }
 }
-.linkicon:hover{
-    transform: translateY(-2px);
+.linkicon:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 </style>
