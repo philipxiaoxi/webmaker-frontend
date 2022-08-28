@@ -164,6 +164,24 @@ export const appList = [
             { type: 'success', content: '绿色认证' },
             { type: 'danger', content: '私人专属' }
         ]
+    },
+    {
+        id: 16,
+        title: '小睡眠组件',
+        intro: '小睡眠官方测试组件，拥有超过500+的音频资源，能够随时随地进行放松与聆听。',
+        img: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.qCxPmaVo2p-u_Z89dcIitAHaHa?w=183&h=183&c=7&r=0&o=5&pid=1.7',
+        cardType: 'component',
+        category: '小组件(测试)',
+        url: 'https://www.xiaotao2333.top:5885/common/SnippetHtml/178'
+    },
+    {
+        id: 17,
+        title: '小时钟组件',
+        intro: '小时钟官方测试组件，一个圆圆的挂在你的应用墙上的时钟，可以实时看到当前时间哦~',
+        img: 'https://tse2-mm.cn.bing.net/th/id/OIP-C.Au1TlzbTsavQuT10NnBjTwHaHa?w=180&h=180&c=7&r=0&o=5&pid=1.7',
+        cardType: 'component',
+        category: '小组件(测试)',
+        url: 'https://www.xiaotao2333.top:5885/common/SnippetHtml/179'
     }
 ]
 
@@ -172,5 +190,6 @@ export const categorys = [
     '实用工具',
     '科技资讯',
     '程序员集',
-    '我的应用'
+    '我的应用',
+    '小组件(测试)'
 ]
