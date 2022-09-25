@@ -18,7 +18,7 @@
                         <el-button slot="append" icon="el-icon-search"></el-button>
                     </el-input>
                     <div style="margin-left: 10px;" class="my-10">
-                        <el-button icon="el-icon-edit-outline" @click="mode = 1; dialogVisible = true" >新建</el-button>
+                        <el-button icon="el-icon-plus" @click="mode = 1; dialogVisible = true" >新建</el-button>
                     </div>
                 </div>
             </div>

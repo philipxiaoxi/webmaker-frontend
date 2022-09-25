@@ -46,13 +46,14 @@ export default {
 }
 .conponent-iframe-container {
     height: 100%;
-    background-color: white;
+    // background-color: white;
 }
 .conponent-iframe {
     height: 100%;
     width: 100%;
     border: none;
     outline: none;
+    border-radius: 3px;
 }
 .conponent-iframe-edit {
     box-sizing: border-box;

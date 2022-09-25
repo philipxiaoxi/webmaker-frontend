@@ -2,9 +2,9 @@
  * @Ahthor: xiaoxi
 -->
 <template>
-    <div class="header">
+    <div class="header" :class="{ 'black-header': blackHeader }">
         <div class="title">
-            <img style="height:100%;" src="/img/logo.png" />
+            <img style="height:100%;" :src="`${blackHeader ? '/img/logo-white.png' : '/img/logo.png'}`" />
         </div>
         <i v-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
         <div v-else class="menu">
@@ -102,16 +102,21 @@ export default {
                     path: ['/forum', '/forumpage', '/newforumpage']
                 },
                 {
-                    name: '应用',
+                    name: '桌面',
                     path: ['/toolbox', '/lowcode', '/insideApp']
                 }
             ],
             routePath: this.$route.path,
             menuStyle: 0,
-            drawer: false
+            drawer: false,
+            blackHeader: false
         }
     },
     watch: {
+        '$route.path'(newPathState) {
+            console.log(newPathState)
+            this.blackHeader = newPathState === '/toolbox'
+        },
         $route(to, from) {
             this.routePath = to.path
             document.documentElement.scrollTop = 0
@@ -161,7 +166,7 @@ export default {
         height: 100%;
     }
     .header {
-        z-index: 10;
+        z-index: 30;
         top: 0px;
         left: 0px;
         width: 100%;
@@ -174,6 +179,15 @@ export default {
         justify-content: space-between;
         padding: 0px 20px;
         box-sizing: border-box;
+    }
+    .black-header {
+        background-color: rgba(0, 0, 0, 0.418);
+        .menu  * {
+            color: white;
+        }
+        .menu ::after {
+            background-color: white;
+        }
     }
     .menu {
         display: flex;

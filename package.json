@@ -17,6 +17,7 @@
     "element-ui": "^2.15.5",
     "esprima": "^4.0.1",
     "js-md5": "^0.7.3",
+    "lodash-es": "^4.17.21",
     "mavon-editor": "^2.9.1",
     "monaco-editor": "^0.27.0",
     "monaco-editor-webpack-plugin": "^4.1.2",

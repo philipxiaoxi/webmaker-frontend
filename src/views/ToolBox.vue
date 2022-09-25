@@ -1,59 +1,78 @@
 <template>
-    <div class="container"  v-loading="loading">
-        <div class="flex-row jc-between">
-            <el-alert
-            :show-icon="true"
-            title="点击右侧按钮，打开应用市场，添加新的应用与网站。"
-            type="info"
-            :closable="false">
-            </el-alert>
-            <el-button size="mini" @click="editModeChange" :type="editMode ? 'success' : ''">{{ editMode? '完成' : '编辑' }}</el-button>
-        </div>
-        <div v-if="appList.length > 0"  class="grid-coantainer">
-            <grid-layout
-                :layout.sync="appList"
-                :col-num="12"
-                :row-height="60"
-                :is-draggable="editMode"
-                :is-resizable="editMode"
-                :responsive="false"
-                :vertical-compact="false"
-                :prevent-collision="false"
-                :use-css-transforms="false"
-            >
-                <grid-item
-                    v-for="item in appList"
-                    :static="false"
-                    :x="item.x"
-                    :y="item.y"
-                    :w="item.w"
-                    :h="item.h"
-                    :i="item.i"
-                    :key="item.id"
+    <div
+        class="container"
+        :class="{ change: backgroundChange }"
+        :style="{ backgroundImage: `url('${settingForm.currentImageUrl}')`, '--alpha': settingForm.bgColorMaskDepth }"
+    >
+        <div class="grid-warp">
+            <!-- <div class="flex-row jc-between">
+                <span>点击右侧按钮，打开应用市场，添加新的应用与网站。</span>
+                <el-button size="mini" @click="editModeChange" :type="editMode ? 'success' : ''">{{ editMode? '完成' : '编辑' }}</el-button>
+            </div> -->
+            <div v-if="appList.length > 0"  class="grid-coantainer">
+                <grid-layout
+                    :layout.sync="appList"
+                    :col-num="12"
+                    :row-height="60"
+                    :margin="[20, 20]"
+                    :is-draggable="editMode"
+                    :is-resizable="editMode"
+                    :responsive="false"
+                    :vertical-compact="false"
+                    :prevent-collision="false"
+                    :use-css-transforms="false"
                 >
-                    <!-- 应用组件 -->
-                    <app-component v-if="item.type === 'component'" :app="item" :editMode="editMode" @close="delApp"></app-component>
-                    <!-- 链接型组件 -->
-                    <link-icon
-                    v-else
-                    :id="item.id"
-                    :title="item.title"
-                    :intro="item.intro"
-                    :url="item.url"
-                    :img='item.img'
-                    :type="item.type"
-                    :auth="item.auth"
-                    :extra="item.extra"
-                    :editMode="editMode"
-                    @close="delApp">
-                    </link-icon>
-                </grid-item>
-            </grid-layout>
+                    <grid-item
+                        v-for="item in appList"
+                        :static="false"
+                        :x="item.x"
+                        :y="item.y"
+                        :w="item.w"
+                        :h="item.h"
+                        :i="item.i"
+                        :key="item.id"
+                    >
+                        <!-- 应用组件 -->
+                        <app-component v-if="item.type === 'component'" :app="item" :editMode="editMode" @close="delApp"></app-component>
+                        <!-- 链接型组件 -->
+                        <link-icon
+                        v-else
+                        :id="item.id"
+                        :title="item.title"
+                        :intro="item.intro"
+                        :url="item.url"
+                        :img='item.img'
+                        :type="item.type"
+                        :auth="item.auth"
+                        :extra="item.extra"
+                        :editMode="editMode"
+                        @close="delApp">
+                        </link-icon>
+                    </grid-item>
+                </grid-layout>
+            </div>
+            <el-empty v-else description="点击右边的应用市场，快去添加喜欢的应用与网站趴~" style="height: 100%;"></el-empty>
+            <div class="rightBtn">
+                <div @click="editModeChange" :class="{ green: editMode }" :title="`${ editMode ? '保存桌面布局' : '编辑桌面布局' }`">
+                    <i v-if="editMode" class="el-icon-check" style="color: white;"></i>
+                    <i v-else class="el-icon-edit"></i>
+                </div>
+                <div @click="rightDrawer = true" title="应用市场"><i class="el-icon-menu"></i></div>
+                <div @click="settingVisible = true" title="设置"><i class="el-icon-s-tools"></i></div>
+            </div>
+            <div class="windmill-container" title="更换壁纸" @click="changeWallpaper">
+                <div class="windmill">
+                    <div class="triangle right"></div>
+                    <div class="triangle bottom"></div>
+                    <div class="triangle left"></div>
+                    <div class="triangle top"></div>
+                </div>
+                <div class="stick"></div>
+            </div>
+            <!-- 工具箱抽屉内容 -->
+            <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps"></tool-and-soft>
+            <tool-box-setting :visible.sync="settingVisible" @change="refreshSetting"></tool-box-setting>
         </div>
-        <el-empty v-else description="快去添加喜欢的应用与网站趴~"></el-empty>
-        <div class="rightBtn" @click="rightDrawer = !rightDrawer"><i class="el-icon-caret-left"></i></div>
-        <!-- 工具箱抽屉内容 -->
-        <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps"></tool-and-soft>
     </div>
 </template>
 
@@ -64,19 +83,47 @@ import AppComponent from '../components/AppComponent.vue'
 import { appList } from '../config/appList'
 import { loadStorage, saveStorage } from '../util/LocalStorage'
 import { GridLayout, GridItem } from 'vue-grid-layout'
+import ToolBoxSetting from '../components/modals/ToolBoxSetting.vue'
+import { cloneDeep } from 'lodash-es'
 
 export default {
-    components: { LinkIcon, ToolAndSoft, GridLayout, GridItem, AppComponent },
+    components: { LinkIcon, ToolAndSoft, GridLayout, GridItem, AppComponent, ToolBoxSetting },
     data() {
         return {
             rightDrawer: false,
+            settingVisible: false,
             appList: [],
             editMode: false,
-            loading: true
+            loading: true,
+            backgroundChange: false,
+            settingForm: {
+                bgColorMaskDepth: 0.3,
+                bgImageOrigin: 'imagesUrl',
+                currentImageUrl: 'https://disk.xiaotao2333.top:344/api/resource/0/fileContentByMD5/458b5b96d7f8e156b71158d6b788a085/17.%E3%80%903%E3%80%91Radar%20Detector%2CSkrillex%20-%20Scary%20Monsters%20And%20Nice%20Sprites%20(Radar%20Detector%20Remix).jpg',
+                images: [
+                    {
+                        id: 1,
+                        url: 'https://disk.xiaotao2333.top:344/api/resource/0/fileContentByMD5/458b5b96d7f8e156b71158d6b788a085/17.%E3%80%903%E3%80%91Radar%20Detector%2CSkrillex%20-%20Scary%20Monsters%20And%20Nice%20Sprites%20(Radar%20Detector%20Remix).jpg'
+                    }
+                ],
+                bgApi: '',
+                bgApiCallBackFn: ''
+            }
         }
     },
-    activated() {
-        this.updateApps()
+    watch: {
+        '$store.getters.token': {
+            immediate: true,
+            handler: function(newTokenState) {
+                if (newTokenState) {
+                    this.updateApps()
+                    this.getSetting()
+                    return
+                }
+                this.appList = []
+                this.settingForm = this.$options.data().settingForm
+            }
+        }
     },
     computed: {
         dragOptions() {
@@ -89,6 +136,31 @@ export default {
         }
     },
     methods: {
+        refreshSetting(settingForm) {
+            this.settingForm = cloneDeep(settingForm)
+        },
+        async getSetting() {
+            const setting = await loadStorage('settingForm')
+            if (Array.isArray(setting)) return
+            this.settingForm = setting
+        },
+        async saveSetting() {
+            await saveStorage(this.settingForm, 'settingForm')
+        },
+        /**
+         * 切换壁纸
+         */
+        changeWallpaper() {
+            this.backgroundChange = true
+            const { images } = this.settingForm
+            let index = images.findIndex(item => item.url === this.settingForm.currentImageUrl)
+            const len = images.length
+            setTimeout(() => {
+                this.settingForm.currentImageUrl = index >= len - 1 || index === -1 ? images[0].url : images[++index].url
+                this.backgroundChange = false
+                this.saveSetting()
+            }, 300)
+        },
         editModeChange() {
             this.editMode = !this.editMode
             if (!this.editMode) this.save()
@@ -99,7 +171,7 @@ export default {
         async save() {
             this.editMode = false
             const positions = this.appList.map(item => {
-                const { x = 0, y = 0, w = 4, h = 2, id } = item
+                const { x, y, w, h, id } = item
                 return {
                     x,
                     y,
@@ -132,9 +204,18 @@ export default {
         /**
          * 制作布局项数据，通过引用写入对象属性
          */
-        getGridItem(postions, app) {
-            const position = postions.find(item => item.id === app.id)
-            const { x = 0, y = 0, w = 4, h = 2 } = position || {}
+        getGridItem(positions, app) {
+            const position = positions.find(item => item.id === app.id)
+            let { x = -1, y = -1, w = 4, h = 2 } = position || {}
+            // 新加的应用没有位置信息默认到底部
+            if (x === -1 || y === -1) {
+                const x0y0apps = positions.filter(item => item.x === 0)
+                x = 0
+                // 寻找最大的位置
+                y = x0y0apps.reduce((previous, current) => {
+                    return current.y > previous ? current.y : previous
+                }, 0)
+            }
             return {
                 ...app,
                 x,
@@ -173,12 +254,39 @@ export default {
 
 <style lang='less' scoped>
 .container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+    padding-top: 60px;
+    background-size: cover;
+    background-position: 50%;
+    background-color: black;
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, var(--alpha));
+        transition: background-color 0.3s;
+    }
+}
+.change:after {
+    background-color: rgba(0, 0, 0, 0.95);
+    transition: background-color 0.3s;
+}
+.grid-warp {
+    width: 100%;
+    height: 100%;
     max-width: 1144px;
     padding: 20px;
-    margin: 0 auto;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-    margin-top: 80px;
-    margin-bottom: 20px;
+    box-sizing: border-box;
+    z-index: 10;
+    // box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
     > div:first-child {
         margin-bottom: 10px;
     }
@@ -190,12 +298,19 @@ export default {
     position: fixed;
     right: 0;
     top: 50%;
-    width: 30px;
-    height: 40px;
-    background-color: #DCDFE6;
-    line-height: 40px;
-    border-top-left-radius: 25%;
-    border-bottom-left-radius: 25%;
+    transform: translateY(-50%);
+    .green {
+        background-color: #67c23a;
+    }
+    & > div {
+        margin: 10px 0;
+        width: 30px;
+        height: 40px;
+        background-color: #DCDFE6;
+        line-height: 40px;
+        border-top-left-radius: 25%;
+        border-bottom-left-radius: 25%;
+    }
 }
 .shake {
     animation: go 3s linear infinite;
@@ -244,9 +359,9 @@ export default {
 .vue-grid-layout {
     min-height: 850px;
     touch-action: none;
-    background-image: linear-gradient(#f8f8f8 10px,transparent 0),linear-gradient(90deg,#f8f8f8 10px,transparent 0);
-    background-size: calc(8.43333% - 2.07px) 70px;
-    min-height: calc(100vh - 150px);
+    // background-image: linear-gradient(#f8f8f8 10px,transparent 0),linear-gradient(90deg,#f8f8f8 10px,transparent 0);
+    // background-size: calc(8.43333% - 2.07px) 70px;
+    min-height: calc(100vh - 200px);
 }
 .vue-grid-item {
     box-sizing: border-box;
@@ -292,5 +407,67 @@ export default {
     background-origin: content-box;
     box-sizing: border-box;
     cursor: pointer;
+}
+// 小风车组件
+.windmill-container {
+    --size: 15;
+    position: fixed;
+    z-index: 10;
+    bottom: 50px;
+    right: 50px;
+    .windmill {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: 10;
+        width: calc(var(--size) * 4px);
+        height: calc(var(--size) * 4px);
+        animation: circle 2s infinite linear;
+        cursor: pointer;
+    }
+    .stick {
+        position: absolute;
+        top: calc(var(--size) * -2px);
+        left: calc(var(--size) * -2px);
+        transform: translateX(-50%);
+        height: 80px;
+        width: 5px;
+        background: royalblue;
+        border-radius: 5px;
+    }
+    .triangle {
+        position: absolute;
+        height: 0;
+        border: calc(var(--size) * 1px) solid transparent;
+    }
+
+    .triangle.right {
+        border-right-color: red;
+    }
+
+    .triangle.bottom {
+        left: calc(var(--size) * 2px);
+        border-bottom-color: yellow;
+    }
+
+    .triangle.left {
+        top: calc(var(--size) * 2px);
+        left: calc(var(--size) * 2px);
+        border-left-color: coral;
+    }
+
+    .triangle.top {
+        top: calc(var(--size) * 2px);
+        border-top-color: cyan;
+    }
+
+    @keyframes circle {
+        to {
+            transform: rotate(0);
+        }
+        from {
+            transform: rotate(360deg);
+        }
+    }
 }
 </style>
