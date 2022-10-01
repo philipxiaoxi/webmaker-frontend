@@ -23,14 +23,28 @@
             </div>
             <!-- 用户选项 -->
             <div v-else>
-                <router-link   to="/my-codes" :class="{active: routePath == '/my-codes'}">
-                    <span>我的片段</span>
+                <router-link  to="/toolbox" :class="{active: ['/toolbox', '/lowcode', '/insideApp'].includes(routePath)}">
+                    <span>桌面</span>
                 </router-link>
-                <router-link   to="/my" :class="{active: routePath == '/my'}">
-                    <span>个人中心</span>
-                </router-link>
-                <span  >{{this.$store.state.userInfo.name}}</span>
-                <span style="cursor: pointer;"  @click="logout">退出</span>
+                <el-dropdown class="flex-col ai-center jc-center" style="display: flex;">
+                    <el-avatar :size="40" :src="getHeadImgSrc"></el-avatar>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item disabled>{{this.$store.state.userInfo.name}}</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-folder-opened">
+                        <router-link   to="/my-codes">
+                            <span>我的片段</span>
+                        </router-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-setting">
+                        <router-link   to="/my">
+                            <span>系统设置</span>
+                        </router-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-switch-button" style="cursor: pointer;color: #f56c6c;">
+                        <span  @click="logout">退出登录</span>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+                </el-dropdown>
             </div>
         </div>
         <!-- 样式1的菜单栏 -->
@@ -77,6 +91,8 @@
 </template>
 
 <script>
+import md5 from 'js-md5'
+
 export default {
     data() {
         return {
@@ -100,11 +116,11 @@ export default {
                 {
                     name: '论坛',
                     path: ['/forum', '/forumpage', '/newforumpage']
-                },
-                {
-                    name: '桌面',
-                    path: ['/toolbox', '/lowcode', '/insideApp']
                 }
+                // {
+                //     name: '桌面',
+                //     path: ['/toolbox', '/lowcode', '/insideApp']
+                // }
             ],
             routePath: this.$route.path,
             menuStyle: 0,
@@ -120,6 +136,12 @@ export default {
         $route(to, from) {
             this.routePath = to.path
             document.documentElement.scrollTop = 0
+        }
+    },
+    computed: {
+        getHeadImgSrc() {
+            console.log('load')
+            return 'https://cravatar.cn/avatar/' + md5(this.$store.state.userInfo.email || '')
         }
     },
     mounted() {
@@ -156,6 +178,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+    .router-link-active {
+        text-decoration: none;
+        color: #606266;
+    }
+    a {
+        text-decoration: none;
+        color: #606266;
+    }
     .menuDrawer {
         & div {
             cursor: pointer;
@@ -198,11 +228,11 @@ export default {
             margin:  0px;
             padding: 0px;
         }
-        * {
+        a {
             text-decoration: none;
             line-height: 60px;
             position: relative;
-            padding: 0 8px;
+            padding: 0 18px;
             display: block;
             z-index: 99999;
             color: black;
