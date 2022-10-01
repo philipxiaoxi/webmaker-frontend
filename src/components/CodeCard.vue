@@ -8,7 +8,7 @@
                     class="CodeImg"
                     :src="RealCodeImg"
                     alt=""
-                    :title="quickPreview ? '鼠标停留2秒预览片段' : '在个人中心其他设置中可开启快速预览'"
+                    :title="quickPreview ? '鼠标停留2秒预览片段' : '在系统设置中可开启快速预览'"
                 >
             </div>
             <div class="headimg">
