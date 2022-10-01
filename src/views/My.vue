@@ -18,11 +18,19 @@
                         <div v-else>管理员</div>
                     </el-descriptions-item>
                 </el-descriptions>
-                <el-button style="margin: 10px;" type="primary" plain @click="initFormData">修改</el-button>
+                <div class="flex-row m-10">
+                    <el-button style="margin: 0 auto;" type="primary" plain @click="initFormData">修改</el-button>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="编码成就">配置管理</el-tab-pane>
             <el-tab-pane label="第三方引入">角色管理</el-tab-pane>
-            <el-tab-pane label="其他设置">定时任务补偿</el-tab-pane>
+            <el-tab-pane label="其他设置">
+                <el-form ref="otherSettingForm" :model="otherSettingForm" label-width="180px">
+                <el-form-item label="片段卡片鼠标停留预览">
+                    <el-switch v-model="otherSettingForm.quickPreview"></el-switch>
+                </el-form-item>
+                </el-form>
+            </el-tab-pane>
         </el-tabs>
         </div>
         <!-- 修改个人信息弹窗 -->
@@ -42,6 +50,7 @@ import API from '../api/'
 import XxDialog from '../components/XxDialog.vue'
 import FS from '../util/FormatString'
 import md5 from 'js-md5'
+import { loadStorage, saveStorage } from '../util/LocalStorage'
 
 export default {
     components: { XxDialog },
@@ -49,7 +58,10 @@ export default {
         return {
             form: {},
             dialogVisible: false,
-            fromData: []
+            fromData: [],
+            otherSettingForm: {
+                quickPreview: false
+            }
         }
     },
     computed: {
@@ -57,7 +69,29 @@ export default {
             return 'https://cravatar.cn/avatar/' + md5(this.$store.state.userInfo.email || '')
         }
     },
-    mounted() {
+    created() {
+        loadStorage('otherSettingForm').then(otherSettingForm => {
+            if (otherSettingForm) this.otherSettingForm = otherSettingForm
+            // 回显后watch
+            this.$watch('otherSettingForm', {
+                deep: true,
+                handler: function() {
+                    saveStorage(this.otherSettingForm, 'otherSettingForm')
+                        .then(() => {
+                            this.$message({
+                                message: '设置已保存。',
+                                type: 'success'
+                            })
+                        })
+                        .catch(() => {
+                            this.$message({
+                                message: '保存失败',
+                                type: 'error'
+                            })
+                        })
+                }
+            })
+        })
     },
     methods: {
         setHeadImg() {
@@ -154,6 +188,7 @@ export default {
     flex-direction: column;
     align-items: center;
     overflow: hidden;
+    text-align: left;
 }
 .info-card{
     background-color: #fff;

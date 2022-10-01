@@ -60,7 +60,7 @@ export default {
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             default:
-                content = PreviewTemplate.makeHtmlPreview(content, this.$parent.item == undefined ? this.item.id : this.$parent.item.id)
+                content = PreviewTemplate.makeHtmlPreview(content, !this.$parent?.item ? this.item.id : this.$parent.item.id)
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             }

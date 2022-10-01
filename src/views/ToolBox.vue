@@ -141,8 +141,7 @@ export default {
         },
         async getSetting() {
             const setting = await loadStorage('settingForm')
-            if (Array.isArray(setting)) return
-            this.settingForm = setting
+            if (setting) this.settingForm = setting
         },
         async saveSetting() {
             await saveStorage(this.settingForm, 'settingForm')
@@ -191,8 +190,8 @@ export default {
         async getAddAppList(ids) {
             this.loading = true
             const allAppList = []
-            const allAppListId = appList.concat(await loadStorage('customApps'))
-            const postions = await loadStorage('positions')
+            const allAppListId = appList.concat(await loadStorage('customApps') || [])
+            const postions = await loadStorage('positions') || []
             for (const id of ids) {
                 let appInfo = allAppListId.find(item => item.id === id)
                 appInfo = this.getGridItem(postions, appInfo)
@@ -227,7 +226,7 @@ export default {
         },
         async updateApps() {
             loadStorage().then(appIds => {
-                this.getAddAppList(appIds)
+                this.getAddAppList(appIds || [])
             }).catch((error) => {
                 this.loading = false
                 this.$message.error(error)
@@ -239,7 +238,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async() => {
-                const appIds = await loadStorage()
+                const appIds = await loadStorage() || []
                 appIds.splice(appIds.indexOf(id), 1)
                 // 本地临时删除
                 const index = this.appList.findIndex(item => item.id === id)

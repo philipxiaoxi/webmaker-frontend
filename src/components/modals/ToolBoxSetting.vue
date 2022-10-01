@@ -88,8 +88,7 @@ export default {
     methods: {
         async getSetting() {
             const setting = await loadStorage('settingForm')
-            if (Array.isArray(setting)) return
-            this.settingForm = setting
+            if (setting) this.settingForm = setting
         },
         addImage() {
             this.settingForm.images.push({

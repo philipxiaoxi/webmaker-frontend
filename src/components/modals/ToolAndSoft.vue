@@ -194,14 +194,13 @@ export default {
     methods: {
         async loadApp() {
             loadStorage('customApps').then(customApp => {
-                this.appList = appList.concat(customApp)
+                this.appList = appList.concat(customApp || [])
             }).catch(error => {
                 this.$message.error(`${error} 未登录的情况下无法展示应用，且无法保存。`)
             })
         },
         async addApp(id) {
-            const appIds = await loadStorage()
-            console.log(appIds)
+            const appIds = await loadStorage() || []
             const app = appIds.find(item => item === id)
             if (app) {
                 this.$notify.error({
@@ -223,13 +222,13 @@ export default {
          * 删除自定义应用
          */
         async deleteApp(id) {
-            const customApps = await loadStorage('customApps')
+            const customApps = await loadStorage('customApps') || []
             const index = customApps.findIndex(item => item.id === id)
             if (index === -1) {
                 this.$message.error('此应用为官方应用，不可以删除哦')
                 return
             }
-            const apps = await loadStorage()
+            const apps = await loadStorage() || []
             const appIndex = apps.findIndex(item => item.id === id)
             if (appIndex !== -1) {
                 apps.splice(appIndex, 1)
@@ -245,7 +244,7 @@ export default {
          * 编辑应用
          */
         async editApp(id) {
-            const customApps = await loadStorage('customApps')
+            const customApps = await loadStorage('customApps') || []
             const app = customApps.find(item => item.id === id)
             if (!app) {
                 this.$message.error('此应用为官方应用，不可以编辑哦')
@@ -263,7 +262,8 @@ export default {
         },
         async submit() {
             if (this.mode === 1) {
-                const customApps = await loadStorage('customApps')
+                let customApps = await loadStorage('customApps')
+                if (!customApps) customApps = []
                 this.appInfo.id = new Date().getTime()
                 // 需要转换一下type类型以确保打开方式
                 if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
@@ -281,7 +281,8 @@ export default {
             }
             if (this.mode === 2) {
                 const id = this.appInfo.id
-                const customApps = await loadStorage('customApps')
+                let customApps = await loadStorage('customApps')
+                if (!customApps) customApps = []
                 const index = customApps.findIndex(item => item.id === id)
                 // 需要转换一下type类型以确保打开方式
                 if (this.appInfo.type === 'url' && this.appInfo.open === 'insideApp') {
