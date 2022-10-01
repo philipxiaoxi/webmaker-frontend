@@ -5,6 +5,7 @@
                 <img ref="image" style="width: 100%;" :src="item.imgurl" :alt="item.title" :title="item.title">
             </el-carousel-item>
         </el-carousel>
+        <forum-hot></forum-hot>
         <square-tools></square-tools>
         <codes-show></codes-show>
     </div>
@@ -13,8 +14,10 @@
 <script>
 import CodesShow from '../components/CodesShow.vue'
 import SquareTools from '../components/SquareTools.vue'
+import ForumHot from './ForumHot/index.vue'
+
 export default {
-    components: { CodesShow, SquareTools },
+    components: { CodesShow, SquareTools, ForumHot },
     data() {
         return {
             pageCount: 1,
