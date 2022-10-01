@@ -63,7 +63,7 @@ export default {
         init() {
             this.editor = this.preview ? this.initPreview() : this.initEditor()
             this.editor.setMarkdown(this.value)
-            this.editor.moveCursorToStart(false)
+            this.editor?.moveCursorToStart && this.editor.moveCursorToStart(false)
         },
         initEditor() {
             return new Editor({
