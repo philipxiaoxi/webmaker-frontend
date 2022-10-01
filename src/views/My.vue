@@ -22,8 +22,8 @@
                     <el-button style="margin: 0 auto;" type="primary" plain @click="initFormData">修改</el-button>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="编码成就">配置管理</el-tab-pane>
-            <el-tab-pane label="第三方引入">角色管理</el-tab-pane>
+            <!-- <el-tab-pane label="编码成就">配置管理</el-tab-pane> -->
+            <!-- <el-tab-pane label="第三方引入">角色管理</el-tab-pane> -->
             <el-tab-pane label="其他设置">
                 <el-form ref="otherSettingForm" :model="otherSettingForm" label-width="180px">
                 <el-form-item label="片段卡片鼠标停留预览">
