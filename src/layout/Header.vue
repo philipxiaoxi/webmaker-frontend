@@ -26,20 +26,20 @@
                 <router-link  to="/toolbox" :class="{active: ['/toolbox', '/lowcode', '/insideApp'].includes(routePath)}">
                     <span>桌面</span>
                 </router-link>
-                <el-dropdown class="flex-col ai-center jc-center" style="display: flex;">
+                <el-dropdown class="flex-col ai-center jc-center" style="margin-left: 8px;">
                     <el-avatar :size="40" :src="getHeadImgSrc"></el-avatar>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item disabled>{{this.$store.state.userInfo.name}}</el-dropdown-item>
-                    <el-dropdown-item icon="el-icon-folder-opened">
-                        <router-link   to="/my-codes">
+                    <router-link   to="/my-codes">
+                        <el-dropdown-item icon="el-icon-folder-opened">
                             <span>我的片段</span>
-                        </router-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item icon="el-icon-setting">
-                        <router-link   to="/my">
+                        </el-dropdown-item>
+                    </router-link>
+                    <router-link   to="/my">
+                        <el-dropdown-item icon="el-icon-setting">
                             <span>系统设置</span>
-                        </router-link>
-                    </el-dropdown-item>
+                        </el-dropdown-item>
+                    </router-link>
                     <el-dropdown-item divided icon="el-icon-switch-button" style="cursor: pointer;color: #f56c6c;">
                         <span  @click="logout">退出登录</span>
                     </el-dropdown-item>
