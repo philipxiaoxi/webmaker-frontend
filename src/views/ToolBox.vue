@@ -261,7 +261,8 @@ export default {
     min-height: calc(100vh - 60px);
     padding-top: 60px;
     background-size: cover;
-    background-position: 50%;
+    background-position: center;
+    background-attachment:fixed;
     background-color: black;
     &:after {
         content: '';
