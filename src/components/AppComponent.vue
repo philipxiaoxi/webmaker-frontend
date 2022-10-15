@@ -5,7 +5,7 @@
         <div v-show="editMode" class="mask">
             <div class="title">{{app.title}}</div>
         </div>
-        <iframe class="conponent-iframe" :src="app.url"></iframe>
+        <iframe ref="iframe" class="conponent-iframe" :src="app.url"></iframe>
     </div>
 </template>
 
@@ -19,6 +19,39 @@ export default {
         editMode: {
             type: Boolean,
             default: false
+        },
+        extra: {
+            type: String,
+            default: '{}'
+        }
+    },
+    mounted() {
+        this.$refs.iframe.addEventListener('load', () => {
+            console.log('234234324')
+            console.log(this.app)
+            this.sendStore()
+        })
+    },
+    methods: {
+        sendStore() {
+            if (this.src === '') return
+            let data = null
+            const { auth } = this.app
+            if (auth === 'userId') data = { id: this.$store.getters.userId }
+            if (auth === 'userInfo') data = { userInfo: this.$store.getters.userInfo }
+            if (auth === 'token') data = { token: this.$store.getters.token }
+            data.extra = this.extra
+            this.$refs.iframe.contentWindow.postMessage({
+                message: 'AUTH',
+                type: this.auth,
+                data
+            }, '*')
+            console.log('=========================================')
+            console.log(this.$store.getters.userId, auth)
+            console.log('[MircoApp]: Store数据已发送给子前端', data)
+            console.log('[MircoApp]: 授权方式：', auth)
+            console.log('[MircoApp]: 数据内容：', data)
+            console.log('=========================================')
         }
     }
 }

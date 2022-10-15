@@ -46,6 +46,7 @@
                         :auth="item.auth"
                         :extra="item.extra"
                         :editMode="editMode"
+                        :item="item"
                         @close="delApp">
                         </link-icon>
                     </grid-item>

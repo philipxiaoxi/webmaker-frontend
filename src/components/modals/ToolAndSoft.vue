@@ -113,7 +113,7 @@
                         <el-option label="内置容器" value="insideApp"></el-option>
                     </el-select>
                 </el-form-item>
-                <template v-if="appInfo.type === 'app' || (appInfo.type === 'url' && appInfo.open === 'insideApp')">
+                <template v-if="appInfo.type === 'component' || appInfo.type === 'app' || (appInfo.type === 'url' && appInfo.open === 'insideApp')">
                     <el-form-item
                     label="授权信息">
                         <p :class="$style['xx-alert']">
