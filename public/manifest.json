@@ -1,0 +1,16 @@
+{
+    "name": "WebMaker",
+    "short_name": "WebMaker",
+    "display": "standalone",
+    "orientation": "landscape",
+    "start_url": "/",
+    "theme_color": "white",
+    "background_color": "white",
+    "icons": [
+        {
+        "src": "/img/icons/code-icon.png",
+        "sizes": "128x128",
+        "type": "image/png"
+        }
+    ]
+}
