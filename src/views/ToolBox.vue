@@ -4,7 +4,7 @@
         :class="{ change: backgroundChange }"
         :style="{ backgroundImage: `url('${settingForm.currentImageUrl}')`, '--alpha': settingForm.bgColorMaskDepth }"
     >
-        <div class="grid-warp">
+        <div v-if="$store.getters.token" class="grid-warp">
             <!-- <div class="flex-row jc-between">
                 <span>点击右侧按钮，打开应用市场，添加新的应用与网站。</span>
                 <el-button size="mini" @click="editModeChange" :type="editMode ? 'success' : ''">{{ editMode? '完成' : '编辑' }}</el-button>
@@ -73,6 +73,16 @@
             <!-- 工具箱抽屉内容 -->
             <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps"></tool-and-soft>
             <tool-box-setting :visible.sync="settingVisible" @change="refreshSetting"></tool-box-setting>
+        </div>
+        <div v-else class="welcome">
+            <i class="el-icon-s-grid"></i>
+            <div class="title">方块桌面</div>
+            <ul>
+                <li>多种方块小组件供你选择，支持账号互动，数据传递，数据保存。</li>
+                <li>可扩展、可开发式小组件设计，会点前端就能做方块组件，丰富应用市场。</li>
+                <li>提供基本的remoteStorge存储库，帮助你保存方块数据组件。</li>
+            </ul>
+            <el-button type="primary" round @click="$router.push('/login')">登录</el-button>
         </div>
     </div>
 </template>
@@ -253,6 +263,35 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.welcome {
+    z-index: 10;
+    background-color: white;
+    width: auto;
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .el-icon-s-grid {
+        font-size: 100px;
+        color: #409EFF;
+        margin: 20px;
+    }
+    .title {
+        font-size: 25px;
+    }
+    ul {
+        list-style: auto;
+        text-align: left;
+        margin-left: 0;
+        padding-left: 20px;
+        li {
+            margin: 10px 0;
+        }
+    }
+}
 .container {
     position: relative;
     display: flex;

@@ -12,6 +12,9 @@
             <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path[0]" :class="{active: link.path.includes(routePath)}">
                 <span>{{link.name}}</span>
             </router-link>
+            <router-link  to="/toolbox" :class="{active: ['/toolbox', '/lowcode', '/insideApp'].includes(routePath)}">
+                <span>桌面</span>
+            </router-link>
             <!-- 登录注册选项 -->
             <div v-if="this.$store.state.userInfo.phone=='未登录'">
                 <router-link  to="/login" :class="{active: routePath == '/login'}">
@@ -23,9 +26,6 @@
             </div>
             <!-- 用户选项 -->
             <div v-else>
-                <router-link  to="/toolbox" :class="{active: ['/toolbox', '/lowcode', '/insideApp'].includes(routePath)}">
-                    <span>桌面</span>
-                </router-link>
                 <el-dropdown class="flex-col ai-center jc-center" style="margin-left: 8px;">
                     <el-avatar :size="40" :src="getHeadImgSrc"></el-avatar>
                 <el-dropdown-menu slot="dropdown">
