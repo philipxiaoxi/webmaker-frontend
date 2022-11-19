@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <link rel="manifest" href="manifest.json" />
     <!--  引入加载动画  -->
     <link rel="stylesheet" type="text/css" href="/css/loading.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
@@ -35,14 +34,6 @@
             window.lastTitle = document.title
           }
       },50)
-    </script>
-    <script>
-      if (navigator.serviceWorker != null) {
-        navigator.serviceWorker.register('js/sw.js')
-        .then(function(registration) {
-          console.log('Registered events at scope: ', registration.scope);
-        });
-      }
     </script>
   </body>
 </html>

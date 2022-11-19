@@ -34,5 +34,19 @@ module.exports = {
     },
     devServer: {
         disableHostCheck: true
+    },
+    pwa: {
+        name: 'WebMaker',
+        themeColor: '#FFFFFF',
+        msTileColor: '#FFFFFF',
+        assetsVersion: 'v0.6.0',
+        workboxPluginMode: 'GenerateSW', // 也可以定义为‘InjectManifest’模式。但是需自己写SW.js文件进行配置
+        workboxOptions: {
+            importWorkboxFrom: 'local', // 从''cdn"导入workbox,也可以‘local’
+            skipWaiting: true, // 安装完SW不等待直接接管网站
+            clientsClaim: true,
+            navigateFallback: '/index.html'
+
+        }
     }
 }

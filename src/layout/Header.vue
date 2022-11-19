@@ -6,7 +6,19 @@
         <div class="title">
             <img style="height:100%;" :src="`${blackHeader ? '/img/logo-white.png' : '/img/logo.png'}`" />
         </div>
-        <i v-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
+        <!-- 离线模式 -->
+        <div v-if="!onLine" class="menu">
+            <div class="tips">
+                <span>您正处于离线模式，仅部分功能可用。</span>
+            </div>
+            <router-link  to="/" :class="{active: ['/'].includes(routePath)}">
+                <span>首页</span>
+            </router-link>
+            <router-link  to="/editor" :class="{active: ['/editor'].includes(routePath)}">
+                <span>编辑</span>
+            </router-link>
+        </div>
+        <i v-else-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
         <div v-else class="menu">
             <!-- 常驻选项 -->
             <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path[0]" :class="{active: link.path.includes(routePath)}">
@@ -125,7 +137,8 @@ export default {
             routePath: this.$route.path,
             menuStyle: 0,
             drawer: false,
-            blackHeader: false
+            blackHeader: false,
+            onLine: true
         }
     },
     watch: {
@@ -143,6 +156,9 @@ export default {
             console.log('load')
             return 'https://cravatar.cn/avatar/' + md5(this.$store.state.userInfo.email || '')
         }
+    },
+    created() {
+        this.onLine = window.navigator?.onLine
     },
     mounted() {
         this.initAutoMenuShow()
@@ -178,6 +194,14 @@ export default {
 </script>
 
 <style lang='less' scoped>
+    .tips {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        color: #f56c6c;
+    }
     .router-link-active {
         text-decoration: none;
         color: #606266;

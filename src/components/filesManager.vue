@@ -110,10 +110,9 @@ export default {
          * @param {*} data
          */
         handleTreeNodeClick(data) {
-            console.log(data)
             this.selectNode = data
             // 定义代码类型文档
-            const code_types = ['css', 'javascript', 'html']
+            const code_types = ['css', 'javascript', 'html', 'typescript']
             // 定义图片类型文档
             const pic_types = ['jpg', 'jpeg', 'png', 'gif']
             const type = this.getFileType(data.label)
@@ -151,6 +150,8 @@ export default {
             switch (type) {
             case 'js':
                 return 'javascript'
+            case 'ts':
+                return 'typescript'
             default:
                 return type
             }
