@@ -65,9 +65,11 @@ export default {
         }
     },
     deactivated() {
+        document.title = 'WebMaker'
     },
     activated() {
         this.checkStatus()
+        if (this.item.title) document.title = this.item.title + ' - WebMaker'
     },
     mounted() {
         this.init()
