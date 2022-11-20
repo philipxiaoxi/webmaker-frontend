@@ -22,6 +22,15 @@ export default {
         initEditor() {
             // DOM进行操作的nextTick
             this.$nextTick(function() {
+                // 设置严格模式 但好像是失效的 正在测试中
+                monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+                    allowNonTsExtensions: true,
+                    strictNullChecks: true
+                })
+                monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+                    allowNonTsExtensions: true,
+                    strictNullChecks: true
+                })
                 monaco.languages.registerCompletionItemProvider('javascript', {
                     provideCompletionItems: function(model, position) {
                         return {
@@ -55,6 +64,15 @@ export default {
         },
         setModelLanguage(type) {
             monaco.editor.setModelLanguage(this.monacoEditor.getModel(), type)
+        },
+        async compileTypescript() {
+            const uri = this.monacoEditor.getModel().uri
+            return monaco.languages.typescript.getTypeScriptWorker()
+                .then(
+                    worker => worker(uri)
+                        .then(client => client.getEmitOutput(uri.toString()))
+                        .then(res => res.outputFiles[0].text)
+                )
         }
     }
 }

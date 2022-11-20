@@ -288,9 +288,16 @@ export default {
          * 代码预览
          * @Ahthor: xiaoxi
          */
-        preview() {
-            const content = this.$refs.vscode.value
-            this.$refs.preview.goPreview(content, this.fileInfo != null ? this.fileInfo.type : '')
+        async preview() {
+            let content = this.$refs.vscode.value
+            let type = this.fileInfo != null ? this.fileInfo.type : ''
+            // typescript 编译为 JavaScript
+            if (type === 'typescript') {
+                this.$refs.preview.goPreview('<h1 style="text-align: center;line-height: 90vh;">正在编译typescript中……</h1>')
+                content = await this.$refs.vscode.compileTypescript()
+                type = 'javascript'
+            }
+            this.$refs.preview.goPreview(content, type)
         },
         /**
          * 改变iframe遮罩显示
