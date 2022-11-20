@@ -137,11 +137,19 @@ export default {
             editTitle: false
         }
     },
+    watch: {
+        fileName() {
+            console.log(this.fileName)
+            this.$nextTick(this.calcBtnWidth)
+        }
+    },
     mounted() {
         this.pasteEventListener()
         // this.initAutoBtnMode()
         window.addEventListener('resize', this.calcBtnWidth)
-        this.calcBtnWidth()
+        this.$nextTick(() => {
+            this.calcBtnWidth()
+        })
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.calcBtnWidth)
