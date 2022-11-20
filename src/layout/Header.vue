@@ -39,7 +39,7 @@
             <!-- 用户选项 -->
             <div v-else>
                 <el-dropdown class="flex-col ai-center jc-center" style="margin-left: 8px;">
-                    <el-avatar :size="40" :src="getHeadImgSrc"></el-avatar>
+                    <el-avatar :size="40" :src="getHeadImgSrc" style="cursor: pointer;"></el-avatar>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item disabled>{{this.$store.state.userInfo.name}}</el-dropdown-item>
                     <router-link   to="/my-codes">
