@@ -93,4 +93,31 @@ body {
     }
   }
 }
+// 规定图标颜色
+.iconfont {
+    &.icon-typescript {
+        color: rgb(2, 136, 209);
+    }
+    &.icon-javascript {
+        color: rgb(255, 202, 40);
+    }
+    &.icon-html {
+        color: rgb(228, 77, 38);
+    }
+    &.icon-css {
+        color:rgb(66, 165, 245);
+    }
+    &.icon-image {
+        color: rgb(38, 166, 154);
+    }
+    &.icon-json {
+        color: rgb(251, 192, 45);
+    }
+    &.icon-file {
+        color: rgb(66, 165, 245);
+    }
+    &.icon-folder-circleci {
+        color: rgb(66, 165, 245);
+    }
+}
 </style>

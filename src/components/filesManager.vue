@@ -2,8 +2,8 @@
     <div @contextmenu.prevent='rightClick' style="height:100%">
         <el-tree :allow-drop="allowDrop" @node-drop="nodeDrop" draggable @node-contextmenu='rightClick' @node-click="handleTreeNodeClick"  :data="data" empty-text="单页网页没有目录内容">
             <span class="custom-tree-node" slot-scope="{ node,data }">
-                <i v-if="data.type=='folder'" class="el-icon-folder"></i>
-                <i v-if="data.type=='file'" class="el-icon-document"></i>
+                <i v-if="data.type=='folder'" class="iconfont icon-folder"></i>
+                <i v-if="data.type=='file'" :class="getIconClassName(data.label)"></i>
                 <span>{{ node.label }}</span>
             </span>
         </el-tree>
@@ -79,6 +79,9 @@ export default {
         this.init()
     },
     methods: {
+        getIconClassName(fileName) {
+            return common.getIconClassName(fileName)
+        },
         /**
          * @Ahthor: xiaoxi
          * 初始化组件
@@ -427,6 +430,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.custom-tree-node {
+    > span {
+        margin-left: 5px;
+    }
+}
 </style>
