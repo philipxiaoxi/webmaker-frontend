@@ -50,6 +50,8 @@ import FilesManager from '../components/filesManager.vue'
 import Note from '../components/Note.vue'
 import common from '../util/common'
 import CollDev from '../components/CollDev/CollDev.vue'
+import MarkdownIt from 'markdown-it'
+
 export default {
     components: { VsCode, Preview, Btns, FilesManager, Note, CollDev },
     data() {
@@ -292,12 +294,14 @@ export default {
          */
         async preview() {
             let content = this.$refs.vscode.value
-            let type = this.fileInfo != null ? this.fileInfo.type : ''
+            const type = this.fileInfo != null ? this.fileInfo.type : ''
             // typescript 编译为 JavaScript
             if (type === 'typescript') {
                 this.$refs.preview.goPreview('<h1 style="text-align: center;line-height: 90vh;">正在编译typescript中……</h1>')
                 content = await this.$refs.vscode.compileTypescript()
-                type = 'javascript'
+            }
+            if (type === 'markdown') {
+                content = new MarkdownIt().render(content)
             }
             this.$refs.preview.goPreview(content, type)
         },

@@ -55,12 +55,13 @@ export default {
             this.loading = true
             this.src = '/mock/default.html'
             switch (type) {
+            case 'typescript':
             case 'javascript':
                 content = PreviewTemplate.makeJsPreview(content)
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             default:
-                content = PreviewTemplate.makeHtmlPreview(content, !this.$parent?.item ? this.item.id : this.$parent.item.id)
+                content = PreviewTemplate.makeHtmlPreview(content, !this.$parent?.item ? this.item.id : this.$parent.item.id, type === 'markdown')
                 this.src = `data:text/html;charset=utf-8,${encodeURIComponent(content)}`
                 break
             }

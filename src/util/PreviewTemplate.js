@@ -2,11 +2,23 @@ import Decorator from '../util/Decorator'
 import GA from '../util/GrammarAnalysis'
 import API from '../api/'
 
-const PREVIEW_UTILS_CSS = `
-<head>
-<link href="${window.location.origin}/css/webMakerPreviewUtils.css" rel="stylesheet" type="text/css" />
-</head>
+const MARKDOWN_CSS = `
+<link href="${window.location.origin}/css/markdown.css" rel="stylesheet" type="text/css" />
 `
+const PREVIEW_UTILS_CSS = `
+<link href="${window.location.origin}/css/webMakerPreviewUtils.css" rel="stylesheet" type="text/css" />
+`
+
+function getCss(markdown = false) {
+    return `
+<head>
+${PREVIEW_UTILS_CSS}
+${markdown ? MARKDOWN_CSS : ''}
+</head>
+    `
+}
+
+// ${isMarkDown ? `< link rel="stylesheet" src="${window.location.origin}/css/markdown.css" >` : ''}
 
 function getPreviewUTtilsJs(selfShow = true, lineOffset = 0) {
     return `
@@ -23,7 +35,7 @@ function makeJsPreview(script) {
     // 注解式注入转换器
     script = Decorator.autowired.transform(script)
     const code = `
-        ${PREVIEW_UTILS_CSS}
+        ${getCss()}
         <body>
             <div id='124106_codeshare_utils_c'></div>
         </body>
@@ -39,9 +51,9 @@ function makeJsPreview(script) {
     return code
 }
 
-function makeHtmlPreview(script, itemId) {
+function makeHtmlPreview(script, itemId, isMarkDown = false) {
     const code = `
-        ${PREVIEW_UTILS_CSS}
+        ${getCss(isMarkDown)}
         <base href="${API.getServer()}common/getSnippetProjectFile/${itemId}/" />
         <div id='124106_codeshare_utils_c'></div>
         ${getPreviewUTtilsJs(false, 14)}
