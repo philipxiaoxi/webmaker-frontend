@@ -63,6 +63,7 @@ export default {
         init() {
             this.editor = this.preview ? this.initPreview() : this.initEditor()
             this.editor.setMarkdown(this.value)
+            this.editor?.moveCursorToStart && this.editor.moveCursorToStart(false)
         },
         initEditor() {
             return new Editor({
@@ -76,6 +77,10 @@ export default {
                     change: () => {
                         this.$emit('input', this.editor.getMarkdown())
                     }
+                },
+                autofocus: false,
+                linkAttributes: {
+                    target: '_blank'
                 }
             })
         },

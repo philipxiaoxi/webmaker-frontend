@@ -6,11 +6,26 @@
         <div class="title">
             <img style="height:100%;" :src="`${blackHeader ? '/img/logo-white.png' : '/img/logo.png'}`" />
         </div>
-        <i v-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
+        <!-- 离线模式 -->
+        <div v-if="!onLine" class="menu">
+            <div class="tips">
+                <span>您正处于离线模式，仅部分功能可用。</span>
+            </div>
+            <router-link  to="/" :class="{active: ['/'].includes(routePath)}">
+                <span>首页</span>
+            </router-link>
+            <router-link  to="/editor" :class="{active: ['/editor'].includes(routePath)}">
+                <span>编辑</span>
+            </router-link>
+        </div>
+        <i v-else-if="menuStyle == 1" @click="openDrawer" class="el-icon-s-fold"></i>
         <div v-else class="menu">
             <!-- 常驻选项 -->
             <router-link v-for="(link, index) in routeLink" v-bind:key="index" :to="link.path[0]" :class="{active: link.path.includes(routePath)}">
                 <span>{{link.name}}</span>
+            </router-link>
+            <router-link  to="/toolbox" :class="{active: ['/toolbox', '/lowcode', '/insideApp'].includes(routePath)}">
+                <span>桌面</span>
             </router-link>
             <!-- 登录注册选项 -->
             <div v-if="this.$store.state.userInfo.phone=='未登录'">
@@ -23,14 +38,25 @@
             </div>
             <!-- 用户选项 -->
             <div v-else>
-                <router-link   to="/my-codes" :class="{active: routePath == '/my-codes'}">
-                    <span>我的片段</span>
-                </router-link>
-                <router-link   to="/my" :class="{active: routePath == '/my'}">
-                    <span>个人中心</span>
-                </router-link>
-                <span  >{{this.$store.state.userInfo.name}}</span>
-                <span style="cursor: pointer;"  @click="logout">退出</span>
+                <el-dropdown class="flex-col ai-center jc-center" style="margin-left: 8px;">
+                    <el-avatar :size="40" :src="getHeadImgSrc" style="cursor: pointer;"></el-avatar>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item disabled>{{this.$store.state.userInfo.name}}</el-dropdown-item>
+                    <router-link   to="/my-codes">
+                        <el-dropdown-item icon="el-icon-folder-opened">
+                            <span>我的片段</span>
+                        </el-dropdown-item>
+                    </router-link>
+                    <router-link   to="/my">
+                        <el-dropdown-item icon="el-icon-setting">
+                            <span>系统设置</span>
+                        </el-dropdown-item>
+                    </router-link>
+                    <el-dropdown-item divided icon="el-icon-switch-button" style="cursor: pointer;color: #f56c6c;">
+                        <span  @click="logout">退出登录</span>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+                </el-dropdown>
             </div>
         </div>
         <!-- 样式1的菜单栏 -->
@@ -77,6 +103,8 @@
 </template>
 
 <script>
+import md5 from 'js-md5'
+
 export default {
     data() {
         return {
@@ -100,16 +128,17 @@ export default {
                 {
                     name: '论坛',
                     path: ['/forum', '/forumpage', '/newforumpage']
-                },
-                {
-                    name: '桌面',
-                    path: ['/toolbox', '/lowcode', '/insideApp']
                 }
+                // {
+                //     name: '桌面',
+                //     path: ['/toolbox', '/lowcode', '/insideApp']
+                // }
             ],
             routePath: this.$route.path,
             menuStyle: 0,
             drawer: false,
-            blackHeader: false
+            blackHeader: false,
+            onLine: true
         }
     },
     watch: {
@@ -121,6 +150,15 @@ export default {
             this.routePath = to.path
             document.documentElement.scrollTop = 0
         }
+    },
+    computed: {
+        getHeadImgSrc() {
+            console.log('load')
+            return 'https://cravatar.cn/avatar/' + md5(this.$store.state.userInfo.email || '')
+        }
+    },
+    created() {
+        this.onLine = window.navigator?.onLine
     },
     mounted() {
         this.initAutoMenuShow()
@@ -156,6 +194,22 @@ export default {
 </script>
 
 <style lang='less' scoped>
+    .tips {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        color: #f56c6c;
+    }
+    .router-link-active {
+        text-decoration: none;
+        color: #606266;
+    }
+    a {
+        text-decoration: none;
+        color: #606266;
+    }
     .menuDrawer {
         & div {
             cursor: pointer;
@@ -198,11 +252,11 @@ export default {
             margin:  0px;
             padding: 0px;
         }
-        * {
+        a {
             text-decoration: none;
             line-height: 60px;
             position: relative;
-            padding: 0 8px;
+            padding: 0 18px;
             display: block;
             z-index: 99999;
             color: black;

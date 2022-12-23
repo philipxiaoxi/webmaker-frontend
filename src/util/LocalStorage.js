@@ -10,7 +10,7 @@ export function loadStorage(name = 'appIds') {
             const value = JSON.parse(data[0].collectionValue)
             return value
         } else {
-            return []
+            return null
         }
     })
 }

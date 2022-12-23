@@ -10,6 +10,8 @@ const GA = {
      */
     addLoopFusing(code) {
         let whiles = []
+        // 暂时处理，含有class的代码无法解析AST树
+        if (code.includes('class')) return code
         esprima.parseScript(code, {}, function(node, meta) {
             if (node.type == 'WhileStatement' || node.type == 'ForStatement') {
                 whiles.push({

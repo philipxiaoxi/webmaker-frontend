@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h1>欢迎来到 WebMaker Forum</h1>
+        <!-- <h1>欢迎来到 WebMaker Forum</h1> -->
         <p>你可以在此交流代码片段或使用WebMaker中遇到的问题、与他人分享使用经验。提问前请先阅读<el-link type="primary" @click="$router.push({ path: '/forumpage', query: { id: 4 } })">《提问的智慧》</el-link></p>
         <!-- <el-carousel :height="imgHeight+'px'" :interval="5000" arrow="always">
             <el-carousel-item v-for="item in carouselImgs" :key="item.imgurl">
@@ -9,6 +9,15 @@
         </el-carousel> -->
         <div class="btns"><el-button icon="el-icon-plus" @click="goToNew" type="primary" round>发布新帖子</el-button></div>
         <forum-list @click="goTo" :data='dataList'></forum-list>
+        <el-pagination
+        style="margin-top: 20px;"
+            background
+            layout="prev, pager, next"
+            :current-page="pageIndex"
+            :page-count="pageCount"
+            @current-change="getAllForumPage"
+        >
+        </el-pagination>
     </div>
 </template>
 
@@ -21,6 +30,8 @@ export default {
         return {
             form: {},
             dataList: [],
+            pageIndex: 1,
+            pageCount: 1,
             carouselImgs: [
                 {
                     title: 'WebMaker轻松编码网站！',
@@ -50,19 +61,18 @@ export default {
         goToNew() {
             this.$router.push({ path: '/newforumpage' })
         },
-        async getAllForumPage() {
-            this.pageIndex = this.pageIndex ? this.pageIndex : 0
-            this.pageIndex = this.pageIndex + 1
+        async getAllForumPage(pageIndex) {
+            if (pageIndex) this.pageIndex = pageIndex
             if (this.pageIndex > this.pageCount) {
                 return
             }
             const res = await this.axios(API.forum.getAllForumPage(this.pageIndex))
-            console.log(res)
-            this.pageCount = res.data.data.lastPage
-            this.dataList = this.dataList.concat(res.data.data.list)
+            this.pageCount = res.data.data.pages
+            this.dataList = res.data.data.list
             // 使前两个显示详情
             this.dataList[0].showPreface = true
             this.dataList[1].showPreface = true
+            window.scrollTo(0, 0)
         }
     }
 }
@@ -78,6 +88,7 @@ export default {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+    background-color: #fbfbfb;
     .btns {
         display: flex;
         flex-direction: row;

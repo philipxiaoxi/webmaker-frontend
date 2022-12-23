@@ -1,7 +1,10 @@
 .cs_console_container {
     font-size: 12px;
 }
-.cs_console_container h1,p{
+.cs_console_container > h1 {
+    text-align: center;
+}
+.cs_console_container > p {
     text-align: center;
 }
 .cs_console_container .log-item {

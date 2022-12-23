@@ -1,9 +1,9 @@
 <template>
-    <div :style="{backgroundColor: this.bgColor}" class="linkicon" :class="{ 'linkicon-tr': !drag }" @click="goTo(url)" >
-        <div class="title">{{title}}</div>
+    <div :style="{backgroundColor: this.bgColor}" class="linkicon" :class="{ 'linkicon-tr': !drag }" @click="goTo(url)" :title="item.title">
+        <div class="title" v-if="item.w > 1">{{title}}</div>
         <div class="intro">
             <img :src="imgSrc"  @error="imgLoadError"/>
-            <div class="text">{{intro}}</div>
+            <div class="text" v-if="item.w > 2">{{intro}}</div>
         </div>
         <div v-show="editMode" @click.stop="$emit('close', id)" class="close"><i class="el-icon-close"></i></div>
     </div>
@@ -54,6 +54,10 @@ export default {
         drag: {
             type: Boolean,
             default: false
+        },
+        item: {
+            type: Object,
+            default: () => ({})
         }
     },
     data() {
@@ -110,17 +114,27 @@ export default {
     align-items: flex-start;
     text-align: left;
     &>div {
-        margin:  10px 20px;
+        padding:  10px 20px;
+        box-sizing: border-box;
     }
     .title {
         font-size: 16px;
         color: #409EFF;
         font-weight: bold;
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        user-select: none;
     }
     .intro {
         display: flex;
         flex-direction: row;
+        width: 100%;
+        justify-content: center;
         & > .text {
+            flex: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -138,8 +152,8 @@ export default {
     }
     .close {
         position: absolute;
-        right: -30px;
-        top: -20px;
+        right: -10px;
+        top: -10px;
         z-index: 999;
         font-size: 15px;
         cursor: pointer;

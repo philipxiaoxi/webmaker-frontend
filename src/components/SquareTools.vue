@@ -5,7 +5,7 @@
                 <i class="el-icon-edit"></i>
             </div>
             <div class="title">代码和测试</div>
-            <p>通过在线编写代码来测试前端HTML/CSS/JS新特性，同时更快地了解代码原理。</p>
+            <p>通过在线编写代码来测试前端代码和脚本HTML/CSS/JS/TS新特性，同时更快地了解代码原理。</p>
             <el-button  size="small" class="xx-btn" @click="$router.push({ path: '/editor' })">开始在线编码</el-button>
         </div>
         <div class="square-crad">

@@ -30,7 +30,8 @@
                 :showPreface="false"
             ></forum-item>
             <div>
-                <note v-model="item.content" :preview="true"></note>
+                <el-skeleton v-if="!item.content" :rows="12" animated/>
+                <note v-else v-model="item.content" :preview="true"></note>
             </div>
         </div>
         <div>

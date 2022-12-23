@@ -1,8 +1,15 @@
 <template>
-    <div>
+    <div class="container" @mouseleave.stop="hover = false" @mouseover.stop="hover = true">
         <el-card @click.native="$emit('clickCard')" class="xx-code-card" style="text-align: left;" :body-style="{ padding: '0px' }" shadow='hover'>
             <div class="heads">
-                <img class="CodeImg" :src="RealCodeImg" alt="">
+                <Preview v-if="showPreview" ref="preview" class="preview" :item="item"></Preview>
+                <img
+                    v-else
+                    class="CodeImg"
+                    :src="RealCodeImg"
+                    alt=""
+                    :title="quickPreview ? '鼠标停留2秒预览片段' : '在系统设置中可开启快速预览'"
+                >
             </div>
             <div class="headimg">
                 <div class="xx-row">
@@ -16,10 +23,8 @@
                     </div>
                 </div>
                 <div
-                @mouseover="hover = true"
-                @mouseleave="hover = false"
-                class="icon" title="预览">
-                    <i class="el-icon-view"></i>
+                class="icon" title="编辑片段">
+                    <i class="el-icon-edit"></i>
                 </div>
             </div>
         </el-card>
@@ -29,7 +34,10 @@
 <script>
 import API from '../api'
 import FS from '../util/FormatString'
+import Preview from './Preview.vue'
 export default {
+    name: 'CodeCard',
+    components: { Preview },
     props: {
         title: {
             type: String,
@@ -61,32 +69,52 @@ export default {
         type: {
             type: Number,
             default: -1
+        },
+        quickPreview: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
         return {
             RealCodeImg: '',
-            hover: false
+            hover: false,
+            showPreview: false
         }
     },
     watch: {
         hover() {
+            if (!this.quickPreview) return
             if (this.hover) {
-                this.$emit('hoverPreview')
+                this.goPreviewTimer = setTimeout(this.goPreview, 2000)
             } else {
-                this.$emit('hoverPreviewCancel')
+                clearTimeout(this.goPreviewTimer)
+                this.showPreview = false
             }
         }
     },
     computed: {
         getIdentity() {
             return FS.getIdentityString(this.identity)
+        },
+        // 为预览组件服务（历史遗留坑）
+        item() {
+            return {
+                id: this.id
+            }
         }
     },
     mounted() {
         this.getCodeimgByFile(this.id)
+        document.addEventListener('mouseover', this.closeHover)
+    },
+    beforeDestroy() {
+        document.removeEventListener('mouseover', this.closeHover)
     },
     methods: {
+        closeHover() {
+            this.hover = false
+        },
         async getCodeimgByFile(id) {
             this.RealCodeImg = API.getServer() + `/common/getImg/${id}`
         },
@@ -100,13 +128,40 @@ export default {
         },
         codePreview() {
             console.log('通知预览')
+        },
+        async goPreview() {
+            console.log('loading', this.hover)
+            if (!this.hover) return
+            this.showPreview = true
+            this.$nextTick(async() => {
+                let url = ''
+                switch (this.type) {
+                case 0:
+                    url = API.getServer() + 'common/SnippetHtml/' + this.id
+                    break
+                case 1:
+                    url = API.getServer() + 'common/getSnippetProjectFile/' + this.id + '/index.html'
+                    break
+                default:
+                    url = ''
+                }
+                console.log(this.type)
+                const res = await this.axios({ url: url })
+                this.$refs.preview && this.$refs.preview.goPreview(res.data, 'html')
+            })
         }
     }
 }
 </script>
 
 <style lang='less' scoped>
+.container {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
 .heads {
+    position: relative;
     width: 100%;
     height: 250px;
     overflow: hidden;
@@ -180,5 +235,14 @@ export default {
         background: #444857;
         color: #fff;
     }
+}
+.preview {
+    width: calc(100% * 2);
+    height: calc(100% * 2 - 144px);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 999;
+    transform:scale(0.5) translate(-50%,-50%);
 }
 </style>

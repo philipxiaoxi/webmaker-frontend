@@ -16,6 +16,22 @@ const common = {
                 fn()
             }, delay)
         }
+    },
+    getIconClassName(fileName) {
+        const className = 'icon-file'
+        const type = fileName.split('.')[1]
+        const iconMap = {
+            ts: 'icon-typescript',
+            js: 'icon-javascript',
+            html: 'icon-html',
+            css: 'icon-css',
+            json: 'icon-json',
+            jpg: 'icon-image',
+            jpeg: 'icon-image',
+            png: 'icon-image',
+            gif: 'icon-image'
+        }
+        return `iconfont ${iconMap[type] || className}`
     }
 }
 module.exports = common

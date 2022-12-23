@@ -8,31 +8,33 @@
             @clickCard="goTo(item)"
             :identity="item.identity"
             :id="item.id"
+            :type="item.type"
             :title="item.title"
             :author="item.name"
             v-for="item in cards"
             :key="item.id"
+            :quickPreview="qiuckPreview"
             ></code-card>
         </div>
         <div class="obItem" style="margin-top:20px;opacity: 0;"><el-button type="primary" round @click="getAllSnippet">继续加载</el-button></div>
-        <code-quick-preview
+        <!-- <code-quick-preview
         :top='codeQuickPreview.top'
         :left='codeQuickPreview.left'
         v-show="codeQuickPreview.show"
         @mouseover.native="codeQuickPreview.show = true"
         @mouseleave.native="codeQuickPreview.show = false"
         ref='codeQuickPreview'
-        ></code-quick-preview>
+        ></code-quick-preview> -->
     </div>
 </template>
 
 <script>
 import CodeCard from '../components/CodeCard.vue'
 import API from '../api/'
-import CodeQuickPreview from './CodeQuickPreview.vue'
 import md5 from 'md5'
+import { loadStorage } from '../util/LocalStorage'
 export default {
-    components: { CodeCard, CodeQuickPreview },
+    components: { CodeCard },
     data() {
         return {
             pageCount: 1,
@@ -45,7 +47,8 @@ export default {
                 left: 0,
                 show: false
             },
-            index: 0
+            index: 0,
+            qiuckPreview: false
         }
     },
     computed: {
@@ -58,6 +61,11 @@ export default {
             type: String,
             default: 'common'
         }
+    },
+    activated() {
+        loadStorage('otherSettingForm').then(otherSettingForm => {
+            if (otherSettingForm) this.qiuckPreview = otherSettingForm.quickPreview
+        })
     },
     mounted() {
         this.init()
