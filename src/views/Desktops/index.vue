@@ -14,7 +14,7 @@
             <i class="el-icon-arrow-right"></i>
         </div>
         <div class="dots">
-            <div @click="index = item" :class="['dot', { 'active': index === item }]" v-for="item in toolBox" :key="item">桌面{{item}}</div>
+            <div @click="dotChange(item)" :class="['dot', { 'active': index === item }]" v-for="item in toolBox" :key="item">桌面{{item}}</div>
         </div>
     </div>
 </template>
@@ -31,6 +31,10 @@ export default {
         }
     },
     methods: {
+        dotChange(index) {
+            if (!this.toolBoxLoad.includes(index)) this.toolBoxLoad.push(index)
+            this.index = index
+        },
         change(type = 'left') {
             if (type === 'left') {
                 const index = this.index - 1
