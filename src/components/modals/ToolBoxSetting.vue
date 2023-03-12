@@ -52,6 +52,10 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        index: {
+            type: Number,
+            default: 2
         }
     },
     data() {
@@ -86,8 +90,13 @@ export default {
         this.getSetting()
     },
     methods: {
+        getKey(name = 'settingForm') {
+            const { index } = this
+            if (index == 2) return name
+            return `${name}-${index}`
+        },
         async getSetting() {
-            const setting = await loadStorage('settingForm')
+            const setting = await loadStorage(this.getKey('settingForm'))
             if (setting) this.settingForm = setting
         },
         addImage() {
@@ -101,7 +110,7 @@ export default {
             this.settingForm.images.splice(index, 1)
         },
         async save() {
-            await saveStorage(this.settingForm, 'settingForm')
+            await saveStorage(this.settingForm, this.getKey('settingForm'))
             this.$message.success('保存成功')
             this.dialogVisible = false
             this.$emit('change', this.settingForm)

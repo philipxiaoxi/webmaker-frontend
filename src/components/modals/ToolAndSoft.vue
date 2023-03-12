@@ -158,6 +158,10 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        index: {
+            type: Number,
+            default: 2
         }
     },
     data() {
@@ -192,6 +196,11 @@ export default {
         }
     },
     methods: {
+        getKey(name = 'settingForm') {
+            const { index } = this
+            if (index == 2) return name
+            return `${name}-${index}`
+        },
         async loadApp() {
             loadStorage('customApps').then(customApp => {
                 this.appList = appList.concat(customApp || [])
@@ -200,7 +209,7 @@ export default {
             })
         },
         async addApp(id) {
-            const appIds = await loadStorage() || []
+            const appIds = await loadStorage(this.getKey('appids')) || []
             const app = appIds.find(item => item === id)
             if (app) {
                 this.$notify.error({
@@ -210,7 +219,7 @@ export default {
                 return
             }
             appIds.push(id)
-            saveStorage(appIds).then(() => {
+            saveStorage(appIds, this.getKey('appIds')).then(() => {
                 this.$notify({
                     title: '成功',
                     message: '应用已添加到您的应用库。'
@@ -228,11 +237,11 @@ export default {
                 this.$message.error('此应用为官方应用，不可以删除哦')
                 return
             }
-            const apps = await loadStorage() || []
+            const apps = await loadStorage(this.getKey('appids')) || []
             const appIndex = apps.findIndex(item => item.id === id)
             if (appIndex !== -1) {
                 apps.splice(appIndex, 1)
-                await saveStorage(apps)
+                await saveStorage(apps, this.getKey('appIds'))
             }
             customApps.splice(index, 1)
             await saveStorage(customApps, 'customApps')

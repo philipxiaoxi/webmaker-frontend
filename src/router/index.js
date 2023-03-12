@@ -88,7 +88,7 @@ const routes = [
         path: '/toolbox',
         name: 'toolbox',
         // component: ToolBox,
-        component: () => import('../views/ToolBox.vue')
+        component: () => import('../views/Desktops/index.vue')
     },
     {
         path: '/lowcode',

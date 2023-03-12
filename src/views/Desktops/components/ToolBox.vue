@@ -19,7 +19,7 @@
                     :is-resizable="editMode"
                     :responsive="false"
                     :vertical-compact="false"
-                    :prevent-collision="false"
+                    :prevent-collision="true"
                     :use-css-transforms="false"
                 >
                     <grid-item
@@ -71,8 +71,8 @@
                 <div class="stick"></div>
             </div>
             <!-- 工具箱抽屉内容 -->
-            <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps"></tool-and-soft>
-            <tool-box-setting :visible.sync="settingVisible" @change="refreshSetting"></tool-box-setting>
+            <tool-and-soft :visible.sync="rightDrawer" ref="toolAndSoft" @update="updateApps" :index="index"></tool-and-soft>
+            <tool-box-setting :visible.sync="settingVisible" @change="refreshSetting" :index="index"></tool-box-setting>
         </div>
         <div v-else class="welcome">
             <i class="el-icon-s-grid"></i>
@@ -88,17 +88,23 @@
 </template>
 
 <script>
-import LinkIcon from '../components/LinkIcon.vue'
-import ToolAndSoft from '../components/modals/ToolAndSoft.vue'
-import AppComponent from '../components/AppComponent.vue'
-import { appList } from '../config/appList'
-import { loadStorage, saveStorage } from '../util/LocalStorage'
+import LinkIcon from '../../../components/LinkIcon.vue'
+import ToolAndSoft from '../../../components/modals/ToolAndSoft.vue'
+import AppComponent from '../../../components/AppComponent.vue'
+import { appList } from '../../../config/appList'
+import { loadStorage, saveStorage } from '../../../util/LocalStorage'
 import { GridLayout, GridItem } from 'vue-grid-layout'
-import ToolBoxSetting from '../components/modals/ToolBoxSetting.vue'
+import ToolBoxSetting from '../../../components/modals/ToolBoxSetting.vue'
 import { cloneDeep } from 'lodash-es'
 
 export default {
     components: { LinkIcon, ToolAndSoft, GridLayout, GridItem, AppComponent, ToolBoxSetting },
+    props: {
+        index: {
+            type: Number,
+            default: 2
+        }
+    },
     data() {
         return {
             rightDrawer: false,
@@ -150,12 +156,17 @@ export default {
         refreshSetting(settingForm) {
             this.settingForm = cloneDeep(settingForm)
         },
+        getKey(name = 'settingForm') {
+            const { index } = this
+            if (index == 2) return name
+            return `${name}-${index}`
+        },
         async getSetting() {
-            const setting = await loadStorage('settingForm')
+            const setting = await loadStorage(this.getKey('settingForm'))
             if (setting) this.settingForm = setting
         },
         async saveSetting() {
-            await saveStorage(this.settingForm, 'settingForm')
+            await saveStorage(this.settingForm, this.getKey('settingForm'))
         },
         /**
          * 切换壁纸
@@ -190,7 +201,7 @@ export default {
                     id
                 }
             })
-            await saveStorage(positions, 'positions')
+            await saveStorage(positions, this.getKey('positions'))
             this.updateApps()
             this.$message({
                 message: '已保存当前布局。',
@@ -202,7 +213,7 @@ export default {
             this.loading = true
             const allAppList = []
             const allAppListId = appList.concat(await loadStorage('customApps') || [])
-            const postions = await loadStorage('positions') || []
+            const postions = await loadStorage(this.getKey('positions')) || []
             for (const id of ids) {
                 let appInfo = allAppListId.find(item => item.id === id)
                 appInfo = this.getGridItem(postions, appInfo)
@@ -236,7 +247,7 @@ export default {
             }
         },
         async updateApps() {
-            loadStorage().then(appIds => {
+            loadStorage(this.getKey('appIds')).then(appIds => {
                 this.getAddAppList(appIds || [])
             }).catch((error) => {
                 this.loading = false
@@ -249,12 +260,12 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async() => {
-                const appIds = await loadStorage() || []
+                const appIds = await loadStorage(this.getKey('appIds')) || []
                 appIds.splice(appIds.indexOf(id), 1)
                 // 本地临时删除
                 const index = this.appList.findIndex(item => item.id === id)
                 this.appList.splice(index, 1)
-                await saveStorage(appIds)
+                await saveStorage(appIds, this.getKey('appIds'))
             }).catch()
         }
     }
