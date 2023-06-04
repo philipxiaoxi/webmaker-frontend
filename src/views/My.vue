@@ -29,6 +29,9 @@
                 <el-form-item label="片段卡片鼠标停留预览">
                     <el-switch v-model="otherSettingForm.quickPreview"></el-switch>
                 </el-form-item>
+                <el-form-item label="askiweb-Token">
+                    <el-input v-model="otherSettingForm.askiwebToken"></el-input>
+                </el-form-item>
                 </el-form>
             </el-tab-pane>
         </el-tabs>

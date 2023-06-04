@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <!-- 工具条按钮组 -->
-        <btns ref="btns" :fileName="selectNode.label" @autoPreview="autoPreview" @synergyChange="synergyChange" :fileInfo="item" v-show="syncBtnShow" :synergy="synergyChangeValue"></btns>
+        <btns ref="btns" @setValue="setContentValue" :fileName="selectNode.label" @autoPreview="autoPreview" @synergyChange="synergyChange" :fileInfo="item" v-show="syncBtnShow" :synergy="synergyChangeValue"></btns>
         <div class="con">
             <!-- 代码编辑器 -->
-            <vs-code ref="vscode" :class="{ 'xx-vscode': syncBtnShow, 'xx-vscode-sync': !syncBtnShow }"></vs-code>
+            <vs-code ref="vscode" v-show="!onlyPreview" :class="{ 'xx-vscode': syncBtnShow, 'xx-vscode-sync': !syncBtnShow }"></vs-code>
             <!-- 收缩侧边栏 -->
             <div id="middle" class="xx-middle">⋮</div>
             <!-- 代码预览 -->
@@ -63,7 +63,8 @@ export default {
             drawerOpenStatus: false,
             selectNode: { label: '' },
             synergyChangeValue: false,
-            syncBtnShow: true
+            syncBtnShow: true,
+            onlyPreview: false
         }
     },
     deactivated() {
@@ -229,6 +230,11 @@ export default {
             setTimeout(() => {
                 this.preview()
             }, 100)
+        },
+        setContentValue(data) {
+            console.log(data)
+            // 赋值到编辑器
+            this.$refs.vscode.monacoEditor.getModel().setValue(data)
         },
         getValue() {
             return this.$refs.vscode.monacoEditor.getValue()

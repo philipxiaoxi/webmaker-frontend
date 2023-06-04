@@ -34,6 +34,13 @@
                 v-model="$parent.item.openSource"
                 @change="openSourceChange">
                 </el-switch>
+                <span class="btn-title">仅预览</span>
+                <el-switch
+                :active-value="1"
+                :inactive-value="0"
+                v-model="$parent.onlyPreview"
+                @change="openSourceChange">
+                </el-switch>
                 <el-button type="primary" round size="mini"  @click="$parent.save()">保存</el-button>
                 <el-button type="primary" round size="mini" @click="copyRealLink">复制直链</el-button>
                 <el-button type="primary" round size="mini" @click="copyLink">复制链接</el-button>
@@ -93,6 +100,8 @@
         @updateDialogReviewVisible="dialogReviewVisible = false"
         :item="$parent.item"
         ></code-review>
+        <!-- AI编程对话框 -->
+        <chatGPT-dialog :dialogVisible.sync="chatGPTdialogVisible" @submit="chatGPTSubmit"></chatGPT-dialog>
     </div>
 </template>
 
@@ -103,9 +112,11 @@ import DockerManager from '../views/DockerManager.vue'
 import NewProjectDialog from './NewProjectDialog.vue'
 import FS from '../util/FormatString'
 import CodeReview from './modals/CodeReview.vue'
+import ChatGPTDialog from '../views/ChatGPT/index.vue'
+import * as monaco from 'monaco-editor'
 
 export default {
-    components: { NewProjectDialog, DockerManager, CodeReview },
+    components: { NewProjectDialog, DockerManager, CodeReview, ChatGPTDialog },
     props: {
         fileName: {
             type: String,
@@ -131,6 +142,7 @@ export default {
             dockerDialogVisible: false,
             helpDialogVisible: false,
             dialogReviewVisible: false,
+            chatGPTdialogVisible: false,
             autoPreview: false,
             btnMode: 1,
             widths: [],
@@ -342,14 +354,18 @@ export default {
                 this.dialogVisible = false
                 this.dockerDialogVisible = true
                 break
+            case 'ChatGPT编码':
+                this.dialogVisible = false
+                this.chatGPTdialogVisible = true
+                break
             default:
                 this.$message.error('功能还在开发中')
                 this.dialogVisible = false
                 break
             }
         },
-        newCode(title) {
-            const content = this.$parent.getValue()
+        newCode(title, defaultContent) {
+            const content = defaultContent || this.$parent.getValue()
             this.axios(API.snippet.insertSnippet(title, content)).then(res => {
                 this.$router.push({ path: '/editor', query: { id: res.data.data } })
                 this.dialogVisible = false
@@ -387,6 +403,90 @@ export default {
                 this.$emit('autoPreview', value)
                 this.$message.error('自动预览已关闭。')
             }
+        },
+        dealData(res) {
+            // const value = this.$parent.getValue()
+            const word = res.replaceAll('data:', '').replaceAll('\n', '').replaceAll('<--br-->', '\n').replaceAll('<--space-->', ' ')
+            const editor = this.$parent.$refs.vscode.monacoEditor
+            var pos = editor.getPosition()
+            editor.executeEdits('my-source', [{
+                range: new monaco.Range(pos.lineNumber, pos.column, pos.lineNumber, pos.column),
+                text: word
+            }])
+            // this.$emit('setValue', value + word.replaceAll('\n', '').replaceAll('<--br-->', '\n').replaceAll('<--space-->', ' '))
+        },
+        chatGPTSubmit(content, token) {
+            if (!content) return this.$message.error('请填写内容')
+            if (!token) return this.$message.error('请填写token')
+            const loading = this.$loading({
+                lock: true,
+                text: '正在生产中……',
+                spinner: 'el-icon-loading'
+            })
+            // if (!this.$store.state.token) return this.$message.error('请先登录。')
+            const message = `${content}`
+            fetch('https://askiweb.diyxi.top/api/ask/chat', {
+                headers: { accept: 'text/event-stream', token, 'content-type': 'application/json' },
+                body: `{"messages":[{"role":"user","content":"${message}"}]}`,
+                method: 'POST'
+            }).then(async(response) => {
+                this.$emit('setValue', '')
+                loading.close()
+                this.chatGPTdialogVisible = false
+                const reader = response.body.getReader()
+                while (true) {
+                    const { value, done } = await reader.read()
+                    const res = new TextDecoder('utf-8').decode(value)
+                    this.dealData(res)
+                    if (done) {
+                        setTimeout(() => this.$parent.preview(), 100)
+                        break
+                    }
+                }
+            })
+                .catch(err => {
+                    this.$message.error(err)
+                    loading.close()
+                })
+                .finally(() => {
+                    loading.close()
+                    this.chatGPTdialogVisible = false
+                })
+            // this.axios({
+            //     url: 'http://127.0.0.1:17860/api/chat_stream',
+            //     method: 'post',
+            //     headers: {
+
+            //     },
+            //     data: {
+            //         prompt: message,
+            //         temperature: 0.9,
+            //         top_p: 0.3,
+            //         max_length: 2050,
+            //         history: [],
+            //         zhishiku: false
+            //     }
+            // }).then(res => {
+            //     console.log(res.data)
+            //     // 赋值到编辑器
+            //     // this.$emit('setValue', res.data.answer)
+            //     setTimeout(() => this.$parent.preview(), 100)
+            // }).catch((e) => {
+            //     this.$message.error(e)
+            // }).finally(() => {
+            //     loading.close()
+            //     this.chatGPTdialogVisible = false
+            // })
+            // this.axios(`https://docker8010.diyxi.top/forward-plus?url=https://api.pearktrue.cn/api/gpt/?message=${message}`).then(res => {
+            //     // 赋值到编辑器
+            //     this.$emit('setValue', res.data.answer)
+            //     setTimeout(() => this.$parent.preview(), 100)
+            // }).catch((e) => {
+            //     this.$message.error(e)
+            // }).finally(() => {
+            //     loading.close()
+            //     this.chatGPTdialogVisible = false
+            // })
         }
     }
 }

@@ -34,7 +34,7 @@ export default {
         },
         width: {
             type: String,
-            default: '600px'
+            default: '700px'
         },
         dialogVisible: {
             type: Boolean,
@@ -58,6 +58,11 @@ export default {
                 {
                     title: '完整项目',
                     tag: '完整项目具有目录管理器功能，您可以开发多文件的前端项目。',
+                    icon: 'el-icon-folder'
+                },
+                {
+                    title: 'ChatGPT编码',
+                    tag: '使用AI生成一个html网页，让你快速完成构建原型。',
                     icon: 'el-icon-folder'
                 }
                 // {
