@@ -17,6 +17,10 @@
                 </div>
 
                 <el-button type="primary" round size="mini" @click="dialogVisible = true">新建代码片段</el-button>
+                <el-badge value="hot" class="item" style="margin-right: 20px;">
+                    <el-button type="primary" round size="mini" @click="chatGPTdialogVisible = true">AI创作</el-button>
+                </el-badge>
+
                 <div v-if="fileName!=''" class="status">您正在编辑:{{fileName}}</div>
                 <el-tooltip id="code_pic1" class="item" effect="dark" content="鼠标点击，Ctrl+V粘贴，上传代码封面图片。" placement="top-start">
                     <i style="margin-left:10px;font-size: 20px;" class="el-icon-picture"></i>
@@ -101,7 +105,7 @@
         :item="$parent.item"
         ></code-review>
         <!-- AI编程对话框 -->
-        <chatGPT-dialog :dialogVisible.sync="chatGPTdialogVisible" @submit="chatGPTSubmit"></chatGPT-dialog>
+        <chatGPT-dialog :visible.sync="chatGPTdialogVisible" @submit="chatGPTSubmit"></chatGPT-dialog>
     </div>
 </template>
 
@@ -415,19 +419,26 @@ export default {
             }])
             // this.$emit('setValue', value + word.replaceAll('\n', '').replaceAll('<--br-->', '\n').replaceAll('<--space-->', ' '))
         },
-        chatGPTSubmit(content, token) {
-            if (!content) return this.$message.error('请填写内容')
+        chatGPTSubmit(form) {
+            const { token, server, textareaContent, withCode } = form
+            if (!textareaContent) return this.$message.error('请填写内容')
             if (!token) return this.$message.error('请填写token')
             const loading = this.$loading({
                 lock: true,
                 text: '正在生产中……',
                 spinner: 'el-icon-loading'
             })
+            const editor = this.$parent.$refs.vscode.monacoEditor
+
+            const message = withCode ? editor.getValue() + textareaContent : textareaContent
             // if (!this.$store.state.token) return this.$message.error('请先登录。')
-            const message = `${content}`
+            if (server === 'aski') this.askiGPT(token, message, loading)
+            if (server === 'aigptx') this.aigptxGPT(token, message, loading)
+        },
+        askiGPT(token, message, loading) {
             fetch('https://askiweb.diyxi.top/api/ask/chat', {
                 headers: { accept: 'text/event-stream', token, 'content-type': 'application/json' },
-                body: `{"messages":[{"role":"user","content":"${message}"}]}`,
+                body: JSON.stringify({ messages: [{ role: 'user', content: message }] }),
                 method: 'POST'
             }).then(async(response) => {
                 this.$emit('setValue', '')
@@ -452,41 +463,30 @@ export default {
                     loading.close()
                     this.chatGPTdialogVisible = false
                 })
-            // this.axios({
-            //     url: 'http://127.0.0.1:17860/api/chat_stream',
-            //     method: 'post',
-            //     headers: {
-
-            //     },
-            //     data: {
-            //         prompt: message,
-            //         temperature: 0.9,
-            //         top_p: 0.3,
-            //         max_length: 2050,
-            //         history: [],
-            //         zhishiku: false
-            //     }
-            // }).then(res => {
-            //     console.log(res.data)
-            //     // 赋值到编辑器
-            //     // this.$emit('setValue', res.data.answer)
-            //     setTimeout(() => this.$parent.preview(), 100)
-            // }).catch((e) => {
-            //     this.$message.error(e)
-            // }).finally(() => {
-            //     loading.close()
-            //     this.chatGPTdialogVisible = false
-            // })
-            // this.axios(`https://docker8010.diyxi.top/forward-plus?url=https://api.pearktrue.cn/api/gpt/?message=${message}`).then(res => {
-            //     // 赋值到编辑器
-            //     this.$emit('setValue', res.data.answer)
-            //     setTimeout(() => this.$parent.preview(), 100)
-            // }).catch((e) => {
-            //     this.$message.error(e)
-            // }).finally(() => {
-            //     loading.close()
-            //     this.chatGPTdialogVisible = false
-            // })
+        },
+        aigptxGPT(token, message, loading) {
+            fetch('https://aigptx.top/v1/chat/completions', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({ model: 'gpt-3.5-turbo', messages: [{ role: 'user', content: message }] }),
+                method: 'POST'
+            }).then(async(response) => {
+                const json = await response.json()
+                this.$emit('setValue', json.choices[0]?.message.content || '')
+                loading.close()
+                this.chatGPTdialogVisible = false
+                setTimeout(() => this.$parent.preview(), 100)
+            })
+                .catch(err => {
+                    this.$message.error(err)
+                    loading.close()
+                })
+                .finally(() => {
+                    loading.close()
+                    this.chatGPTdialogVisible = false
+                })
         }
     }
 }
